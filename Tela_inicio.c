@@ -1,52 +1,54 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
 #include <stdio.h>
 
-// Definir o enum GameState
-typedef enum { MENU, RESUMO } GameState;
+// Definir el enum GameState
+typedef enum { MENU, RESUMO, FASE_1 } GameState;
 
-// Função para iniciar a tela de menu
-void iniciar_tela_menu();
+// Funciones de las distintas fases
+void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background);
+void iniciar_fase_1(ALLEGRO_DISPLAY* display);
 
 int main() {
-    // Chamar a função de inicialização da tela de menu
-    iniciar_tela_menu();
-    return 0;
-}
-
-void iniciar_tela_menu() {
-    // Inicializar Allegro e seus addons
-    al_init();
+    // Inicializar Allegro y sus addons
+    if (!al_init()) {
+        printf("Error al inicializar Allegro!\n");
+        return -1;
+    }
     al_init_image_addon();
     al_install_mouse();
     al_init_primitives_addon();
-    al_init_font_addon();
-    al_init_ttf_addon();
 
-    // Carregar a fonte
-    ALLEGRO_FONT* font = al_load_ttf_font("pixel_arial_11/PIXEARG_.TTF", 18, 0);
-    if (!font) {
-        printf("Falha ao carregar a fonte!\n");
-        return;
-    }
-
-    // Criar display em tela cheia
+    // Crear display de 1280x720
     ALLEGRO_DISPLAY* display = al_create_display(1280, 720);
+    if (!display) {
+        printf("Error al crear el display!\n");
+        return -1;
+    }
     al_set_window_title(display, "A Revolução Francesa");
 
-    // Carregar imagem da tela de início
+    // Cargar imagen de fondo
     ALLEGRO_BITMAP* background = al_load_bitmap("./telainicio.png");
-
-    // Verificar se a imagem foi carregada corretamente
     if (!background) {
-        printf("Falha ao carregar a imagem de fundo!\n");
-        return;
+        printf("Error al cargar la imagen de fondo!\n");
+        al_destroy_display(display);
+        return -1;
     }
 
-    // Variável para controlar o estado do jogo
+    // Iniciar la pantalla de menú
+    iniciar_tela_menu(display, background);
+
+    // Limpiar recursos
+    al_destroy_bitmap(background);
+    al_destroy_display(display);
+
+    return 0;
+}
+
+// Función para iniciar la pantalla de menú
+void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background) {
+    // Variable para controlar el estado del juego
     GameState game_state = MENU;
 
     ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
@@ -58,68 +60,96 @@ void iniciar_tela_menu() {
 
     al_start_timer(timer);
 
-    bool running = true; // Variável de controle para manter o loop ativo
+    bool running = true; // Controla el ciclo principal del juego
 
     while (running) {
         ALLEGRO_EVENT event;
         al_wait_for_event(event_queue, &event);
 
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-            running = false;  // Fechar o programa
+            running = false;  // Salir del programa
         }
 
         if (game_state == MENU) {
-            // Tela de início
+            // Pantalla de inicio
             if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
                 int mouse_x = event.mouse.x;
                 int mouse_y = event.mouse.y;
 
-                // Verificar clique na área do botão "Iniciar Jogo"
+                // Verificar clic en el botón "Iniciar Juego"
                 if (mouse_x >= 456 && mouse_x <= 813 && mouse_y >= 604 && mouse_y <= 647) {
-                    printf("Iniciar Jogo foi clicado!\n");
-                    // Aqui você pode adicionar a lógica para iniciar o jogo
+                    printf("Iniciar Jogo fue clicado!\n");
+                    game_state = FASE_1;  // Cambiar estado a FASE_1
                 }
 
-                // Verificar clique na área do botão "Sair"
+                // Verificar clic en el botón "Salir"
                 if (mouse_x >= 879 && mouse_x <= 1184 && mouse_y >= 599 && mouse_y <= 654) {
-                    printf("Sair foi clicado!\n");
-                    running = false;  // Sair do loop principal e fechar o programa
+                    printf("Sair fue clicado!\n");
+                    running = false;  // Salir del ciclo principal
                 }
 
-                // Verificar clique na área do botão "Resumo"
+                // Verificar clic en el botón "Resumen"
                 if (mouse_x >= 120 && mouse_x <= 380 && mouse_y >= 561 && mouse_y <= 695) {
-                    printf("Resumo foi clicado!\n");
+                    printf("Resumo fue clicado!\n");
                     game_state = RESUMO;
                 }
             }
 
-            // Desenhar a imagem de fundo que cobre toda a tela
+            // Dibujar la imagen de fondo que cubre toda la pantalla
             al_draw_scaled_bitmap(background, 0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
 
             al_flip_display();
         }
         else if (game_state == RESUMO) {
-            // Tela de resumo (texto da revolução)
+            // Pantalla de resumen (sólo fondo negro ahora)
             al_clear_to_color(al_map_rgb(0, 0, 0));
-            al_draw_text(font, al_map_rgb(255, 255, 255), 50, 50, 0, "A Revolução Francesa, um dos marcos mais significativos da história moderna,");
-            al_draw_text(font, al_map_rgb(255, 255, 255), 50, 70, 0, "ocorreu entre 1789 e 1799. Ela começou com profundas crises econômicas, sociais");
-            al_draw_text(font, al_map_rgb(255, 255, 255), 50, 90, 0, "e políticas na França monárquica, exacerbadas por dívidas nacionais e fome.");
 
-            // Aqui você pode adicionar o resto do texto, ajustando as coordenadas y conforme necessário
-
-            // Verificar se o usuário clicou para voltar ao menu
+            // Verificar si el usuario hizo clic para volver al menú
             if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
-                game_state = MENU;  // Voltar ao menu
+                game_state = MENU;  // Volver al menú
             }
 
             al_flip_display();
         }
+        else if (game_state == FASE_1) {
+            iniciar_fase_1(display);  // Iniciar Fase 1
+            game_state = MENU;  // Después de la Fase 1, volver al menú
+        }
     }
 
-    // Limpar recursos
-    al_destroy_bitmap(background);
+    // Limpiar recursos
     al_destroy_timer(timer);
-    al_destroy_font(font);
-    al_destroy_display(display);
+    al_destroy_event_queue(event_queue);
+}
+
+// Función para iniciar la Fase 1
+void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
+    // Aquí puedes poner la lógica de la Fase 1
+    ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
+
+    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+
+    al_start_timer(timer);
+
+    bool running = true; // Controla la ejecución de la Fase 1
+
+    while (running) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(event_queue, &event);
+
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            running = false;  // Salir de la Fase 1
+        }
+
+        // Lógica de la Fase 1
+        al_clear_to_color(al_map_rgb(0, 255, 0)); // Aquí puedes cambiar el color o la lógica a tu gusto
+        al_flip_display(); // Actualizar la pantalla
+
+        al_rest(0.01);  // Pausa para no sobrecargar el ciclo
+    }
+
+    al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
 }
