@@ -4,8 +4,8 @@
 *.VC.db
 
 # Ignorar arquivos de build e de compilação
-bin/
-obj/
+/bin
+/obj
 *.pdb
 *.ilk
 *.idb
