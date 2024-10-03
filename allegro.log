@@ -1,8 +1,0 @@
-stdio    D         file_stdio.c:107  file_stdio_fopen                 [   0.00000] opening C:\Users\leona\OneDrive\Documentos\PI_Revolucao_Francesa\PI_Revolucao\x64\Debug\allegro5.cfg r
-system   D            wsystem.c:836  maybe_parent_dir                 [   0.00000] Also searching C:\Users\leona\OneDrive\Documentos\PI_Revolucao_Francesa\PI_Revolucao\x64\
-system   D            wsystem.c:891  _al_win_safe_load_library        [   0.00000] PathFindOnPath found: C:\WINDOWS\system32\shcore.dll
-system   D            wsystem.c:797  load_library_at_path             [   0.00000] Calling LoadLibrary C:\WINDOWS\system32\shcore.dll
-system   I            wsystem.c:800  load_library_at_path             [   0.00000] Loaded C:\WINDOWS\system32\shcore.dll
-system   I             system.c:271  al_install_system                [   0.00000] Allegro version: 5.2.9
-stdio    D         file_stdio.c:107  file_stdio_fopen                 [   0.00628] opening pixel_arial_11/PIXEARG_.TTF rb
-font     E                ttf.c:1023 al_load_ttf_font_stretch         [   0.00662] Unable to open file for reading: pixel_arial_11/PIXEARG_.TTF

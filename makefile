@@ -14,15 +14,15 @@ PKG_CONFIG := pkg-config
 CFLAGS := -g -Wall -MMD -Iinclude `$(PKG_CONFIG) --cflags $(ALLEGRO_LIBS)`
 LIBS := `$(PKG_CONFIG) --libs $(ALLEGRO_LIBS)`
 
-SOURCE_FILES := $(wildcard ./*.c)
-OBJECT_FILES := $(patsubst ./%, obj/%, $(SOURCE_FILES:.c=.o))
+SOURCE_FILES := $(wildcard src/*.c)
+OBJECT_FILES := $(patsubst src/%, obj/%, $(SOURCE_FILES:.c=.o))
 
 DEPENDENCY_FILES := $(OBJECT_FILES:.o=.d)
 
 $(EXECUTABLE_NAME): $(OBJECT_FILES)
 	$(CC) $^ -o $(EXECUTABLE_NAME) $(LIBS)
 
-obj/%.o: ./%.c
+obj/%.o: src/%.c
 	@mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $<
 
@@ -36,5 +36,5 @@ run: $(EXECUTABLE_NAME)
 
 -include $(DEPENDENCY_FILES)
 
-# gcc ./*.c -o main $(pkg-config allegro-5 allegro_main-5 allegro_font-5 --libs --cflags)
-# gcc obj/main.o -o game `/opt/local/bin/pkg-config --libs allegro-5 allegro_main-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_audio-5 allegro_acodec-5 allegro_primitives-5`
+#gcc src/*.c -o main $(pkg-config allegro-5 allegro_main-5 allegro_font-5 --libs --cflags)
+#gcc obj/main.o -o game `/opt/local/bin/pkg-config --libs allegro-5 allegro_main-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_audio-5 allegro_acodec-5 allegro_primitives-5`
