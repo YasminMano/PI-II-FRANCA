@@ -1,3 +1,6 @@
+# Ignorar pastas e arquivos do Visual Studio Code
+.vscode/
+
 # Ignorar pastas e arquivos do Visual Studio
 .vs/
 *.VC.opendb
@@ -5,7 +8,7 @@
 
 # Ignorar arquivos de build e de compilação
 /bin
-/obj
+/obj/
 *.pdb
 *.ilk
 *.idb
@@ -27,3 +30,17 @@
 
 # Ignorar o arquivo de lock do NuGet
 project.lock.json
+
+# Ignorar arquivos do sistema operacional
+.DS_Store  # Para macOS
+Thumbs.db  # Para Windows
+
+# Ignorar binários e outros artefatos de compilação
+*.o
+*.out
+*.exe
+
+# Ignorar arquivos temporários criados por editores
+*.swp
+*.swo
+*~
