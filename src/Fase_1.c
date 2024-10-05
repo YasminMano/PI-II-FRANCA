@@ -1,158 +1,155 @@
-// #include <allegro5/allegro.h>
-// #include <allegro5/allegro_image.h>
-// #include <allegro5/keyboard.h>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/keyboard.h>
+#include <allegro5/keycodes.h>
 
-// int main1() {
+// Função que inicia a fase 1 do jogo
+void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
+    al_init();  // Inicializa a biblioteca Allegro
+    al_install_keyboard();  // Instala o suporte ao teclado
 
-//     al_init();
-//     al_init_image_addon();
-//     al_install_keyboard();
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);  // Cria um timer para controlar a taxa de atualização do jogo
 
-//     ALLEGRO_DISPLAY* display = al_create_display(1280, 720);
-//     al_set_window_position(display, 200, 200);
-//     al_set_window_title(display, "A Corrida Pela Liberdade!");
+    // Carregar as imagens do personagem e do cenário
+    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/teste_personagem1.png");
+    ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/cenario1.png");
 
-//     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);
+    // Verifica se as imagens foram carregadas corretamente, caso contrário, destrói o display e encerra
+    if (!bg || !sprite_sheet) {
+        al_destroy_display(display);
+        return;
+    }
 
-//     // Carregar a imagem do sprite sheet
-//     ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("./teste_personagem1.png");
-//     ALLEGRO_BITMAP* bg = al_load_bitmap("./cenario1.png");
+    // Define a cor branca como transparente para o sprite
+    al_convert_mask_to_alpha(sprite_sheet, al_map_rgb(255, 255, 255));
 
-//     // Verifique se as imagens foram carregadas corretamente
-//     if (!bg || !sprite_sheet) {
-//         al_destroy_display(display);
-//         return -1;
-//     }
+    // Configura a fila de eventos para receber eventos de teclado, timer e display
+    ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
+    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_register_event_source(event_queue, al_get_keyboard_event_source());
+    al_start_timer(timer);  // Inicia o timer
 
-//     // Configurar transpar�ncia (assumindo que o fundo do sprite � branco)
-//     al_convert_mask_to_alpha(sprite_sheet, al_map_rgb(255, 255, 255));
+    // Configuração dos frames do personagem (animação)
+    int frame_width = 320;  // Largura de cada frame do personagem
+    int frame_height = 320;  // Altura de cada frame do personagem
+    int frame_x[] = { 0, 320, 640 };  // Coordenadas dos frames na imagem (sprites)
+    int frame_y = 0;  // Linha do sprite
+    float scale_factor = 0.6;  // Fator de escala do personagem
 
-//     ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
-//     al_register_event_source(event_queue, al_get_display_event_source(display));
-//     al_register_event_source(event_queue, al_get_timer_event_source(timer));
-//     al_register_event_source(event_queue, al_get_keyboard_event_source());
-//     al_start_timer(timer);
+    // Posição inicial do personagem
+    int pos_x = 50;  // Posição X inicial
+    int pos_y = al_get_display_height(display) - frame_height * scale_factor - 50;  // Posição Y inicial, perto do chão
+    int initial_pos_y = pos_y;  // Armazena a posição inicial do personagem para controlar o pulo
 
-//     // Definir coordenadas espec�ficas de cada sprite
-//     int frame_width = 320;  // Largura de cada sprite
-//     int frame_height = 320;  // Altura de cada sprite
-//     int frame_x[] = { 0, 320, 640 };  // Coordenadas x dos sprites (ajustar se necess�rio)
-//     int frame_y = 0;  // Todos os sprites est�o na mesma linha vertical
+    // Controle do pulo
+    bool jumping = false;  // Indica se o personagem está pulando
+    float jump_velocity = -15.0f;  // Velocidade inicial do pulo
+    float gravity = 0.7f;  // Gravidade para desacelerar o pulo
 
-//     // Reduzir o tamanho do personagem para 60% do tamanho original
-//     float scale_factor = 0.6;
+    bool facing_right = true;  // Indica a direção que o personagem está virado
+    bool move_left = false;  // Indica se o personagem está se movendo para a esquerda
+    bool move_right = false;  // Indica se o personagem está se movendo para a direita
+    bool moving = false;  // Indica se o personagem está se movendo
 
-//     // Posi��o inicial do personagem na tela
-//     int pos_x = 50; // Um pouco � esquerda
-//     int pos_y = al_get_display_height(display) - frame_height * scale_factor - 50; // Um pouco acima do ch�o
-//     int initial_pos_y = pos_y; // Para resetar o pulo
+    // Velocidade de movimento
+    float movement_speed = 1.5;
 
-//     bool jumping = false;
-//     float jump_velocity = -15.0f; // Velocidade inicial do pulo
-//     float gravity = 0.7f; // Gravidade
-//     bool facing_right = true; // Personagem come�a virado para a direita
+    // Controle da animação do personagem
+    int current_frame = 0;  // Frame atual
+    float frame_time = 0.2;  // Tempo de cada frame
+    float frame_timer = 0;
+    int total_moving_frames = 3;  // Total de frames da animação
 
-//     bool move_left = false;
-//     bool move_right = false;
-//     bool moving = false; // Controle de movimento
+    bool running = true;  // Indica se o loop do jogo está rodando
 
-//     // Velocidade de movimento do personagem
-//     float movement_speed = 1.5;
+    // Loop principal do jogo
+    while (running) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(event_queue, &event);  // Espera por um evento (teclado, timer, etc.)
 
-//     // Controle de anima��o
-//     int current_frame = 0;
-//     float frame_time = 0.2; // Tempo entre cada frame
-//     float frame_timer = 0;
-//     int total_moving_frames = 3; // Tr�s frames no total
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {  // Se o usuário fechar a janela, encerra o jogo
+            running = false;
+        }
 
-//     while (true) {
-//         ALLEGRO_EVENT event;
-//         al_wait_for_event(event_queue, &event);
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla é pressionada
+            if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Move para a direita
+                move_right = true;
+                facing_right = true;
+                moving = true;
+            } else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Move para a esquerda
+                move_left = true;
+                facing_right = false;
+                moving = true;
+            } else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jumping) {  // Pulo
+                jumping = true;
+            }
+        } else if (event.type == ALLEGRO_EVENT_KEY_UP) {  // Detecta quando uma tecla é solta
+            if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Para de se mover para a direita
+                move_right = false;
+                if (!move_left) moving = false;
+            } else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Para de se mover para a esquerda
+                move_left = false;
+                if (!move_right) moving = false;
+            }
+        }
 
-//         // Detecta quando as teclas s�o pressionadas
-//         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-//             if (event.keyboard.keycode == ALLEGRO_KEY_D) {
-//                 move_right = true;
-//                 facing_right = true;
-//                 moving = true;
-//             }
-//             else if (event.keyboard.keycode == ALLEGRO_KEY_A) {
-//                 move_left = true;
-//                 facing_right = false;
-//                 moving = true;
-//             }
-//             else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jumping) {
-//                 jumping = true; // Inicia o pulo
-//             }
-//         }
+        // Movimento horizontal
+        if (move_right) pos_x += movement_speed;
+        if (move_left) pos_x -= movement_speed;
 
-//         // Detecta quando as teclas s�o soltas
-//         else if (event.type == ALLEGRO_EVENT_KEY_UP) {
-//             if (event.keyboard.keycode == ALLEGRO_KEY_D) {
-//                 move_right = false;
-//                 if (!move_left) moving = false; // Parar se n�o estiver movendo para a esquerda
-//             }
-//             else if (event.keyboard.keycode == ALLEGRO_KEY_A) {
-//                 move_left = false;
-//                 if (!move_right) moving = false; // Parar se n�o estiver movendo para a direita
-//             }
-//         }
+        // Lógica de pulo
+        if (jumping) {
+            pos_y += jump_velocity;
+            jump_velocity += gravity;
+            if (pos_y >= initial_pos_y) {  // Se o personagem tocar o chão, o pulo termina
+                pos_y = initial_pos_y;
+                jumping = false;
+                jump_velocity = -15.0f;
+            }
+        }
 
-//         // L�gica de movimento horizontal cont�nuo
-//         if (move_right) {
-//             pos_x += movement_speed; // Movimento para a direita
-//         }
-//         if (move_left) {
-//             pos_x -= movement_speed; // Movimento para a esquerda
-//         }
+        // Controle da animação do movimento
+        if (moving) {
+            frame_timer += 1.0 / 30.0;
+            if (frame_timer >= frame_time) {
+                current_frame = (current_frame + 1) % total_moving_frames;
+                frame_timer = 0;
+            }
+        } else {
+            current_frame = 0;  // Se não estiver se movendo, exibe o primeiro frame
+        }
 
-//         // L�gica do pulo
-//         if (jumping) {
-//             pos_y += jump_velocity; // Aplicar a velocidade do pulo
-//             jump_velocity += gravity; // Aplicar gravidade para desacelerar o pulo
+        // Desenho dos frames do personagem
+        int frame_cx = frame_x[current_frame];  // Frame atual
+        int frame_cy = frame_y;  // Linha dos frames (fixo)
 
-//             // Quando o personagem atinge o ch�o, o pulo termina
-//             if (pos_y >= initial_pos_y) {
-//                 pos_y = initial_pos_y;
-//                 jumping = false;
-//                 jump_velocity = -15.0f; // Reseta a velocidade do pulo
-//             }
-//         }
+        // Limpa a tela e desenha o cenário e o personagem
+        al_clear_to_color(al_map_rgb(255, 255, 255));  // Limpa a tela com a cor branca
+        al_draw_scaled_bitmap(bg, 0, 0, al_get_bitmap_width(bg), al_get_bitmap_height(bg), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
 
-//         // Atualizar o frame da anima��o se o personagem estiver se movendo
-//         if (moving) {
-//             frame_timer += 1.0 / 30.0;
-//             if (frame_timer >= frame_time) {
-//                 current_frame = (current_frame + 1) % total_moving_frames;
-//                 frame_timer = 0;
-//             }
-//         }
-//         else {
-//             current_frame = 0; // Parado, usar o primeiro frame
-//         }
+        // Desenha o personagem na direção correta
+        if (facing_right) {
+            al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, 0);
+        } else {
+            al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, ALLEGRO_FLIP_HORIZONTAL);
+        }
 
-//         // Calcular o frame a ser desenhado
-//         int frame_cx = frame_x[current_frame];  // Coordenada x do frame atual
-//         int frame_cy = frame_y;  // Coordenada y do frame (fixo no topo da imagem)
+        al_flip_display();  // Atualiza a tela
+    }
 
-//         al_clear_to_color(al_map_rgb(255, 255, 255)); // Limpa a tela
-//         al_draw_scaled_bitmap(bg, 0, 0, al_get_bitmap_width(bg), al_get_bitmap_height(bg), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
+    // Destrói os recursos após o fim do jogo
+    al_destroy_bitmap(bg);
+    al_destroy_bitmap(sprite_sheet);
+    al_destroy_timer(timer);
+    al_destroy_event_queue(event_queue);
+}
 
-//         // Desenhar o personagem redimensionado com base no frame atual
-//         if (facing_right) {
-//             al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, 0);
-//         }
-//         else {
-//             al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, ALLEGRO_FLIP_HORIZONTAL);
-//         }
-
-//         al_flip_display();
-//     }
-
-//     al_destroy_bitmap(bg);
-//     al_destroy_bitmap(sprite_sheet);
-//     al_destroy_display(display);
-//     al_destroy_event_queue(event_queue);
-
-//     return 0;
-// }
+/*
+Resumo:
+O arquivo `fase1.c` define a função `iniciar_fase_1`, que configura e roda a lógica da primeira fase do jogo.
+Ele lida com a criação do display, carregamento de imagens, controles do teclado, e animação do personagem.
+O loop principal do jogo controla o movimento, o pulo e a animação do personagem, além de desenhar o cenário e o personagem na tela.
+Quando o jogador fecha a janela ou sai do jogo, os recursos alocados são liberados.
+*/
