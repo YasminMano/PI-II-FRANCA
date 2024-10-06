@@ -1,0 +1,8 @@
+C:\Users\leona\OneDrive\Documentos\PI_Revolucao_Francesa\PI_Revolucao\x64\Debug\PI_Revolucao.exe
+C:\Users\leona\source\repos\PI-II-FRANCA\x64\Debug\PI_Revolucao.vcxproj.CopyComplete
+C:\Users\leona\source\repos\PI-II-FRANCA\x64\Debug\PI_Revolucao.exe
+C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\allegro-debug-5.2.dll
+C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\allegro_image-debug-5.2.dll
+C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\libwebp.dll
+C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\libsharpyuv.dll
+C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\allegro_primitives-debug-5.2.dll

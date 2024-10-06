@@ -44,3 +44,8 @@ Thumbs.db  # Para Windows
 *.swp
 *.swo
 *~
+
+# Adicionar ao .gitignore
+packages/
+x64/
+*.TTF
