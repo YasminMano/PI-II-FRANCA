@@ -12,7 +12,7 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);  // Cria um timer para controlar a taxa de atualização do jogo
 
     // Carregar as imagens do personagem e do cenário
-    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/Design sem nome(1)(1)(2).png");
+    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/teste_personagem.png");
     ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/cenario1.png");
 
     // Verifica se as imagens foram carregadas corretamente, caso contrário, destrói o display e encerra
