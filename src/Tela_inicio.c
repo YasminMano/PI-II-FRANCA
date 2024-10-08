@@ -7,6 +7,49 @@
 // Declaração da função iniciar_fase_1 (a implementação está em Fase_1.c)
 void iniciar_fase_1(ALLEGRO_DISPLAY* display);
 
+// Função que inicializa a tela de resumo sobre a Revolução Francesa
+void iniciar_resumo(ALLEGRO_DISPLAY* display) {
+    bool running = true;
+    ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);  // Temporizador para 60 FPS
+
+    // Registrar as fontes de eventos
+    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_start_timer(timer);
+
+    while (running) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(event_queue, &event);
+
+        // Fecha a janela se o usuário clicar no botão de fechar
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            running = false;
+        }
+
+        // Verifique se o usuário clicou para sair do resumo (por exemplo, com clique no mouse)
+        if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            running = false;
+        }
+
+        // Limpa a tela e desenha o texto de resumo
+        al_clear_to_color(al_map_rgb(0, 0, 0));  // Preenche o fundo com cor preta
+
+        // Exemplo de texto sobre a Revolução Francesa
+        al_draw_text(al_create_builtin_font(), al_map_rgb(255, 255, 255), al_get_display_width(display) / 2,
+                     al_get_display_height(display) / 2, ALLEGRO_ALIGN_CENTER,
+                     "A Revolução Francesa foi um movimento social e politico que ocorreu na França entre 1789 e 1799.\n"
+                     "Ela foi marcada pela derrubada da monarquia e a instauração de uma república.\n"
+                     "Foi um evento de grande impacto histórico, inspirando mudanças em todo o mundo.");
+
+        al_flip_display();  // Atualiza a tela com o conteúdo do resumo
+    }
+
+    // Libera recursos
+    al_destroy_timer(timer);
+    al_destroy_event_queue(event_queue);
+}
+
 // Função que inicializa a tela de menu do jogo
 void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background) {
     GameState game_state = MENU;  // Define o estado inicial do jogo como MENU
@@ -57,7 +100,7 @@ void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background) {
                 // Verifica se o botão "Resumo" foi clicado
                 if (mouse_x >= 120 && mouse_x <= 380 && mouse_y >= 561 && mouse_y <= 695) {
                     printf("Resumo foi clicado!\n");
-                    game_state = RESUMO;  // Muda o estado do jogo para RESUMO (não implementado)
+                    game_state = RESUMO;  // Muda o estado do jogo para RESUMO
                 }
             }
 
@@ -71,16 +114,14 @@ void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background) {
             iniciar_fase_1(display);  // Chama a função que inicia a Fase 1
             game_state = MENU;  // Após a Fase 1, volta para o MENU
         }
+        // Se o estado do jogo for RESUMO
+        else if (game_state == RESUMO) {
+            iniciar_resumo(display);  // Chama a função que exibe o resumo
+            game_state = MENU;  // Volta para o MENU após o resumo
+        }
     }
 
     // Libera os recursos alocados após o término do loop
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
 }
-
-/*
-Resumo:
-Este código define a função `iniciar_tela_menu`, que exibe a tela de menu do jogo. Ele detecta cliques
-no mouse para iniciar o jogo, mostrar o resumo ou sair. O estado do jogo muda para `FASE_1` quando o
-jogador clica em "Iniciar Jogo". O loop principal do jogo escuta eventos e atualiza a tela conforme o estado atual.
-*/

@@ -12,7 +12,7 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);  // Cria um timer para controlar a taxa de atualização do jogo
 
     // Carregar as imagens do personagem e do cenário
-    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/teste_personagem1.png");
+    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/teste_personagem.png");
     ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/cenario1.png");
 
     // Verifica se as imagens foram carregadas corretamente, caso contrário, destrói o display e encerra
@@ -32,15 +32,20 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
     al_start_timer(timer);  // Inicia o timer
 
     // Configuração dos frames do personagem (animação)
-    int frame_width = 320;  // Largura de cada frame do personagem
-    int frame_height = 320;  // Altura de cada frame do personagem
-    int frame_x[] = { 0, 320, 640 };  // Coordenadas dos frames na imagem (sprites)
-    int frame_y = 0;  // Linha do sprite
-    float scale_factor = 0.6;  // Fator de escala do personagem
+    int frame_width = 265;  // Largura de cada frame do personagem
+    int frame_height = 376;  // Altura de cada frame do personagem
+    
+    // Coordenadas X dos frames (3 frames por linha)
+    int frame_x[] = { 0, 265, 530 };
+    
+    // Coordenadas Y para duas linhas
+    int frame_y[] = { 0, 376 };
 
-    // Posição inicial do personagem
+    float scale_factor = 0.6;  // Escala do personagem ajustada
+
+    // Posição inicial do personagem (ajustando para que fique no chão)
     int pos_x = 50;  // Posição X inicial
-    int pos_y = al_get_display_height(display) - frame_height * scale_factor - 50;  // Posição Y inicial, perto do chão
+    int pos_y = al_get_display_height(display) - frame_height * scale_factor;  // Ajuste para que o personagem toque o chão
     int initial_pos_y = pos_y;  // Armazena a posição inicial do personagem para controlar o pulo
 
     // Controle do pulo
@@ -54,13 +59,13 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
     bool moving = false;  // Indica se o personagem está se movendo
 
     // Velocidade de movimento
-    float movement_speed = 1.5;
+    float movement_speed = 2.0;
 
     // Controle da animação do personagem
     int current_frame = 0;  // Frame atual
     float frame_time = 0.2;  // Tempo de cada frame
     float frame_timer = 0;
-    int total_moving_frames = 3;  // Total de frames da animação
+    int total_moving_frames = 3;  // Total de frames da animação (3 por linha)
 
     bool running = true;  // Indica se o loop do jogo está rodando
 
@@ -122,14 +127,14 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
         }
 
         // Desenho dos frames do personagem
-        int frame_cx = frame_x[current_frame];  // Frame atual
-        int frame_cy = frame_y;  // Linha dos frames (fixo)
+        int frame_cx = frame_x[current_frame];  // Frame atual (X)
+        int frame_cy = frame_y[0];  // Usando apenas a primeira linha de sprites por enquanto
 
         // Limpa a tela e desenha o cenário e o personagem
         al_clear_to_color(al_map_rgb(255, 255, 255));  // Limpa a tela com a cor branca
         al_draw_scaled_bitmap(bg, 0, 0, al_get_bitmap_width(bg), al_get_bitmap_height(bg), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
 
-        // Desenha o personagem na direção correta
+        // Desenha o personagem na direção correta com ajuste de escala
         if (facing_right) {
             al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, 0);
         } else {
@@ -145,11 +150,3 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
 }
-
-/*
-Resumo:
-O arquivo `fase1.c` define a função `iniciar_fase_1`, que configura e roda a lógica da primeira fase do jogo.
-Ele lida com a criação do display, carregamento de imagens, controles do teclado, e animação do personagem.
-O loop principal do jogo controla o movimento, o pulo e a animação do personagem, além de desenhar o cenário e o personagem na tela.
-Quando o jogador fecha a janela ou sai do jogo, os recursos alocados são liberados.
-*/
