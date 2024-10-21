@@ -233,10 +233,3 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
     al_destroy_timer(jogo.timer);
     al_destroy_event_queue(jogo.event_queue);
 }
-
-int main() {
-    ALLEGRO_DISPLAY* display = al_create_display(800, 600);
-    iniciar_fase_1(display);
-    al_destroy_display(display);
-    return 0;
-}
