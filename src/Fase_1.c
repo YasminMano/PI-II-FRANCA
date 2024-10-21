@@ -15,6 +15,8 @@ typedef struct {
     float scale_factor;
     bool facing_right;
     bool jumping;
+    bool knocked_back; // Para indicar se o jogador está sendo "empurrado" para trás
+    float knockback_velocity; // Velocidade do pulo para trás
     float jump_velocity;
     float gravity;
     bool move_left, move_right, moving;
@@ -48,11 +50,11 @@ void init_jogador(Jogador* jogador, int display_height) {
     jogador->frame_width = 265;
     jogador->frame_height = 376;
     jogador->pos_x = 50;
-    jogador->scale_factor = 0.6;
+    jogador->scale_factor = 0.6;  // Escala do jogador ajustada para 0.6
     jogador->pos_y = display_height - jogador->frame_height * jogador->scale_factor;
     jogador->initial_pos_y = jogador->pos_y;
-    jogador->jump_velocity = -15.0f;
-    jogador->gravity = 0.7f;
+    jogador->jump_velocity = -8.0f; // Pulo mais suave
+    jogador->gravity = 0.5f; // Gravidade mais leve
     jogador->movement_speed = 2.0;
     jogador->frame_time = 0.2;
     jogador->frame_timer = 0;
@@ -63,6 +65,8 @@ void init_jogador(Jogador* jogador, int display_height) {
     jogador->move_left = false;
     jogador->move_right = false;
     jogador->moving = false;
+    jogador->knocked_back = false; // Inicializa como não empurrado
+    jogador->knockback_velocity = 0; // Sem empurrão inicial
 }
 
 // Função para inicializar o guarda (inimigo)
@@ -70,7 +74,7 @@ void init_guarda(Guarda* guarda, int display_width, int display_height) {
     guarda->sprite_sheet = al_load_bitmap("assets/images/guarda.png");
     guarda->frame_width = 265;
     guarda->frame_height = 376;
-    guarda->scale_factor = 0.6;
+    guarda->scale_factor = 0.45;  // Escala menor para o guarda
     guarda->pos_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
     guarda->pos_y = display_height - guarda->frame_height * guarda->scale_factor;
     guarda->movement_speed = 1.5;
@@ -156,18 +160,20 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
         }
 
         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-            if (event.keyboard.keycode == ALLEGRO_KEY_D) {
-                jogador.move_right = true;
-                jogador.facing_right = true;
-                jogador.moving = true;
-            }
-            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {
-                jogador.move_left = true;
-                jogador.facing_right = false;
-                jogador.moving = true;
-            }
-            else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador.jumping) {
-                jogador.jumping = true;
+            if (!jogador.knocked_back) { // Permitir controle só se não estiver sendo empurrado
+                if (event.keyboard.keycode == ALLEGRO_KEY_D) {
+                    jogador.move_right = true;
+                    jogador.facing_right = true;
+                    jogador.moving = true;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {
+                    jogador.move_left = true;
+                    jogador.facing_right = false;
+                    jogador.moving = true;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador.jumping) {
+                    jogador.jumping = true;
+                }
             }
         }
         else if (event.type == ALLEGRO_EVENT_KEY_UP) {
@@ -182,8 +188,10 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
         }
 
         // Movimento do jogador
-        if (jogador.move_right) jogador.pos_x += jogador.movement_speed;
-        if (jogador.move_left) jogador.pos_x -= jogador.movement_speed;
+        if (!jogador.knocked_back) { // Apenas mover se não estiver sendo empurrado
+            if (jogador.move_right) jogador.pos_x += jogador.movement_speed;
+            if (jogador.move_left) jogador.pos_x -= jogador.movement_speed;
+        }
 
         // Lógica de pulo
         if (jogador.jumping) {
@@ -192,8 +200,20 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
             if (jogador.pos_y >= jogador.initial_pos_y) {
                 jogador.pos_y = jogador.initial_pos_y;
                 jogador.jumping = false;
-                jogador.jump_velocity = -15.0f;
+                jogador.jump_velocity = -8.0f;
             }
+        }
+
+        // Atualizar a animação do jogador
+        if (jogador.moving) {
+            jogador.frame_timer += 1.0 / 30.0; // Supondo 30 FPS
+            if (jogador.frame_timer >= jogador.frame_time) {
+                jogador.current_frame = (jogador.current_frame + 1) % jogador.total_moving_frames;
+                jogador.frame_timer = 0;
+            }
+        }
+        else {
+            jogador.current_frame = 0; // Frame parado
         }
 
         // Movimento do guarda (bot)
@@ -210,10 +230,31 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
             }
         }
 
-        // Verifica colisão
+        // Verifica colisão e empurra para trás
         if (detectar_colisao(&jogador, &guarda)) {
-            printf("Colisão detectada!\n");  // Exibe mensagem quando há colisão
-            running = false;  // Termina o jogo ao detectar colisão (pode alterar para outra ação)
+            printf("Colisão detectada!\n");
+            jogador.knocked_back = true;
+            jogador.knockback_velocity = 6.0f;  // Velocidade do "pulo" para trás ajustada para ser mais lenta
+            jogador.jump_velocity = -6.0f;  // Pulo para cima mais suave
+        }
+
+        // Lógica de empurrão (knockback)
+        if (jogador.knocked_back) {
+            if (jogador.facing_right) {
+                jogador.pos_x -= jogador.knockback_velocity; // Empurrar para a esquerda se estiver virado para a direita
+            }
+            else {
+                jogador.pos_x += jogador.knockback_velocity; // Empurrar para a direita se estiver virado para a esquerda
+            }
+            jogador.pos_y += jogador.jump_velocity;  // Movimento de pulo para trás
+            jogador.knockback_velocity -= 0.2f;  // Reduz a velocidade horizontal gradualmente
+            jogador.jump_velocity += jogador.gravity;  // Aplica gravidade no pulo
+
+            if (jogador.pos_y >= jogador.initial_pos_y) {  // Chegou no chão
+                jogador.pos_y = jogador.initial_pos_y;
+                jogador.knocked_back = false;  // Empurrão terminou
+                jogador.jump_velocity = -8.0f;  // Resetar velocidade de pulo
+            }
         }
 
         // Limpa a tela e desenha o cenário, jogador e guarda
