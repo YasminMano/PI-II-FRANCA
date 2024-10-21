@@ -5,6 +5,9 @@
 #include "game.h"  // Inclui a definição de GameState e a estrutura AllegroGame
 #include "Tela_inicio.h"  // Inclui a função para inicializar a tela de menu
 
+// Declaração da função de iniciar a fase 1, já que não há um arquivo de cabeçalho `Fase_1.h`
+void iniciar_fase_1(ALLEGRO_DISPLAY* display);
+
 int main() {
     // Inicializa o Allegro e verifica se a inicialização foi bem-sucedida
     if (!al_init()) {
@@ -44,10 +47,3 @@ int main() {
 
     return 0;  // Retorna 0 para indicar que o programa terminou sem erros
 }
-
-/*
-Resumo:
-O arquivo `main.c` contém a função principal que inicializa a biblioteca Allegro e configura a janela do jogo.
-Ele carrega a imagem de fundo para a tela de menu e chama a função `iniciar_tela_menu` para exibir essa tela. 
-No final, o código libera a memória usada pela imagem e o display.
-*/

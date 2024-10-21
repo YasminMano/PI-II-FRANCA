@@ -3,7 +3,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
 #include "game.h"
-#include "headers/mapa.h"  // Adicionado para incluir as funções do mapa
+#include "mapa.h"  // Adicionado para incluir as funções do mapa
 
 void iniciar_fase_1(ALLEGRO_DISPLAY* display);
 void iniciar_fase_2(ALLEGRO_DISPLAY* display);
