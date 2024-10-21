@@ -3,150 +3,240 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/keyboard.h>
 #include <allegro5/keycodes.h>
+#include <stdio.h> // Para exibir mensagens
+
+// Estrutura para o jogador
+typedef struct {
+    ALLEGRO_BITMAP* sprite_sheet;
+    int pos_x, pos_y;
+    int initial_pos_y;
+    int frame_width, frame_height;
+    int current_frame;
+    float scale_factor;
+    bool facing_right;
+    bool jumping;
+    float jump_velocity;
+    float gravity;
+    bool move_left, move_right, moving;
+    float movement_speed;
+    float frame_time, frame_timer;
+    int total_moving_frames;
+} Jogador;
+
+// Estrutura para o guarda (inimigo)
+typedef struct {
+    ALLEGRO_BITMAP* sprite_sheet;
+    int pos_x, pos_y;
+    int frame_width, frame_height;
+    float scale_factor;
+    float movement_speed;
+    bool move_right;
+    int min_x, max_x;
+} Guarda;
+
+// Estrutura para o contexto do jogo
+typedef struct {
+    ALLEGRO_DISPLAY* display;
+    ALLEGRO_TIMER* timer;
+    ALLEGRO_EVENT_QUEUE* event_queue;
+    ALLEGRO_BITMAP* background;
+} Jogo;
+
+// Função para inicializar o jogador
+void init_jogador(Jogador* jogador, int display_height) {
+    jogador->sprite_sheet = al_load_bitmap("assets/images/teste_personagem.png");
+    jogador->frame_width = 265;
+    jogador->frame_height = 376;
+    jogador->pos_x = 50;
+    jogador->scale_factor = 0.6;
+    jogador->pos_y = display_height - jogador->frame_height * jogador->scale_factor;
+    jogador->initial_pos_y = jogador->pos_y;
+    jogador->jump_velocity = -15.0f;
+    jogador->gravity = 0.7f;
+    jogador->movement_speed = 2.0;
+    jogador->frame_time = 0.2;
+    jogador->frame_timer = 0;
+    jogador->total_moving_frames = 3;
+    jogador->current_frame = 0;
+    jogador->facing_right = true;
+    jogador->jumping = false;
+    jogador->move_left = false;
+    jogador->move_right = false;
+    jogador->moving = false;
+}
+
+// Função para inicializar o guarda (inimigo)
+void init_guarda(Guarda* guarda, int display_width, int display_height) {
+    guarda->sprite_sheet = al_load_bitmap("assets/images/guarda.png");
+    guarda->frame_width = 265;
+    guarda->frame_height = 376;
+    guarda->scale_factor = 0.6;
+    guarda->pos_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
+    guarda->pos_y = display_height - guarda->frame_height * guarda->scale_factor;
+    guarda->movement_speed = 1.5;
+    guarda->move_right = false;
+    guarda->min_x = display_width - guarda->frame_width * guarda->scale_factor - 200;
+    guarda->max_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
+}
+
+// Função para inicializar o jogo
+void init_jogo(Jogo* jogo) {
+    al_init();  // Inicializa a biblioteca Allegro
+    al_install_keyboard();  // Instala o suporte ao teclado
+    jogo->timer = al_create_timer(1.0 / 30.0);  // Cria um timer
+    jogo->background = al_load_bitmap("assets/images/cenario1.png");
+    jogo->event_queue = al_create_event_queue();
+    al_register_event_source(jogo->event_queue, al_get_display_event_source(jogo->display));
+    al_register_event_source(jogo->event_queue, al_get_timer_event_source(jogo->timer));
+    al_register_event_source(jogo->event_queue, al_get_keyboard_event_source());
+    al_start_timer(jogo->timer); // Inicia o timer
+}
+
+// Função que desenha o jogador
+void desenha_jogador(Jogador* jogador) {
+    int frame_x[] = { 0, 265, 530 };
+    int frame_y[] = { 0, 376 };
+
+    int frame_cx = frame_x[jogador->current_frame];
+    int frame_cy = frame_y[0];
+
+    if (jogador->facing_right) {
+        al_draw_scaled_bitmap(jogador->sprite_sheet, frame_cx, frame_cy, jogador->frame_width, jogador->frame_height, jogador->pos_x, jogador->pos_y, jogador->frame_width * jogador->scale_factor, jogador->frame_height * jogador->scale_factor, 0);
+    }
+    else {
+        al_draw_scaled_bitmap(jogador->sprite_sheet, frame_cx, frame_cy, jogador->frame_width, jogador->frame_height, jogador->pos_x, jogador->pos_y, jogador->frame_width * jogador->scale_factor, jogador->frame_height * jogador->scale_factor, ALLEGRO_FLIP_HORIZONTAL);
+    }
+}
+
+// Função que desenha o guarda (inimigo)
+void desenha_guarda(Guarda* guarda) {
+    al_draw_scaled_bitmap(guarda->sprite_sheet, 0, 0, guarda->frame_width, guarda->frame_height, guarda->pos_x, guarda->pos_y, guarda->frame_width * guarda->scale_factor, guarda->frame_height * guarda->scale_factor, 0);
+}
+
+// Função para detectar colisão entre jogador e guarda
+bool detectar_colisao(Jogador* jogador, Guarda* guarda) {
+    int jogador_left = jogador->pos_x;
+    int jogador_right = jogador->pos_x + jogador->frame_width * jogador->scale_factor;
+    int jogador_top = jogador->pos_y;
+    int jogador_bottom = jogador->pos_y + jogador->frame_height * jogador->scale_factor;
+
+    int guarda_left = guarda->pos_x;
+    int guarda_right = guarda->pos_x + guarda->frame_width * guarda->scale_factor;
+    int guarda_top = guarda->pos_y;
+    int guarda_bottom = guarda->pos_y + guarda->frame_height * guarda->scale_factor;
+
+    // Verifica se as áreas se sobrepõem (colisão)
+    if (jogador_right > guarda_left && jogador_left < guarda_right &&
+        jogador_bottom > guarda_top && jogador_top < guarda_bottom) {
+        return true;
+    }
+    return false;
+}
 
 // Função que inicia a fase 1 do jogo
 void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
-    al_init();  // Inicializa a biblioteca Allegro
-    al_install_keyboard();  // Instala o suporte ao teclado
+    Jogo jogo;
+    jogo.display = display;
+    init_jogo(&jogo);
 
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);  // Cria um timer para controlar a taxa de atualização do jogo
+    Jogador jogador;
+    init_jogador(&jogador, al_get_display_height(display));
 
-    // Carregar as imagens do personagem e do cenário
-    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/teste_personagem.png");
-    ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/cenario1.png");
+    Guarda guarda;
+    init_guarda(&guarda, al_get_display_width(display), al_get_display_height(display));
 
-    // Verifica se as imagens foram carregadas corretamente, caso contrário, destrói o display e encerra
-    if (!bg || !sprite_sheet) {
-        al_destroy_display(display);
-        return;
-    }
+    bool running = true;
 
-    // Define a cor branca como transparente para o sprite
-    al_convert_mask_to_alpha(sprite_sheet, al_map_rgb(255, 255, 255));
-
-    // Configura a fila de eventos para receber eventos de teclado, timer e display
-    ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
-    al_register_event_source(event_queue, al_get_display_event_source(display));
-    al_register_event_source(event_queue, al_get_timer_event_source(timer));
-    al_register_event_source(event_queue, al_get_keyboard_event_source());
-    al_start_timer(timer); // Inicia o timer
-
-    // Configuração dos frames do personagem (animação)
-    int frame_width = 265;  // Largura de cada frame do personagem
-    int frame_height = 376;  // Altura de cada frame do personagem
-    
-    // Coordenadas X dos frames (3 frames por linha)
-    int frame_x[] = { 0, 265, 530 };
-    
-    // Coordenadas Y para duas linhas
-    int frame_y[] = { 0, 376 };
-
-    float scale_factor = 0.6;  // Escala do personagem ajustada
-
-    // Posição inicial do personagem (ajustando para que fique no chão)
-    int pos_x = 50;  // Posição X inicial
-    int pos_y = al_get_display_height(display) - frame_height * scale_factor;  // Ajuste para que o personagem toque o chão
-    int initial_pos_y = pos_y;  // Armazena a posição inicial do personagem para controlar o pulo
-
-    // Controle do pulo
-    bool jumping = false;  // Indica se o personagem está pulando
-    float jump_velocity = -15.0f;  // Velocidade inicial do pulo
-    float gravity = 0.7f;  // Gravidade para desacelerar o pulo
-
-    bool facing_right = true;  // Indica a direção que o personagem está virado
-    bool move_left = false;  // Indica se o personagem está se movendo para a esquerda
-    bool move_right = false;  // Indica se o personagem está se movendo para a direita
-    bool moving = false;  // Indica se o personagem está se movendo
-
-    // Velocidade de movimento
-    float movement_speed = 2.0;
-
-    // Controle da animação do personagem
-    int current_frame = 0;  // Frame atual
-    float frame_time = 0.2;  // Tempo de cada frame
-    float frame_timer = 0;
-    int total_moving_frames = 3;  // Total de frames da animação (3 por linha)
-
-    bool running = true;  // Indica se o loop do jogo está rodando
-
-    // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
-        al_wait_for_event(event_queue, &event);  // Espera por um evento (teclado, timer, etc.)
+        al_wait_for_event(jogo.event_queue, &event);  // Espera por um evento (teclado, timer, etc.)
 
-        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {  // Se o usuário fechar a janela, encerra o jogo
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
 
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla é pressionada
-            if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Move para a direita
-                move_right = true;
-                facing_right = true;
-                moving = true;
-            } else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Move para a esquerda
-                move_left = true;
-                facing_right = false;
-                moving = true;
-            } else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jumping) {  // Pulo
-                jumping = true;
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            if (event.keyboard.keycode == ALLEGRO_KEY_D) {
+                jogador.move_right = true;
+                jogador.facing_right = true;
+                jogador.moving = true;
             }
-        } else if (event.type == ALLEGRO_EVENT_KEY_UP) {  // Detecta quando uma tecla é solta
-            if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Para de se mover para a direita
-                move_right = false;
-                if (!move_left) moving = false;
-            } else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Para de se mover para a esquerda
-                move_left = false;
-                if (!move_right) moving = false;
+            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {
+                jogador.move_left = true;
+                jogador.facing_right = false;
+                jogador.moving = true;
+            }
+            else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador.jumping) {
+                jogador.jumping = true;
+            }
+        }
+        else if (event.type == ALLEGRO_EVENT_KEY_UP) {
+            if (event.keyboard.keycode == ALLEGRO_KEY_D) {
+                jogador.move_right = false;
+                if (!jogador.move_left) jogador.moving = false;
+            }
+            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {
+                jogador.move_left = false;
+                if (!jogador.move_right) jogador.moving = false;
             }
         }
 
-        // Movimento horizontal
-        if (move_right) pos_x += movement_speed;
-        if (move_left) pos_x -= movement_speed;
+        // Movimento do jogador
+        if (jogador.move_right) jogador.pos_x += jogador.movement_speed;
+        if (jogador.move_left) jogador.pos_x -= jogador.movement_speed;
 
         // Lógica de pulo
-        if (jumping) {
-            pos_y += jump_velocity;
-            jump_velocity += gravity;
-            if (pos_y >= initial_pos_y) {  // Se o personagem tocar o chão, o pulo termina
-                pos_y = initial_pos_y;
-                jumping = false;
-                jump_velocity = -15.0f;
+        if (jogador.jumping) {
+            jogador.pos_y += jogador.jump_velocity;
+            jogador.jump_velocity += jogador.gravity;
+            if (jogador.pos_y >= jogador.initial_pos_y) {
+                jogador.pos_y = jogador.initial_pos_y;
+                jogador.jumping = false;
+                jogador.jump_velocity = -15.0f;
             }
         }
 
-        // Controle da animação do movimento
-        if (moving) {
-            frame_timer += 1.0 / 30.0;
-            if (frame_timer >= frame_time) {
-                current_frame = (current_frame + 1) % total_moving_frames;
-                frame_timer = 0;
+        // Movimento do guarda (bot)
+        if (guarda.move_right) {
+            guarda.pos_x += guarda.movement_speed;
+            if (guarda.pos_x >= guarda.max_x) {
+                guarda.move_right = false;
             }
-        } else {
-            current_frame = 0;  // Se não estiver se movendo, exibe o primeiro frame
+        }
+        else {
+            guarda.pos_x -= guarda.movement_speed;
+            if (guarda.pos_x <= guarda.min_x) {
+                guarda.move_right = true;
+            }
         }
 
-        // Desenho dos frames do personagem
-        int frame_cx = frame_x[current_frame];  // Frame atual (X)
-        int frame_cy = frame_y[0];  // Usando apenas a primeira linha de sprites por enquanto
-
-        // Limpa a tela e desenha o cenário e o personagem
-        al_clear_to_color(al_map_rgb(255, 255, 255));  // Limpa a tela com a cor branca
-        al_draw_scaled_bitmap(bg, 0, 0, al_get_bitmap_width(bg), al_get_bitmap_height(bg), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
-
-        // Desenha o personagem na direção correta com ajuste de escala
-        if (facing_right) {
-            al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, 0);
-        } else {
-            al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, ALLEGRO_FLIP_HORIZONTAL);
+        // Verifica colisão
+        if (detectar_colisao(&jogador, &guarda)) {
+            printf("Colisão detectada!\n");  // Exibe mensagem quando há colisão
+            running = false;  // Termina o jogo ao detectar colisão (pode alterar para outra ação)
         }
+
+        // Limpa a tela e desenha o cenário, jogador e guarda
+        al_clear_to_color(al_map_rgb(255, 255, 255));
+        al_draw_scaled_bitmap(jogo.background, 0, 0, al_get_bitmap_width(jogo.background), al_get_bitmap_height(jogo.background), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
+
+        desenha_jogador(&jogador);
+        desenha_guarda(&guarda);
 
         al_flip_display();  // Atualiza a tela
     }
 
     // Destrói os recursos após o fim do jogo
-    al_destroy_bitmap(bg);
-    al_destroy_bitmap(sprite_sheet);
-    al_destroy_timer(timer);
-    al_destroy_event_queue(event_queue);
+    al_destroy_bitmap(jogo.background);
+    al_destroy_bitmap(jogador.sprite_sheet);
+    al_destroy_bitmap(guarda.sprite_sheet);
+    al_destroy_timer(jogo.timer);
+    al_destroy_event_queue(jogo.event_queue);
+}
+
+int main() {
+    ALLEGRO_DISPLAY* display = al_create_display(800, 600);
+    iniciar_fase_1(display);
+    al_destroy_display(display);
+    return 0;
 }

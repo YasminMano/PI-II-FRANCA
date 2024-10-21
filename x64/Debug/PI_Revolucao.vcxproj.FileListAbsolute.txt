@@ -6,3 +6,9 @@ C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\allegro_image-debug-5.2.dll
 C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\libwebp.dll
 C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\libsharpyuv.dll
 C:\Users\leona\Source\Repos\PI-II-FRANCA\x64\Debug\allegro_primitives-debug-5.2.dll
+C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\x64\Debug\PI_Revolucao.vcxproj.CopyComplete
+C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\x64\Debug\PI_Revolucao.exe
+C:\Users\leona\Source\Repos\YasminMano\PI-II-FRANCA\x64\Debug\allegro-debug-5.2.dll
+C:\Users\leona\Source\Repos\YasminMano\PI-II-FRANCA\x64\Debug\allegro_image-debug-5.2.dll
+C:\Users\leona\Source\Repos\YasminMano\PI-II-FRANCA\x64\Debug\allegro_font-debug-5.2.dll
+C:\Users\leona\Source\Repos\YasminMano\PI-II-FRANCA\x64\Debug\allegro_primitives-debug-5.2.dll
