@@ -28,7 +28,7 @@ int main() {
     }
 
     // Define o título da janela
-    al_set_window_title(display, "A Revolução Francesa");
+    al_set_window_title(display, "A Revolucao Francesa");
 
     // Carrega a imagem de fundo que será usada no menu
     ALLEGRO_BITMAP* background = al_load_bitmap("assets/images/telainicio.png");
