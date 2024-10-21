@@ -49,3 +49,5 @@ Thumbs.db  # Para Windows
 packages/
 x64/
 *.TTF
+# Adicionar ao .gitignore
+Debug/
