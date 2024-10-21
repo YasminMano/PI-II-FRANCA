@@ -9,8 +9,10 @@
 typedef enum {
     MENU,         // Menu principal do jogo
     RESUMO,       // Tela de resumo
+    MAPA,        // Tela do mapa
     FASE_1,       // Primeira fase do jogo
     FASE_2,       // Segunda fase do jogo
+    FASE_3,       // Terceira fase do jogo
     CONFIG,       // Tela de configurações
     GAME,         // Estado de jogo ativo
     TELA_INICIO   // Tela de início do jogo
