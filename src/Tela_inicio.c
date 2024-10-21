@@ -2,10 +2,12 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "game.h"  // Certifique-se de incluir o game.h, que contém as definições de GameState e AllegroGame
+#include "game.h"
+#include "headers/mapa.h"  // Adicionado para incluir as funções do mapa
 
-// Declaração da função iniciar_fase_1 (a implementação está em Fase_1.c)
 void iniciar_fase_1(ALLEGRO_DISPLAY* display);
+void iniciar_fase_2(ALLEGRO_DISPLAY* display);
+void iniciar_fase_3(ALLEGRO_DISPLAY* display);
 
 // Função que inicializa a tela de resumo sobre a Revolução Francesa
 void iniciar_resumo(ALLEGRO_DISPLAY* display) {
@@ -88,7 +90,7 @@ void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background) {
                 // Verifica se o botão "Iniciar Jogo" foi clicado
                 if (mouse_x >= 456 && mouse_x <= 813 && mouse_y >= 604 && mouse_y <= 647) {
                     printf("Iniciar Jogo foi clicado!\n");
-                    game_state = FASE_1;  // Muda o estado do jogo para FASE_1
+                    game_state = MAPA;  // Agora vai para o mapa
                 }
 
                 // Verifica se o botão "Sair" foi clicado
@@ -109,15 +111,38 @@ void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background) {
                                   0, 0, al_get_display_width(display), al_get_display_height(display), 0);
             al_flip_display();  // Atualiza a tela com o novo frame
         }
-        // Se o estado do jogo for FASE_1
-        else if (game_state == FASE_1) {
-            iniciar_fase_1(display);  // Chama a função que inicia a Fase 1
-            game_state = MENU;  // Após a Fase 1, volta para o MENU
+        // Se o estado do jogo for MAPA
+        else if (game_state == MAPA) {
+            init_mapa();  // Inicializa a tela do mapa
+            while (game_state == MAPA) {
+                ALLEGRO_EVENT event;
+                al_wait_for_event(event_queue, &event);
+                al_clear_to_color(al_map_rgb(0, 0, 0));  // Limpa a tela
+                draw_mapa();  // Desenha o mapa
+                handle_mapa_event(event, &game_state);  // Lida com o evento de clique
+                al_flip_display();
+            }
+            destroy_mapa();
         }
         // Se o estado do jogo for RESUMO
         else if (game_state == RESUMO) {
             iniciar_resumo(display);  // Chama a função que exibe o resumo
             game_state = MENU;  // Volta para o MENU após o resumo
+        }
+        // Se o estado do jogo for FASE_1
+        else if (game_state == FASE_1) {
+            iniciar_fase_1(display);  // Chama a função da Fase 1
+            game_state = MENU;  // Volta para o MENU após a fase
+        }
+        // Se o estado do jogo for FASE_2
+        else if (game_state == FASE_2) {
+            iniciar_fase_2(display);  // Chama a função da Fase 2
+            game_state = MENU;  // Volta para o MENU após a fase
+        }
+        // Se o estado do jogo for FASE_3
+        else if (game_state == FASE_3) {
+            iniciar_fase_3(display);  // Chama a função da Fase 3 (de teste)
+            game_state = MENU;  // Volta para o MENU após a fase
         }
     }
 

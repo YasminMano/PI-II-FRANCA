@@ -1,6 +1,7 @@
 #include "headers/handle.h"
 #include "headers/screens.h"
 #include "headers/helper.h"
+#include "headers/mapa.h"  // Adicionado para incluir as funções do mapa
 
 // Função que gerencia as transições de telas e estados do jogo
 bool handleScrens (struct AllegroGame *game, GameState *gameState) {
@@ -47,6 +48,11 @@ bool handleScrens (struct AllegroGame *game, GameState *gameState) {
                 if (game->event.type == ALLEGRO_EVENT_KEY_DOWN && game->event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
                     *gameState = FASE_1;
                 }
+                break;
+            case MAPA:
+                // Desenha a tela do mapa e verifica cliques nos botões
+                draw_mapa();
+                handle_mapa_event(game->event, gameState);
                 break;
             case FASE_1:
                 // Desenha a fase 1 e, se ENTER for pressionado, vai para a FASE_2
