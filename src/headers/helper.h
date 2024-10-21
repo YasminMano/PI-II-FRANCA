@@ -2,7 +2,7 @@
 #define HELPER_H
 
 #include <allegro5/allegro.h>
-#include "screens.h"
+#include "headers/screens.h"
 
 // Função que verifica se o mouse está sobre um texto específico.
 // Ela usa a posição do mouse, as coordenadas do texto e a fonte para determinar isso.
