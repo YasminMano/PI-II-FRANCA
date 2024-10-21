@@ -39,6 +39,9 @@
     <ClCompile Include="src\screens.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="Fase_3.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\game.h">
