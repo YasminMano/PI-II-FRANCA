@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
