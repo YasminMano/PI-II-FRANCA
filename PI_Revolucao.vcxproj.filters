@@ -21,13 +21,10 @@
     <ClCompile Include="src\Fase_1.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tela_inicio.c">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.c">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
     <ClCompile Include="src\Fase_2.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fase_3.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\handle.c">
@@ -36,10 +33,16 @@
     <ClCompile Include="src\helper.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="src\main.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mapa.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
     <ClCompile Include="src\screens.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="Fase_3.c">
+    <ClCompile Include="src\Tela_inicio.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,6 +54,9 @@
       <Filter>Arquivos de Origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\helper.h">
+      <Filter>Arquivos de Origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\mapa.h">
       <Filter>Arquivos de Origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\screens.h">

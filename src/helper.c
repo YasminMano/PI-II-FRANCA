@@ -2,7 +2,7 @@
 #define HELPER_H
 
 #include <allegro5/allegro.h>
-#include "game.h"  // Incluindo game.h para usar AllegroGame
+#include "headers/game.h"  // Incluindo game.h para usar AllegroGame
 
 // Função auxiliar que verifica o clique do mouse. 
 // Essa função monitora o estado atual e o estado anterior do mouse,
