@@ -2,8 +2,8 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "game.h"  // Inclui a definição de GameState e a estrutura AllegroGame
-#include "Tela_inicio.h"  // Inclui a função para inicializar a tela de menu
+#include "headers/game.h"  // Inclui a definição de GameState e a estrutura AllegroGame
+#include "headers/Tela_inicio.h"  // Inclui a função para inicializar a tela de menu
 
 // Declaração da função de iniciar a fase 1, já que não há um arquivo de cabeçalho `Fase_1.h`
 void iniciar_fase_1(ALLEGRO_DISPLAY* display);

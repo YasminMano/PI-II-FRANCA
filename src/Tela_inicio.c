@@ -18,7 +18,12 @@ void iniciar_resumo(ALLEGRO_DISPLAY* display) {
     // Registrar as fontes de eventos
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_register_event_source(event_queue, al_get_mouse_event_source());  // Para detectar cliques de mouse
     al_start_timer(timer);
+
+    // Configurações de texto
+    ALLEGRO_FONT* font = al_create_builtin_font();  // Usa a fonte padrão do Allegro
+    ALLEGRO_COLOR white = al_map_rgb(255, 255, 255);  // Cor branca para o texto
 
     while (running) {
         ALLEGRO_EVENT event;
@@ -29,25 +34,40 @@ void iniciar_resumo(ALLEGRO_DISPLAY* display) {
             running = false;
         }
 
-        // Verifique se o usuário clicou para sair do resumo (por exemplo, com clique no mouse)
+        // Verifique se o usuário clicou no botão "Voltar"
         if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
-            running = false;
+            int mouse_x = event.mouse.x;
+            int mouse_y = event.mouse.y;
+
+            // Verifica se o botão "Voltar" foi clicado
+            if (mouse_x >= 300 && mouse_x <= 500 && mouse_y >= 400 && mouse_y <= 450) {
+                running = false;  // Sai da tela de resumo e retorna ao menu
+            }
         }
 
-        // Limpa a tela e desenha o texto de resumo
+        // Limpa a tela e desenha o texto de resumo linha por linha
         al_clear_to_color(al_map_rgb(0, 0, 0));  // Preenche o fundo com cor preta
 
-        // Exemplo de texto sobre a Revolução Francesa
-        al_draw_text(al_create_builtin_font(), al_map_rgb(255, 255, 255), al_get_display_width(display) / 2,
-                     al_get_display_height(display) / 2, ALLEGRO_ALIGN_CENTER,
-                     "A Revolução Francesa foi um movimento social e politico que ocorreu na França entre 1789 e 1799.\n"
-                     "Ela foi marcada pela derrubada da monarquia e a instauração de uma república.\n"
-                     "Foi um evento de grande impacto histórico, inspirando mudanças em todo o mundo.");
+        // Desenhar o resumo linha por linha
+        int x = al_get_display_width(display) / 2;
+        int y = al_get_display_height(display) / 4;
+
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A Revolução Francesa foi um movimento social");
+        al_draw_text(font, white, x, y + 20, ALLEGRO_ALIGN_CENTER, "e político que ocorreu na França entre 1789 e 1799.");
+        al_draw_text(font, white, x, y + 40, ALLEGRO_ALIGN_CENTER, "Ela foi marcada pela derrubada da monarquia");
+        al_draw_text(font, white, x, y + 60, ALLEGRO_ALIGN_CENTER, "e a instauração de uma república.");
+        al_draw_text(font, white, x, y + 80, ALLEGRO_ALIGN_CENTER, "Foi um evento de grande impacto histórico,");
+        al_draw_text(font, white, x, y + 100, ALLEGRO_ALIGN_CENTER, "inspirando mudanças em todo o mundo.");
+
+        // Desenhar o botão "Voltar"
+        al_draw_filled_rectangle(300, 400, 500, 450, al_map_rgb(100, 100, 100));  // Botão cinza
+        al_draw_text(font, white, 400, 415, ALLEGRO_ALIGN_CENTER, "Voltar");  // Texto do botão
 
         al_flip_display();  // Atualiza a tela com o conteúdo do resumo
     }
 
     // Libera recursos
+    al_destroy_font(font);
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
 }
@@ -108,7 +128,7 @@ void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background) {
 
             // Desenha a imagem de fundo do menu e atualiza a tela
             al_draw_scaled_bitmap(background, 0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
-                                  0, 0, al_get_display_width(display), al_get_display_height(display), 0);
+                0, 0, al_get_display_width(display), al_get_display_height(display), 0);
             al_flip_display();  // Atualiza a tela com o novo frame
         }
         // Se o estado do jogo for MAPA

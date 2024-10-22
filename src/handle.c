@@ -31,42 +31,42 @@ bool handleScrens (struct AllegroGame *game, GameState *gameState) {
 
         // Verifica o estado atual do jogo e desenha a tela correspondente
         switch (*gameState) {
-            case MENU:
-                // Desenha a tela de início do menu
-                if (!drawTelaInicio(game, gameState)) return false;
-                break;
-            case CONFIG:
-                // Adiciona a lógica para a tela de configurações, se houver
-                break;
-            case GAME:
-                // Desenha a fase 1 do jogo e, se completada, muda para FASE_2
-                if (!drawFase1(game)) *gameState = FASE_2;
-                break;
-            case TELA_INICIO:
-                // Desenha a tela inicial e, se a tecla ENTER for pressionada, vai para a FASE_1
-                if (!drawTelaInicio(game, gameState)) return false;
-                if (game->event.type == ALLEGRO_EVENT_KEY_DOWN && game->event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
-                    *gameState = FASE_1;
-                }
-                break;
-            case MAPA:
-                // Desenha a tela do mapa e verifica cliques nos botões
-                draw_mapa();
-                handle_mapa_event(game->event, gameState);
-                break;
-            case FASE_1:
-                // Desenha a fase 1 e, se ENTER for pressionado, vai para a FASE_2
-                if (!drawFase1(game)) return false;
-                if (game->event.type == ALLEGRO_EVENT_KEY_DOWN && game->event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
-                    *gameState = FASE_2;
-                }
-                break;
-            case FASE_2:
+        case MENU:
+            // Desenha a tela de início do menu
+            if (!drawTelaInicio(game, gameState)) return false;
+            break;
+        case CONFIG:
+            // Adiciona a lógica para a tela de configurações, se houver
+            break;
+        case GAME:
+            // Desenha a fase 1 do jogo e, se completada, muda para FASE_2
+            if (!drawFase1(game)) *gameState = FASE_2;
+            break;
+        case TELA_INICIO:
+            // Desenha a tela inicial e, se a tecla ENTER for pressionada, vai para a FASE_1
+            if (!drawTelaInicio(game, gameState)) return false;
+            if (game->event.type == ALLEGRO_EVENT_KEY_DOWN && game->event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                *gameState = FASE_1;
+            }
+            break;
+        case MAPA:
+            // Desenha a tela do mapa e verifica cliques nos botões
+            draw_mapa();
+            handle_mapa_event(game->event, gameState);
+            break;
+        case FASE_1:
+            // Desenha a fase 1 e, se ENTER for pressionado, vai para a FASE_2
+            if (!drawFase1(game)) return false;
+            if (game->event.type == ALLEGRO_EVENT_KEY_DOWN && game->event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                *gameState = FASE_2;
+            }
+            break;
+        case FASE_2:
                 // Desenha a fase 2
-                if (!drawFase2(game)) return false;
-                break;
-            default:
-                break;
+            if (!drawFase2(game)) return false;
+            break;
+        default:
+            break;
         }
 
         // Atualiza o display com o conteúdo desenhado
