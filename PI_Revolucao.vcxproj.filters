@@ -45,6 +45,9 @@
     <ClCompile Include="src\Tela_inicio.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="src\pause_menu.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\game.h">
@@ -63,6 +66,9 @@
       <Filter>Arquivos de Origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\Tela_inicio.h">
+      <Filter>Arquivos de Origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\pause_menu.h">
       <Filter>Arquivos de Origem</Filter>
     </ClInclude>
   </ItemGroup>

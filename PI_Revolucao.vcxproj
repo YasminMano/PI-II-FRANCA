@@ -152,6 +152,7 @@
     <ClCompile Include="src\helper.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mapa.c" />
+    <ClCompile Include="src\pause_menu.c" />
     <ClCompile Include="src\screens.c" />
     <ClCompile Include="src\Tela_inicio.c" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="src\headers\handle.h" />
     <ClInclude Include="src\headers\helper.h" />
     <ClInclude Include="src\headers\mapa.h" />
+    <ClInclude Include="src\headers\pause_menu.h" />
     <ClInclude Include="src\headers\screens.h" />
     <ClInclude Include="src\headers\Tela_inicio.h" />
   </ItemGroup>
