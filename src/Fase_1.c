@@ -83,12 +83,12 @@ void init_guarda(Guarda* guarda, int display_width, int display_height) {
     guarda->scale_factor = 1.2; // Ajuste de escala para manter o tamanho proporcional
     guarda->pos_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
     guarda->pos_y = display_height - guarda->frame_height * guarda->scale_factor;
-    guarda->movement_speed = 1.5;
+    guarda->movement_speed =1.5;
     guarda->move_right = false;
     guarda->min_x = display_width - guarda->frame_width * guarda->scale_factor - 200;
     guarda->max_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
     guarda->current_frame = 0;
-    guarda->frame_time = 0.2;
+    guarda->frame_time = 0.3;
     guarda->frame_timer = 0;
     guarda->total_frames = 6;    // Total de quadros (2 colunas x 3 linhas)
     guarda->frames_per_row = 2;  // Quantidade de quadros por linha
@@ -126,7 +126,7 @@ void desenha_jogador(Jogador* jogador) {
 void desenha_guarda(Guarda* guarda) {
     // Calcula a posição do quadro atual no sprite sheet
     int frame_coluna = guarda->current_frame % guarda->frames_per_row;
-    int frame_linha = guarda->current_frame / guarda->frames_per_row;
+    int frame_linha = guarda->current_frame / 3;
     int frame_x = frame_coluna * guarda->frame_width;
     int frame_y = frame_linha * guarda->frame_height;
 
