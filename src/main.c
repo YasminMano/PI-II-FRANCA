@@ -66,7 +66,11 @@ int main() {
                     printf("Estado atual após pausa: %d\n", state); // Depuração
                 }
             }
+<<<<<<< HEAD
         };
+=======
+        }
+>>>>>>> 8bb8570 (corrigindo divergencias)
 
         // Controle de estados do jogo
         switch (state) {

@@ -59,7 +59,11 @@ void init_jogador(Jogador* jogador, int display_height) {
     jogador->pos_y = display_height - jogador->frame_height * jogador->scale_factor;
     jogador->initial_pos_y = jogador->pos_y;
     jogador->jump_velocity = -10.0f;
+<<<<<<< HEAD
     jogador->gravity = 0.4f;
+=======
+    jogador->gravity = 0.5f;
+>>>>>>> 8bb8570 (corrigindo divergencias)
     jogador->movement_speed = 2.0;
     jogador->frame_time = 0.2;
     jogador->frame_timer = 0;
@@ -78,9 +82,15 @@ void init_jogador(Jogador* jogador, int display_height) {
 // Função para inicializar o guarda (inimigo)
 void init_guarda(Guarda* guarda, int display_width, int display_height) {
     guarda->sprite_sheet = al_load_bitmap("assets/images/guarda.png");
+<<<<<<< HEAD
     guarda->frame_width = 120;  // Largura de cada quadro do guarda
     guarda->frame_height = 170; // Altura de cada quadro do guarda
     guarda->scale_factor = 1.2; // Ajuste de escala para manter o tamanho proporcional
+=======
+    guarda->frame_width = 200;  // Largura de cada quadro do guarda
+    guarda->frame_height = 200; // Altura de cada quadro do guarda
+    guarda->scale_factor = 0.6; // Ajuste de escala para manter o tamanho proporcional
+>>>>>>> 8bb8570 (corrigindo divergencias)
     guarda->pos_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
     guarda->pos_y = display_height - guarda->frame_height * guarda->scale_factor;
     guarda->movement_speed =1.5;
@@ -88,7 +98,11 @@ void init_guarda(Guarda* guarda, int display_width, int display_height) {
     guarda->min_x = display_width - guarda->frame_width * guarda->scale_factor - 200;
     guarda->max_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
     guarda->current_frame = 0;
+<<<<<<< HEAD
     guarda->frame_time = 0.3;
+=======
+    guarda->frame_time = 0.2;
+>>>>>>> 8bb8570 (corrigindo divergencias)
     guarda->frame_timer = 0;
     guarda->total_frames = 6;    // Total de quadros (2 colunas x 3 linhas)
     guarda->frames_per_row = 2;  // Quantidade de quadros por linha
@@ -126,11 +140,25 @@ void desenha_jogador(Jogador* jogador) {
 void desenha_guarda(Guarda* guarda) {
     // Calcula a posição do quadro atual no sprite sheet
     int frame_coluna = guarda->current_frame % guarda->frames_per_row;
+<<<<<<< HEAD
     int frame_linha = guarda->current_frame / 3;
     int frame_x = frame_coluna * guarda->frame_width;
     int frame_y = frame_linha * guarda->frame_height;
 
     al_draw_scaled_bitmap(guarda->sprite_sheet, frame_x, frame_y, guarda->frame_width, guarda->frame_height, guarda->pos_x, guarda->pos_y, guarda->frame_width * guarda->scale_factor, guarda->frame_height * guarda->scale_factor, ALLEGRO_FLIP_HORIZONTAL);
+=======
+    int frame_linha = guarda->current_frame / guarda->frames_per_row;
+    int frame_x = frame_coluna * guarda->frame_width;
+    int frame_y = frame_linha * guarda->frame_height;
+
+    al_draw_scaled_bitmap(
+        guarda->sprite_sheet,
+        frame_x, frame_y, guarda->frame_width, guarda->frame_height,
+        guarda->pos_x, guarda->pos_y,
+        guarda->frame_width * guarda->scale_factor, guarda->frame_height * guarda->scale_factor,
+        0
+    );
+>>>>>>> 8bb8570 (corrigindo divergencias)
 }
 
 // Função para detectar colisão entre jogador e guarda
