@@ -67,10 +67,14 @@ int main() {
                 }
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
         };
 =======
         }
 >>>>>>> 8bb8570 (corrigindo divergencias)
+=======
+        }
+>>>>>>> d19ad89 (Ajustado o tamanho da tela do jogo para full scream, ajustado também o pulo do persongame, o botão esc ainda não funciona)
 
         // Controle de estados do jogo
         switch (state) {
