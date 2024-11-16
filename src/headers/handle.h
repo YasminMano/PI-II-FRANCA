@@ -6,10 +6,10 @@
 #include "game.h"        // Inclui game.h para acessar GameState e AllegroGame
 
 // Função que lida com a lógica de transição entre as telas do jogo
-bool handleScrens(struct AllegroGame *game, GameState *gameState);
+bool handleScrens(struct AllegroGame* game, GameState* gameState);
 
 #endif  // Fim da verificação de inclusão múltipla
 
 // Resumo:
-// O arquivo `handle.h` define a função `handleScrens`, que é responsável por gerenciar as transições entre os diferentes estados do jogo (como menu, fases, etc.). 
-// Ele usa a estrutura `AllegroGame` e o enum `GameState` definidos em `game.h` para realizar essa tarefa.
+// O arquivo handle.h define a função handleScrens, que é responsável por gerenciar as transições entre os diferentes estados do jogo (como menu, fases, etc.). 
+// Ele usa a estrutura AllegroGame e o enum GameState definidos em game.h para realizar essa tarefa.

@@ -33,4 +33,3 @@ typedef struct AllegroGame {
 } AllegroGame;
 
 #endif // GAME_H
-//teste legal uau 

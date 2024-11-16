@@ -3,9 +3,10 @@
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
 #include "headers/game.h"
+#include "headers/resumo_fase.h"  // Inclui o cabeçalho da tela de resumo
 
-ALLEGRO_BITMAP *background_mapa = NULL;
-ALLEGRO_BITMAP *red_circle = NULL;
+ALLEGRO_BITMAP* background_mapa = NULL;
+ALLEGRO_BITMAP* red_circle = NULL;
 
 // Coordenadas e tamanhos das áreas clicáveis (bolinhas)
 int bolinha1_x = 570, bolinha1_y = 250, bolinha_size = 50;
@@ -27,34 +28,34 @@ void init_mapa() {
 void draw_mapa() {
     if (background_mapa) {
         // Desenha o mapa redimensionado para a tela inteira
-        al_draw_scaled_bitmap(background_mapa, 0, 0, al_get_bitmap_width(background_mapa), al_get_bitmap_height(background_mapa), 
-                              0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), 0);
+        al_draw_scaled_bitmap(background_mapa, 0, 0, al_get_bitmap_width(background_mapa), al_get_bitmap_height(background_mapa),
+            0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), 0);
     }
 
     // Desenha as bolinhas vermelhas nas suas posições
     al_draw_scaled_bitmap(red_circle, 0, 0, al_get_bitmap_width(red_circle), al_get_bitmap_height(red_circle),
-                          bolinha1_x, bolinha1_y, bolinha_size, bolinha_size, 0); // Bolinha 1
+        bolinha1_x, bolinha1_y, bolinha_size, bolinha_size, 0); // Bolinha 1
     al_draw_scaled_bitmap(red_circle, 0, 0, al_get_bitmap_width(red_circle), al_get_bitmap_height(red_circle),
-                          bolinha2_x, bolinha2_y, bolinha_size, bolinha_size, 0); // Bolinha 2
+        bolinha2_x, bolinha2_y, bolinha_size, bolinha_size, 0); // Bolinha 2
     al_draw_scaled_bitmap(red_circle, 0, 0, al_get_bitmap_width(red_circle), al_get_bitmap_height(red_circle),
-                          bolinha3_x, bolinha3_y, bolinha_size, bolinha_size, 0); // Bolinha 3
+        bolinha3_x, bolinha3_y, bolinha_size, bolinha_size, 0); // Bolinha 3
 }
 
 // Função que verifica se o mouse clicou dentro de uma bolinha
 bool is_mouse_over_bolinha(int mouse_x, int mouse_y, int bolinha_x, int bolinha_y, int bolinha_size) {
     return (mouse_x >= bolinha_x && mouse_x <= (bolinha_x + bolinha_size) &&
-            mouse_y >= bolinha_y && mouse_y <= (bolinha_y + bolinha_size));
+        mouse_y >= bolinha_y && mouse_y <= (bolinha_y + bolinha_size));
 }
 
 // Função que lida com os eventos e cliques nas bolinhas
-void handle_mapa_event(ALLEGRO_EVENT event, GameState *game_state) {
+void handle_mapa_event(ALLEGRO_EVENT event, GameState* game_state) {
     if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
         int mouse_x = event.mouse.x;
         int mouse_y = event.mouse.y;
 
         // Verifica se o clique foi na bolinha 1
         if (is_mouse_over_bolinha(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
-            *game_state = FASE_1;  // Vai para a Fase 1
+            init_resumo_fase_1(al_get_current_display());  // Chama a tela de resumo para a Fase 1
         }
         // Verifica se o clique foi na bolinha 2
         else if (is_mouse_over_bolinha(mouse_x, mouse_y, bolinha2_x, bolinha2_y, bolinha_size)) {
