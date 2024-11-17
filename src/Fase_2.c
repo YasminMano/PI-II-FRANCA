@@ -633,7 +633,9 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display) {
             else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jumping) {  // Pulo
                 jumping = true;
             }
-        }
+            else if (event.keyboard.keycode == ALLEGRO_KEY_F && (pos_x>=178 && pos_x<=272 || pos_x >= 530 && pos_x <= 642 || pos_x >= 875 && pos_x<=980)) {  //Quando clica F abri a porta
+                jumping = true;
+            }
         else if (event.type == ALLEGRO_EVENT_KEY_UP) {  // Detecta quando uma tecla é solta
             if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Para de se mover para a direita
                 move_right = false;
