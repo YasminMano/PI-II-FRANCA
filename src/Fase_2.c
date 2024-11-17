@@ -127,7 +127,7 @@ void banheiro(ALLEGRO_DISPLAY* display) {
         }
 
         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla é pressionada
-            if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Move para a direita
+            if (event.keyboard.keycode == ALLEGRO_KEY_D && pos_x<=990) {  // Move para a direita
                 move_right = true;
                 facing_right = true;
                 moving = true;
