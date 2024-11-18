@@ -81,17 +81,14 @@ int main() {
             break;
 
         case FASE_1:
-            // Aqui estaria o código específico da fase 1
+            iniciar_fase_1(display);
+            state = FASE_1;
             break;
 
         case FASE_2:
-            // Aqui estaria o código específico da fase 2
-            break;
-
-        case FASE_3:
-            // Aqui estaria o código específico da fase 3
-            break;
-
+            iniciar_fase_2(display);
+            state = FASE_2;
+            break;        
         default:
             break;
         }
