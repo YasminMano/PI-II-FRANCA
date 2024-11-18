@@ -5,5 +5,7 @@
 #include <allegro5/allegro.h>
 
 void init_resumo_fase_1(ALLEGRO_DISPLAY* display);
+void init_resumo_fase_2(ALLEGRO_DISPLAY* display);
+void init_resumo_fase_3(ALLEGRO_DISPLAY* display);
 
 #endif // RESUMO_FASE_H

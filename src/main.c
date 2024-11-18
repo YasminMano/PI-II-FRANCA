@@ -90,6 +90,17 @@ int main() {
             init_resumo_fase_1(display);
             state = FASE_1; // Após o resumo, inicia a Fase 1
             break;
+        case RESUMO_2:
+            // Exibe a tela de resumo da Fase 2
+            init_resumo_fase_2(display);
+            state = FASE_1; // Após o resumo, inicia a Fase 1
+            break;
+
+        case RESUMO_3:
+            // Exibe a tela de resumo da Fase 3
+            init_resumo_fase_3(display);
+            state = FASE_1; // Após o resumo, inicia a Fase 1
+            break;
 
         case FASE_1:
             iniciar_fase_1(display);

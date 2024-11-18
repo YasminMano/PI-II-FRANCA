@@ -14,6 +14,8 @@ int bolinha1_x = 570, bolinha1_y = 250, bolinha_size = 50;
 int bolinha2_x = 450, bolinha2_y = 450;
 int bolinha3_x = 690, bolinha3_y = 570;
 int caixa1_x = 620, caixa1_y = 250, caixa_size = 50;
+int caixa2_x = 500, caixa2_y = 450;
+int caixa3_x = 740, caixa3_y = 570;
 
 void init_mapa() {
     // Carregar a imagem do mapa, bolinha vermelha e caixa de mensagem
@@ -44,6 +46,13 @@ void draw_mapa() {
     // Desenha a caixa de mensagem
     al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
         caixa1_x, caixa1_y, caixa_size, caixa_size, 0);
+    
+    al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
+        caixa2_x, caixa2_y, caixa_size, caixa_size, 0);
+
+    al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
+        caixa3_x, caixa3_y, caixa_size, caixa_size, 0);
+
 }
 
 bool is_mouse_over_area(int mouse_x, int mouse_y, int area_x, int area_y, int area_size) {
@@ -59,6 +68,14 @@ void handle_mapa_event(ALLEGRO_EVENT event, GameState* game_state) {
         if (is_mouse_over_area(mouse_x, mouse_y, caixa1_x, caixa1_y, caixa_size)) {
             // Abre a tela de resumo da Fase 1
             init_resumo_fase_1(al_get_current_display(), game_state);
+        }
+        else if (is_mouse_over_area(mouse_x, mouse_y, caixa2_x, caixa2_y, caixa_size)) {
+            // Abre a tela de resumo da Fase 3
+            init_resumo_fase_2(al_get_current_display(), game_state);
+        }
+        else if (is_mouse_over_area(mouse_x, mouse_y, caixa3_x, caixa3_y, caixa_size)) {
+            // Abre a tela de resumo da Fase 3
+            init_resumo_fase_3(al_get_current_display(), game_state);
         }
         else if (is_mouse_over_area(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
             *game_state = FASE_1; // Vai direto para a Fase 1
