@@ -20,7 +20,7 @@ int main() {
     al_install_keyboard();
     al_init_primitives_addon();
 
-    al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+    // al_set_new_display_flags(ALLEGRO_FULLSCREEN);
     ALLEGRO_DISPLAY* display = al_create_display(1280, 720);
     if (!display) {
         printf("Erro ao criar o display!\n");

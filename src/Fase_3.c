@@ -1,158 +1,199 @@
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
-#include <allegro5/keyboard.h>
-#include <allegro5/keycodes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h> // Para gera√ß√£o de n√∫meros aleat√≥rios
 
-// FunÁ„o que inicia a fase 3 do jogo
-void iniciar_fase_3(ALLEGRO_DISPLAY* display) {
-    al_init();  // Inicializa a biblioteca Allegro
-    al_install_keyboard();  // Instala o suporte ao teclado
+// Estrutura para armazenar informa√ß√µes sobre cada pergunta
+typedef struct {
+    ALLEGRO_BITMAP* imagem_pergunta; // Imagem da pergunta
+    char alternativas[3][128];      // Alternativas de resposta
+    int resposta_certa;             // √çndice da resposta correta
+} Pergunta;
 
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);  // Cria um timer para controlar a taxa de atualizaÁ„o do jogo
+// Fun√ß√£o para embaralhar as alternativas de uma pergunta
+void embaralhar_alternativas(Pergunta* pergunta) {
+    int indices[] = {0, 1, 2};
+    char alternativas_temp[3][128];
+    int resposta_certa_original = pergunta->resposta_certa;
 
-    // Carregar as imagens do personagem e do cen·rio
-    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/teste_personagem.png");
-    ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/cenario3.png");
+    // Copiar as alternativas para um array tempor√°rio
+    for (int i = 0; i < 3; i++) {
+        strcpy(alternativas_temp[i], pergunta->alternativas[i]);
+    }
 
-    // Verifica se as imagens foram carregadas corretamente, caso contr·rio, destrÛi o display e encerra
-    if (!bg || !sprite_sheet) {
-        al_destroy_display(display);
+    // Embaralhar os √≠ndices
+    for (int i = 2; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int temp = indices[i];
+        indices[i] = indices[j];
+        indices[j] = temp;
+    }
+
+    // Reorganizar as alternativas com base nos √≠ndices embaralhados
+    for (int i = 0; i < 3; i++) {
+        strcpy(pergunta->alternativas[i], alternativas_temp[indices[i]]);
+        if (indices[i] == resposta_certa_original) {
+            pergunta->resposta_certa = i;
+        }
+    }
+}
+
+// Fun√ß√£o para exibir a tela de fim (vit√≥ria ou derrota) com ajuste autom√°tico de propor√ß√µes
+void exibir_tela_fim(ALLEGRO_DISPLAY* display, const char* caminho_imagem) {
+    ALLEGRO_BITMAP* imagem_fim = al_load_bitmap(caminho_imagem);
+    if (!imagem_fim) {
+        printf("Erro ao carregar a imagem de fim de jogo: %s\n", caminho_imagem);
         return;
     }
 
-    // Define a cor branca como transparente para o sprite
-    al_convert_mask_to_alpha(sprite_sheet, al_map_rgb(255, 255, 255));
+    int tela_largura = al_get_display_width(display);
+    int tela_altura = al_get_display_height(display);
 
-    // Configura a fila de eventos para receber eventos de teclado, timer e display
+    al_clear_to_color(al_map_rgb(0, 0, 0)); // Limpa a tela antes de desenhar
+    al_draw_scaled_bitmap(imagem_fim, 0, 0, 1024, 1024, // Dimens√µes originais da imagem
+                          0, 0, tela_largura, tela_altura, // Ajuste para preencher a tela
+                          0); // Sem flips
+    al_flip_display();
+    al_rest(3.0); // Aguarda 3 segundos para exibir a tela
+    al_destroy_bitmap(imagem_fim);
+}
+
+// Fun√ß√£o para iniciar a fase 3
+void iniciar_fase_3(ALLEGRO_DISPLAY* display) {
+    if (!al_init_image_addon()) { // Inicializa o addon de imagens
+        printf("Falha ao inicializar o addon de imagens.\n");
+        return;
+    }
+
+    srand(time(NULL)); // Inicializa o gerador de n√∫meros aleat√≥rios
+
+    bool running = true;
     ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0); // Temporizador para 60 FPS
+
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
-    al_register_event_source(event_queue, al_get_keyboard_event_source());
-    al_start_timer(timer); // Inicia o timer
+    al_register_event_source(event_queue, al_get_mouse_event_source());
+    al_start_timer(timer);
 
-    // ConfiguraÁ„o dos frames do personagem (animaÁ„o)
-    int frame_width = 265;  // Largura de cada frame do personagem
-    int frame_height = 376;  // Altura de cada frame do personagem
+    // Configura√ß√£o de bot√µes e fontes
+    ALLEGRO_FONT* font = al_create_builtin_font();
+    ALLEGRO_COLOR white = al_map_rgb(255, 255, 255);
+    ALLEGRO_COLOR button_color = al_map_rgb(100, 100, 100);
 
-    // Coordenadas X dos frames (3 frames por linha)
-    int frame_x[] = { 0, 265, 530 };
+    // Carregar o cen√°rio e os personagens
+    ALLEGRO_BITMAP* cenario = al_load_bitmap("assets/images/cenario3.png");
+    ALLEGRO_BITMAP* personagens = al_load_bitmap("assets/images/personagens_3tela.png");
+    ALLEGRO_BITMAP* rei = al_load_bitmap("assets/images/Luis_XIV.png");
 
-    // Coordenadas Y para duas linhas
-    int frame_y[] = { 0, 376 };
+    // Verifica se os recursos foram carregados corretamente
+    if (!cenario || !personagens || !rei) {
+        printf("Erro ao carregar o cen√°rio ou personagens. Verifique os arquivos.\n");
+        return;
+    }
 
-    float scale_factor = 0.6;  // Escala do personagem ajustada
+    // Carregar as imagens das perguntas e definir alternativas
+    Pergunta perguntas[5] = {
+        {al_load_bitmap("assets/images/question1.png"), {"Foi a Guerra dos Cem Anos, que ainda nos afeta!", "Foi a sua corte luxuosa e os impostos esmagadores!", "Foi a Revolu√ß√£o Industrial que desestabilizou tudo!"}, 1},
+        {al_load_bitmap("assets/images/question2.png"), {"Liberdade, Igualdade e Fraternidade!", "Paz, P√£o e Terra!", "Ordem e Progresso!"}, 0},
+        {al_load_bitmap("assets/images/question3.png"), {"Os comerciantes que enriqueceram √†s nossas custas!", "Os fil√≥sofos que s√≥ sabem falar e nunca agir!", "Foi a monarquia que nos explorou!"}, 2},
+        {al_load_bitmap("assets/images/question4.png"), {"Jean-Jacques Rousseau, o fil√≥sofo rebelde!", "Foi Maximilien Robespierre, o verdadeiro l√≠der!", "Foi Napole√£o, claro!"}, 1},
+        {al_load_bitmap("assets/images/question5.png"), {"A Constitui√ß√£o de 1791!", "A Declara√ß√£o Universal dos Direitos Humanos!", "A Declara√ß√£o dos Direitos do Homem e do Cidad√£o!"}, 2}
+    };
 
-    // PosiÁ„o inicial do personagem (ajustando para que fique no ch„o)
-    int pos_x = 50;  // PosiÁ„o X inicial
-    int pos_y = al_get_display_height(display) - frame_height * scale_factor;  // Ajuste para que o personagem toque o ch„o
-    int initial_pos_y = pos_y;  // Armazena a posiÁ„o inicial do personagem para controlar o pulo
+    // Verifica se as imagens das perguntas foram carregadas
+    for (int i = 0; i < 5; i++) {
+        if (!perguntas[i].imagem_pergunta) {
+            printf("Erro ao carregar a imagem da pergunta %d. Verifique o arquivo.\n", i + 1);
+            running = false;
+        }
+        embaralhar_alternativas(&perguntas[i]); // Embaralha as alternativas de cada pergunta
+    }
 
-    // Controle do pulo
-    bool jumping = false;  // Indica se o personagem est· pulando
-    float jump_velocity = -15.0f;  // Velocidade inicial do pulo
-    float gravity = 0.7f;  // Gravidade para desacelerar o pulo
+    if (!running) {
+        printf("Abortando a fase devido a erros no carregamento dos recursos.\n");
+        return;
+    }
 
-    bool facing_right = true;  // Indica a direÁ„o que o personagem est· virado
-    bool move_left = false;  // Indica se o personagem est· se movendo para a esquerda
-    bool move_right = false;  // Indica se o personagem est· se movendo para a direita
-    bool moving = false;  // Indica se o personagem est· se movendo
+    // Coordenadas dos bot√µes
+    int botao_x = 350;                // NOVA POSI√á√ÉO X DOS BOT√ïES (alterada para mais √† direita)
+    int botao_y[3] = {440, 510, 580}; // NOVAS POSI√á√ïES Y DOS BOT√ïES (alteradas para mais abaixo)
+    int largura = 420;               // Largura dos bot√µes
+    int altura = 50;                 // Altura dos bot√µes
 
-    // Velocidade de movimento
-    float movement_speed = 2.0;
+    int indice_pergunta = 0; // Controle da pergunta atual
+    int erros = 0;           // Contador de erros
 
-    // Controle da animaÁ„o do personagem
-    int current_frame = 0;  // Frame atual
-    float frame_time = 0.2;  // Tempo de cada frame
-    float frame_timer = 0;
-    int total_moving_frames = 3;  // Total de frames da animaÁ„o (3 por linha)
-
-    bool running = true;  // Indica se o loop do jogo est· rodando
-
-    // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
-        al_wait_for_event(event_queue, &event);  // Espera por um evento (teclado, timer, etc.)
+        al_wait_for_event(event_queue, &event);
 
-        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {  // Se o usu·rio fechar a janela, encerra o jogo
+        // Fecha a janela se o usu√°rio clicar no bot√£o de fechar
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
 
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla È pressionada
-            if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Move para a direita
-                move_right = true;
-                facing_right = true;
-                moving = true;
-            }
-            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Move para a esquerda
-                move_left = true;
-                facing_right = false;
-                moving = true;
-            }
-            else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jumping) {  // Pulo
-                jumping = true;
-            }
-        }
-        else if (event.type == ALLEGRO_EVENT_KEY_UP) {  // Detecta quando uma tecla È solta
-            if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Para de se mover para a direita
-                move_right = false;
-                if (!move_left) moving = false;
-            }
-            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Para de se mover para a esquerda
-                move_left = false;
-                if (!move_right) moving = false;
-            }
-        }
+        // Verifica se o usu√°rio clicou em um bot√£o
+        if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            int mouse_x = event.mouse.x;
+            int mouse_y = event.mouse.y;
 
-        // Movimento horizontal
-        if (move_right) pos_x += movement_speed;
-        if (move_left) pos_x -= movement_speed;
-
-        // LÛgica de pulo
-        if (jumping) {
-            pos_y += jump_velocity;
-            jump_velocity += gravity;
-            if (pos_y >= initial_pos_y) {  // Se o personagem tocar o ch„o, o pulo termina
-                pos_y = initial_pos_y;
-                jumping = false;
-                jump_velocity = -15.0f;
+            for (int i = 0; i < 3; i++) {
+                if (mouse_x >= botao_x && mouse_x <= botao_x + largura &&
+                    mouse_y >= botao_y[i] && mouse_y <= botao_y[i] + altura) {
+                    if (i == perguntas[indice_pergunta].resposta_certa) {
+                        indice_pergunta++;
+                        if (indice_pergunta >= 5) {
+                            exibir_tela_fim(display, "assets/images/end_game.png"); // Tela de vit√≥ria
+                            running = false;
+                        }
+                    } else {
+                        erros++;
+                        printf("Erros: %d\n", erros); // Mostra no console o contador de erros
+                        if (erros > 2) {
+                            exibir_tela_fim(display, "assets/images/death.png"); // Tela de derrota
+                            running = false;
+                        }
+                    }
+                }
             }
         }
 
-        // Controle da animaÁ„o do movimento
-        if (moving) {
-            frame_timer += 1.0 / 30.0;
-            if (frame_timer >= frame_time) {
-                current_frame = (current_frame + 1) % total_moving_frames;
-                frame_timer = 0;
-            }
-        }
-        else {
-            current_frame = 0;  // Se n„o estiver se movendo, exibe o primeiro frame
-        }
+        // Limpa a tela e desenha os elementos
+        al_clear_to_color(al_map_rgb(0, 0, 0));
 
-        // Desenho dos frames do personagem
-        int frame_cx = frame_x[current_frame];  // Frame atual (X)
-        int frame_cy = frame_y[0];  // Usando apenas a primeira linha de sprites por enquanto
+        // Ajusta cen√°rio para preencher a tela
+        al_draw_scaled_bitmap(cenario, 0, 0, al_get_bitmap_width(cenario), al_get_bitmap_height(cenario), 
+                              0, 0, al_get_display_width(display), al_get_display_height(display), 0);
 
-        // Limpa a tela e desenha o cen·rio e o personagem
-        al_clear_to_color(al_map_rgb(255, 255, 255));  // Limpa a tela com a cor branca
-        al_draw_scaled_bitmap(bg, 0, 0, al_get_bitmap_width(bg), al_get_bitmap_height(bg), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
+        // Desenha os personagens
+        al_draw_bitmap(personagens, 50, 350, 0); // Invasores √† esquerda
+        al_draw_bitmap(rei, 700, 350, 0);        // Rei √† direita
 
-        // Desenha o personagem na direÁ„o correta com ajuste de escala
-        if (facing_right) {
-            al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, 0);
-        }
-        else {
-            al_draw_scaled_bitmap(sprite_sheet, frame_cx, frame_cy, frame_width, frame_height, pos_x, pos_y, frame_width * scale_factor, frame_height * scale_factor, ALLEGRO_FLIP_HORIZONTAL);
+        // Desenha a imagem da pergunta atual (sem redimensionamento)
+        al_draw_bitmap(perguntas[indice_pergunta].imagem_pergunta, 450, -110, 0); // Posi√ß√£o original
+
+        // Exibe as alternativas como bot√µes
+        for (int i = 0; i < 3; i++) {
+            al_draw_filled_rectangle(botao_x, botao_y[i], botao_x + largura, botao_y[i] + altura, button_color);
+            al_draw_text(font, white, botao_x + largura / 2, botao_y[i] + 15, ALLEGRO_ALIGN_CENTER,
+                         perguntas[indice_pergunta].alternativas[i]);
         }
 
-        al_flip_display();  // Atualiza a tela
+        al_flip_display(); // Atualiza a tela
     }
 
-    // DestrÛi os recursos apÛs o fim do jogo
-    al_destroy_bitmap(bg);
-    al_destroy_bitmap(sprite_sheet);
+    // Libera recursos
+    al_destroy_bitmap(cenario);
+    al_destroy_bitmap(personagens);
+    al_destroy_bitmap(rei);
+    for (int i = 0; i < 5; i++) {
+        al_destroy_bitmap(perguntas[i].imagem_pergunta);
+    }
+    al_destroy_font(font);
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
 }
