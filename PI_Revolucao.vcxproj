@@ -145,7 +145,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Fase_2_3.c" />
     <ClCompile Include="src\Fase_1.c" />
     <ClCompile Include="src\Fase_2.c" />
     <ClCompile Include="src\Fase_3.c" />
