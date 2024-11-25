@@ -48,6 +48,16 @@
     <ClCompile Include="src\pause_menu.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    <ClCompile Include="Fase_2_3.c">
+=======
+    <ClCompile Include="src\resumo_fase.c">
+>>>>>>> ba6ad54 (Criado a tela de resumo para a fase 1)
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+>>>>>>> acd4d3f (Criado a tela de resumo para a fase 1)
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\game.h">
@@ -69,6 +79,9 @@
       <Filter>Arquivos de Origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\pause_menu.h">
+      <Filter>Arquivos de Origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\resumo_fase.h">
       <Filter>Arquivos de Origem</Filter>
     </ClInclude>
   </ItemGroup>

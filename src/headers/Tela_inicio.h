@@ -11,8 +11,8 @@ void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background);
 
 /*
 Resumo:
-O arquivo `tela_inicio.h` contém a declaração da função `iniciar_tela_menu`, 
-que é responsável por inicializar e desenhar a tela de menu do jogo. 
-Essa função utiliza o display do Allegro para exibir a interface gráfica 
+O arquivo tela_inicio.h contém a declaração da função iniciar_tela_menu,
+que é responsável por inicializar e desenhar a tela de menu do jogo.
+Essa função utiliza o display do Allegro para exibir a interface gráfica
 e desenha um fundo específico passado como parâmetro.
 */

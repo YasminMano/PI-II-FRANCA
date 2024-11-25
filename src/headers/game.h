@@ -8,6 +8,8 @@
 typedef enum {
     MENU,         // Menu principal do jogo
     RESUMO,       // Tela de resumo
+    RESUMO_2,
+    RESUMO_3,
     MAPA,         // Tela do mapa
     FASE_1,       // Primeira fase do jogo
     FASE_2,       // Segunda fase do jogo
