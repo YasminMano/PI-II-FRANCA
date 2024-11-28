@@ -73,7 +73,7 @@ void init_jogo2(Jogo2* jogo2) {
 }
 
 // Função que desenha o jogador
-void desenha_jogador2(Jogador2* jogador2) {
+static void desenha_jogador2(Jogador2* jogador2) {
     int frame_x[] = { 0, 213, 346 };
     int frame_cx = frame_x[jogador2->current_frame];
     int frame_cy = 0;
@@ -89,7 +89,7 @@ void desenha_jogador2(Jogador2* jogador2) {
     );
 }
 
-void iniciar_fase_2_2(ALLEGRO_DISPLAY* display, int x) {
+void iniciar_fase_2_2(ALLEGRO_DISPLAY* display) {
     Jogo2 jogo2;
     jogo2.display = display;
     init_jogo2(&jogo2);
@@ -97,10 +97,9 @@ void iniciar_fase_2_2(ALLEGRO_DISPLAY* display, int x) {
     Jogador2 jogador2;
     init_jogador2(&jogador2, al_get_display_height(display));
 
-    bool running = true;
-
     jogo2.background = al_load_bitmap("assets/images/ponte_provisorio.png");
-    jogador2.pos_x = x;
+
+    bool running = true;
 
     // Loop principal do jogo
     while (running) {
@@ -110,251 +109,224 @@ void iniciar_fase_2_2(ALLEGRO_DISPLAY* display, int x) {
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
-        <<<<<< < Updated upstream
 
-            if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla é pressionada
-                if (event.keyboard.keycode == ALLEGRO_KEY_D && pos_x <= 990) {  // Move para a direita
-                    move_right = true;
-                    facing_right = true;
-                    moving = true;
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
+            if (!jogador2.knocked_back) {
+                if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
+                    jogador2.move_right = true;
+                    jogador2.facing_right = true;
+                    jogador2.moving = true;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Move para a esquerda
-                    move_left = true;
-                    facing_right = false;
-                    moving = true;
+                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Move para a esquerda
+                    jogador2.move_left = true;
+                    jogador2.facing_right = false;
+                    jogador2.moving = true;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jumping) {  // Pulo
-                    jumping = true;
+                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
+                    jogador2.jumping = true;
                 }
-                // F abri outra porta
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && pos_x >= 12 && pos_x <= 84) {// porta para voltar
-                    return -1;
-                }
-
-                // E abri o bau
-                else if (event.keyboard.keycode == ALLEGRO_KEY_E && pos_x >= 162 && pos_x <= 332) {// abri o bau 1
-                    bau(display);
-                    ====== =
-                        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
-                            if (!jogador2.knocked_back) {
-                                if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
-                                    jogador2.move_right = true;
-                                    jogador2.facing_right = true;
-                                    jogador2.moving = true;
-                                }
-                                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Move para a esquerda
-                                    jogador2.move_left = true;
-                                    jogador2.facing_right = false;
-                                    jogador2.moving = true;
-                                }
-                                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
-                                    jogador2.jumping = true;
-                                }
-                                >>>>>> > Stashed changes
-                            }
-                        }
-                        else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla é solta
-                            if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Para de se mover para a direita
-                                jogador2.move_right = false;
-                                if (!jogador2.move_left) jogador2.moving = false;
-                            }
-                            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Para de se mover para a esquerda
-                                jogador2.move_left = false;
-                                if (!jogador2.move_right) jogador2.moving = false;
-                            }
-                        }
-
-                    // Movimento horizontal
-                    if (!jogador2.knocked_back) {
-                        if (jogador2.move_right) jogador2.pos_x += jogador2.movement_speed;
-                        if (jogador2.move_left) jogador2.pos_x -= jogador2.movement_speed;
-                    }
-
-                    // Lógica de pulo
-                    if (jogador2.jumping) {
-                        jogador2.pos_y += jogador2.jump_velocity;
-                        jogador2.jump_velocity += jogador2.gravity;
-                        if (jogador2.pos_y >= jogador2.initial_pos_y) {// Se o personagem tocar o chão, o pulo termina
-                            jogador2.pos_y = jogador2.initial_pos_y;
-                            jogador2.jumping = false;
-                            jogador2.jump_velocity = -10.0f;
-                        }
-                    }
-
-                    // Controle da animação do movimento
-                    if (jogador2.moving) {
-                        jogador2.frame_timer += 1.0 / 30.0;
-                        if (jogador2.frame_timer >= jogador2.frame_time) {
-                            jogador2.current_frame = (jogador2.current_frame + 1) % jogador2.total_moving_frames;
-                            jogador2.frame_timer = 0;
-                        }
-                    }
-                    else {
-                        jogador2.current_frame = 0;// Se não estiver se movendo, exibe o primeiro frame
-                    }
-
-                    if (jogador2.knocked_back) {
-                        if (jogador2.facing_right) {
-                            jogador2.pos_x -= jogador2.knockback_velocity;
-                        }
-                        else {
-                            jogador2.pos_x += jogador2.knockback_velocity;
-                        }
-                        jogador2.pos_y += jogador2.jump_velocity;
-                        jogador2.knockback_velocity -= 0.2f;
-                        jogador2.jump_velocity += jogador2.gravity;
-
-                        if (jogador2.pos_y >= jogador2.initial_pos_y) {
-                            jogador2.pos_y = jogador2.initial_pos_y;
-                            jogador2.knocked_back = false;
-                            jogador2.jump_velocity = -10.0f;
-                        }
-                    }
-
-                    if (jogador2.pos_x > 1200) {
-                        jogador2.move_right = false;
-                    }
-                    if (jogador2.pos_x < 0) {
-                        return display, 500;
-                    }
-
-                    // Limpa a tela e desenha o cenário e o personagem
-                    al_clear_to_color(al_map_rgb(255, 255, 255));
-                    al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
-                        al_get_bitmap_height(jogo2.background), 0, 0,
-                        al_get_display_width(display), al_get_display_height(display), 0);
-
-                    // Desenha o personagem na direção correta com ajuste de escala
-                    desenha_jogador2(&jogador2);
-                    al_flip_display();// Atualiza a tela
-
-                    printf("%d\n", jogador2.pos_x);
-                }
-
-                // Destrói os recursos após o fim do jogo
-                al_destroy_bitmap(jogo2.background);
-                al_destroy_bitmap(jogador2.sprite_sheet);
-                al_destroy_timer(jogo2.timer);
-                al_destroy_event_queue(jogo2.event_queue);
             }
-
-
-        void iniciar_fase_2(ALLEGRO_DISPLAY * display) {
-            Jogo2 jogo2;
-            jogo2.display = display;
-            init_jogo2(&jogo2);
-
-            Jogador2 jogador2;
-            init_jogador2(&jogador2, al_get_display_height(display));
-
-            bool running = true;
-
-            // Loop principal do jogo
-            while (running) {
-                ALLEGRO_EVENT event;
-                al_wait_for_event(jogo2.event_queue, &event);
-
-                if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-                    running = false;
-                }
-                if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
-                    if (!jogador2.knocked_back) {
-                        if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
-                            jogador2.move_right = true;
-                            jogador2.facing_right = true;
-                            jogador2.moving = true;
-                        }
-                        else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Move para a esquerda
-                            jogador2.move_left = true;
-                            jogador2.facing_right = false;
-                            jogador2.moving = true;
-                        }
-                        else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
-                            jogador2.jumping = true;
-                        }
-                    }
-                }
-                else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla é solta
-                    if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Para de se mover para a direita
-                        jogador2.move_right = false;
-                        if (!jogador2.move_left) jogador2.moving = false;
-                    }
-                    else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Para de se mover para a esquerda
-                        jogador2.move_left = false;
-                        if (!jogador2.move_right) jogador2.moving = false;
-                    }
-                }
-
-                // Movimento horizontal
-                if (!jogador2.knocked_back) {
-                    if (jogador2.move_right) jogador2.pos_x += jogador2.movement_speed;
-                    if (jogador2.move_left) jogador2.pos_x -= jogador2.movement_speed;
-                }
-
-                // Lógica de pulo
-                if (jogador2.jumping) {
-                    jogador2.pos_y += jogador2.jump_velocity;
-                    jogador2.jump_velocity += jogador2.gravity;
-                    if (jogador2.pos_y >= jogador2.initial_pos_y) {// Se o personagem tocar o chão, o pulo termina
-                        jogador2.pos_y = jogador2.initial_pos_y;
-                        jogador2.jumping = false;
-                        jogador2.jump_velocity = -10.0f;
-                    }
-                }
-
-                // Controle da animação do movimento
-                if (jogador2.moving) {
-                    jogador2.frame_timer += 1.0 / 30.0;
-                    if (jogador2.frame_timer >= jogador2.frame_time) {
-                        jogador2.current_frame = (jogador2.current_frame + 1) % jogador2.total_moving_frames;
-                        jogador2.frame_timer = 0;
-                    }
-                }
-                else {
-                    jogador2.current_frame = 0;// Se não estiver se movendo, exibe o primeiro frame
-                }
-
-                if (jogador2.knocked_back) {
-                    if (jogador2.facing_right) {
-                        jogador2.pos_x -= jogador2.knockback_velocity;
-                    }
-                    else {
-                        jogador2.pos_x += jogador2.knockback_velocity;
-                    }
-                    jogador2.pos_y += jogador2.jump_velocity;
-                    jogador2.knockback_velocity -= 0.2f;
-                    jogador2.jump_velocity += jogador2.gravity;
-
-                    if (jogador2.pos_y >= jogador2.initial_pos_y) {
-                        jogador2.pos_y = jogador2.initial_pos_y;
-                        jogador2.knocked_back = false;
-                        jogador2.jump_velocity = -10.0f;
-                    }
-                }
-
-                if (jogador2.pos_x > 1200) {
-                    iniciar_fase_2_2(display, 250);
-                }
-                if (jogador2.pos_x < 0) {
-                    jogador2.move_left = false;
-                }
-
-                // Limpa a tela e desenha o cenário e o personagem
-                al_clear_to_color(al_map_rgb(255, 255, 255));
-                al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
-                    al_get_bitmap_height(jogo2.background), 0, 0,
-                    al_get_display_width(display), al_get_display_height(display), 0);
-
-                // Desenha o personagem na direção correta com ajuste de escala
-                desenha_jogador2(&jogador2);
-                al_flip_display();// Atualiza a tela
-
-                printf("%d\n", jogador2.pos_x);
-            }
-
-            // Destrói os recursos após o fim do jogo
-            al_destroy_bitmap(jogo2.background);
-            al_destroy_bitmap(jogador2.sprite_sheet);
-            al_destroy_timer(jogo2.timer);
-            al_destroy_event_queue(jogo2.event_queue);
         }
+        else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla é solta
+            if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Para de se mover para a direita
+                jogador2.move_right = false;
+                if (!jogador2.move_left) jogador2.moving = false;
+            }
+            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Para de se mover para a esquerda
+                jogador2.move_left = false;
+                if (!jogador2.move_right) jogador2.moving = false;
+            }
+        }
+
+        // Movimento horizontal
+        if (!jogador2.knocked_back) {
+            if (jogador2.move_right) jogador2.pos_x += jogador2.movement_speed;
+            if (jogador2.move_left) jogador2.pos_x -= jogador2.movement_speed;
+        }
+
+        // Lógica de pulo
+        if (jogador2.jumping) {
+            jogador2.pos_y += jogador2.jump_velocity;
+            jogador2.jump_velocity += jogador2.gravity;
+            if (jogador2.pos_y >= jogador2.initial_pos_y) {
+                jogador2.pos_y = jogador2.initial_pos_y;
+                jogador2.jumping = false;
+                jogador2.jump_velocity = -10.0f;
+            }
+        }
+
+        // Controle da animação do movimento
+        if (jogador2.moving) {
+            jogador2.frame_timer += 1.0 / 30.0;
+            if (jogador2.frame_timer >= jogador2.frame_time) {
+                jogador2.current_frame = (jogador2.current_frame + 1) % jogador2.total_moving_frames;
+                jogador2.frame_timer = 0;
+            }
+        }
+        else {
+            jogador2.current_frame = 0;// Se não estiver se movendo, exibe o primeiro frame
+        }
+
+        if (jogador2.knocked_back) {
+            if (jogador2.facing_right) {
+                jogador2.pos_x -= jogador2.knockback_velocity;
+            }
+            else {
+                jogador2.pos_x += jogador2.knockback_velocity;
+            }
+            jogador2.pos_y += jogador2.jump_velocity;
+            jogador2.knockback_velocity -= 0.2f;
+            jogador2.jump_velocity += jogador2.gravity;
+
+            if (jogador2.pos_y >= jogador2.initial_pos_y) {
+                jogador2.pos_y = jogador2.initial_pos_y;
+                jogador2.knocked_back = false;
+                jogador2.jump_velocity = -10.0f;
+            }
+        }
+
+        if (jogador2.pos_x > 1200) {
+            jogador2.move_right = false;
+        }
+        if (jogador2.pos_x < 0) {
+            return display;
+        }
+
+        // Limpa a tela e desenha o cenário e o personagem
+        al_clear_to_color(al_map_rgb(255, 255, 255));
+        al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
+            al_get_bitmap_height(jogo2.background), 0, 0,
+            al_get_display_width(display), al_get_display_height(display), 0);
+
+        // Desenha o personagem na direção correta com ajuste de escala
+        desenha_jogador2(&jogador2);
+        al_flip_display();// Atualiza a tela
+
+        printf("%d\n", jogador2.pos_x);
+    }
+    // Destrói os recursos após o fim do jogo
+    al_destroy_bitmap(jogo2.background);
+    al_destroy_bitmap(jogador2.sprite_sheet);
+    al_destroy_timer(jogo2.timer);
+    al_destroy_event_queue(jogo2.event_queue);
+}
+
+void iniciar_fase_2(ALLEGRO_DISPLAY * display) {
+    Jogo2 jogo2;
+    jogo2.display = display;
+    init_jogo2(&jogo2);
+
+    Jogador2 jogador2;
+    init_jogador2(&jogador2, al_get_display_height(display));
+
+    bool running = true;
+
+    // Loop principal do jogo
+    while (running) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(jogo2.event_queue, &event);
+
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            running = false;
+        }
+
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
+            if (!jogador2.knocked_back) {
+                if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
+                    jogador2.move_right = true;
+                    jogador2.facing_right = true;
+                    jogador2.moving = true;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Move para a esquerda
+                    jogador2.move_left = true;
+                    jogador2.facing_right = false;
+                    jogador2.moving = true;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
+                    jogador2.jumping = true;
+                }
+            }
+        }
+        else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla é solta
+            if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Para de se mover para a direita
+                jogador2.move_right = false;
+                if (!jogador2.move_left) jogador2.moving = false;
+            }
+            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Para de se mover para a esquerda
+                jogador2.move_left = false;
+                if (!jogador2.move_right) jogador2.moving = false;
+            }
+        }
+
+        // Movimento horizontal
+        if (!jogador2.knocked_back) {
+            if (jogador2.move_right) jogador2.pos_x += jogador2.movement_speed;
+            if (jogador2.move_left) jogador2.pos_x -= jogador2.movement_speed;
+        }
+
+        // Lógica de pulo
+        if (jogador2.jumping) {
+            jogador2.pos_y += jogador2.jump_velocity;
+            jogador2.jump_velocity += jogador2.gravity;
+            if (jogador2.pos_y >= jogador2.initial_pos_y) {
+                jogador2.pos_y = jogador2.initial_pos_y;
+                jogador2.jumping = false;
+                jogador2.jump_velocity = -10.0f;
+            }
+        }
+
+        // Controle da animação do movimento
+        if (jogador2.moving) {
+            jogador2.frame_timer += 1.0 / 30.0;
+            if (jogador2.frame_timer >= jogador2.frame_time) {
+                jogador2.current_frame = (jogador2.current_frame + 1) % jogador2.total_moving_frames;
+                jogador2.frame_timer = 0;
+            }
+        }
+        else {
+            jogador2.current_frame = 0;// Se não estiver se movendo, exibe o primeiro frame
+        }
+
+        if (jogador2.knocked_back) {
+            if (jogador2.facing_right) {
+                jogador2.pos_x -= jogador2.knockback_velocity;
+            }
+            else {
+                jogador2.pos_x += jogador2.knockback_velocity;
+            }
+            jogador2.pos_y += jogador2.jump_velocity;
+            jogador2.knockback_velocity -= 0.2f;
+            jogador2.jump_velocity += jogador2.gravity;
+
+            if (jogador2.pos_y >= jogador2.initial_pos_y) {
+                jogador2.pos_y = jogador2.initial_pos_y;
+                jogador2.knocked_back = false;
+                jogador2.jump_velocity = -10.0f;
+            }
+        }
+
+        if (jogador2.pos_x > 1200) {
+            iniciar_fase_2_2(display);
+        }
+        if (jogador2.pos_x < 0) {
+            jogador2.move_left = false;
+        }
+
+        // Limpa a tela e desenha o cenário e o personagem
+        al_clear_to_color(al_map_rgb(255, 255, 255));
+        al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
+            al_get_bitmap_height(jogo2.background), 0, 0,
+            al_get_display_width(display), al_get_display_height(display), 0);
+
+        // Desenha o personagem na direção correta com ajuste de escala
+        desenha_jogador2(&jogador2);
+        al_flip_display();// Atualiza a tela
+
+        printf("%d\n", jogador2.pos_x);
+    }
+    // Destrói os recursos após o fim do jogo
+    al_destroy_bitmap(jogo2.background);
+    al_destroy_bitmap(jogador2.sprite_sheet);
+    al_destroy_timer(jogo2.timer);
+    al_destroy_event_queue(jogo2.event_queue);
+}
