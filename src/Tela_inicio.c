@@ -2,7 +2,7 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "game.h"
+#include "headers/game.h"
 
 // Função que inicializa a tela de menu do jogo
 void iniciar_tela_menu(ALLEGRO_DISPLAY* display, ALLEGRO_BITMAP* background, GameState* game_state, ALLEGRO_EVENT_QUEUE* event_queue) {

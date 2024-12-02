@@ -2,8 +2,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "resumo_inicio.h"
-#include "game.h"
+#include "headers/resumo_inicio.h"
+#include "headers/game.h"
 
 void iniciar_resumo(ALLEGRO_DISPLAY* display, GameState* game_state) {
     // Verifique se os ponteiros são nulos antes de usar

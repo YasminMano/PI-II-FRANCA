@@ -4,7 +4,7 @@
 #include <stdbool.h>       // Para suporte ao tipo booleano (true/false)
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>  // Para manipulação de fontes no Allegro
-#include "game.h"          // Inclui AllegroGame para gerenciamento do jogo
+#include "headers/game.h"          // Inclui AllegroGame para gerenciamento do jogo
 
 // Verifica se o mouse está sobre um texto específico.
 // Usa as coordenadas do texto, a fonte, e a posição do mouse para determinar.
