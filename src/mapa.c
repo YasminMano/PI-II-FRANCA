@@ -78,7 +78,7 @@ if (texto_mapa) {
 
 bool is_mouse_over_area(int mouse_x, int mouse_y, int area_x, int area_y, int area_size) {
     return (mouse_x >= area_x && mouse_x <= (area_x + area_size) &&
-            mouse_y >= area_y && mouse_y <= (area_y + area_size));
+        mouse_y >= area_y && mouse_y <= (area_y + area_size));
 }
 
 void handle_mapa_event(ALLEGRO_EVENT event, GameState* game_state) {
@@ -88,15 +88,20 @@ void handle_mapa_event(ALLEGRO_EVENT event, GameState* game_state) {
 
         if (is_mouse_over_area(mouse_x, mouse_y, caixa1_x, caixa1_y, caixa_size)) {
             init_resumo_fase_1(al_get_current_display(), game_state);
-        } else if (is_mouse_over_area(mouse_x, mouse_y, caixa2_x, caixa2_y, caixa_size)) {
+        }
+        else if (is_mouse_over_area(mouse_x, mouse_y, caixa2_x, caixa2_y, caixa_size)) {
             init_resumo_fase_2(al_get_current_display(), game_state);
-        } else if (is_mouse_over_area(mouse_x, mouse_y, caixa3_x, caixa3_y, caixa_size)) {
+        }
+        else if (is_mouse_over_area(mouse_x, mouse_y, caixa3_x, caixa3_y, caixa_size)) {
             init_resumo_fase_3(al_get_current_display(), game_state);
-        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
+        }
+        else if (is_mouse_over_area(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
             *game_state = FASE_1;
-        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha2_x, bolinha2_y, bolinha_size)) {
+        }
+        else if (is_mouse_over_area(mouse_x, mouse_y, bolinha2_x, bolinha2_y, bolinha_size)) {
             *game_state = FASE_2;
-        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha3_x, bolinha3_y, bolinha_size)) {
+        }
+        else if (is_mouse_over_area(mouse_x, mouse_y, bolinha3_x, bolinha3_y, bolinha_size)) {
             *game_state = FASE_3;
         }
     }
@@ -112,7 +117,11 @@ void destroy_mapa() {
     if (message_box) {
         al_destroy_bitmap(message_box);
     }
+<<<<<<< HEAD
     if (texto_mapa) { // Não esquecer de liberar a imagem do texto
         al_destroy_bitmap(texto_mapa);
     }
 }
+=======
+}
+>>>>>>> 5c86fe2 (Transições feitas)

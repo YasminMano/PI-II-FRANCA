@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\gabri_\source\repos\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,6 +154,8 @@
   <ItemGroup>
     <ClCompile Include="src\Fase1_2.c" />
     <ClCompile Include="src\Fase1_3.c" />
+    <ClCompile Include="src\banheiro.c" />
+    <ClCompile Include="src\corredor.c" />
     <ClCompile Include="src\Fase_1.c" />
     <ClCompile Include="src\Fase_2.c" />
     <ClCompile Include="src\Fase_2_3.c" />
@@ -166,6 +168,7 @@
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mapa.c" />
     <ClCompile Include="src\pause_menu.c" />
+    <ClCompile Include="src\quarto.c" />
     <ClCompile Include="src\resumo_fase.c" />
     <ClCompile Include="src\resumo_inicio.c" />
     <ClCompile Include="src\screens.c" />

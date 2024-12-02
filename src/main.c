@@ -97,6 +97,22 @@ int main() {
                 iniciar_fase_2(display, &game_state);
                 break;
 
+            case FASE_2_3:
+                iniciar_fase_2_3(display, &game_state);
+                break;
+
+            case CORREDOR:
+                corredor(display, &game_state);
+                break;
+
+            case QUARTO:
+                quarto(display, &game_state);
+                break;
+
+            case BANHEIRO:
+                banheiro(display, &game_state);
+                break;
+
             case FASE_3:
                 iniciar_fase_3(display, &game_state);
                 break;

@@ -24,34 +24,32 @@ typedef struct {
     float frame_time, frame_timer;
     int total_moving_frames;
     int vidas;
-    int x;
-} Jogador2;
+} Jogador_corredor;
 
-// FunÃ§Ã£o para inicializar o jogador
-void init_jogador2(Jogador2* jogador2, int display_height) {
+// Função para inicializar o jogador
+void init_jogador_corredor(Jogador_corredor* jogador2, int display_height) {
     jogador2->sprite_sheet = al_load_bitmap("assets/images/mulher.png");
     jogador2->frame_width = 136;// Largura de cada frame do personagem
     jogador2->frame_height = 250;// Altura de cada frame do personagem
-    jogador2->pos_x = 50;// PosiÃ§Ã£o X inicial
+    jogador2->pos_x = 50;// Posição X inicial
     jogador2->scale_factor = 0.8;// Escala do personagem ajustada
-    jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 60;// Ajuste para que o personagem toque o chÃ£o
-    jogador2->initial_pos_y = jogador2->pos_y;// Armazena a posiÃ§Ã£o inicial do personagem para controlar o pulo
+    jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 60;// Ajuste para que o personagem toque o chão
+    jogador2->initial_pos_y = jogador2->pos_y;// Armazena a posição inicial do personagem para controlar o pulo
     jogador2->jump_velocity = -15.0f;// Velocidade inicial do pulo
     jogador2->gravity = 0.7f;// Gravidade para desacelerar o pulo
     jogador2->movement_speed = 5.0;// Velocidade de movimento
     jogador2->frame_time = 0.2;// Tempo de cada frame
     jogador2->frame_timer = 0;
-    jogador2->total_moving_frames = 3;// Total de frames da animaÃ§Ã£o (3 por linha)
+    jogador2->total_moving_frames = 3;// Total de frames da animação (3 por linha)
     jogador2->current_frame = 0;// Frame atual
-    jogador2->facing_right = true;// Indica a direÃ§Ã£o que o personagem estÃ¡ virado
-    jogador2->jumping = false;// Indica se o personagem estÃ¡ pulando
-    jogador2->move_left = false;// Indica se o personagem estÃ¡ se movendo para a esquerda
-    jogador2->move_right = false;// Indica se o personagem estÃ¡ se movendo para a direita
-    jogador2->moving = false;// Indica se o personagem estÃ¡ se movendo
+    jogador2->facing_right = true;// Indica a direção que o personagem está virado
+    jogador2->jumping = false;// Indica se o personagem está pulando
+    jogador2->move_left = false;// Indica se o personagem está se movendo para a esquerda
+    jogador2->move_right = false;// Indica se o personagem está se movendo para a direita
+    jogador2->moving = false;// Indica se o personagem está se movendo
     jogador2->knocked_back = false;
     jogador2->knockback_velocity = 0;
     jogador2->vidas = 3;
-    jogador2->x = 0;
 }
 
 // Estrutura para o contexto do jogo
@@ -60,13 +58,13 @@ typedef struct {
     ALLEGRO_TIMER* timer;
     ALLEGRO_EVENT_QUEUE* event_queue;
     ALLEGRO_BITMAP* background;
-} Jogo2;
+} Jogo_corredor;
 
-// FunÃ§Ã£o para inicializar o jogo
-void init_jogo2(Jogo2* jogo2) {
+// Função para inicializar o jogo
+void init_jogo_corredor(Jogo_corredor* jogo2) {
     al_init();
     al_install_keyboard();
-    jogo2->timer = al_create_timer(1.0 / 30.0);// Cria um timer para controlar a taxa de atualizaÃ§Ã£o do jogo
+    jogo2->timer = al_create_timer(1.0 / 30.0);// Cria um timer para controlar a taxa de atualização do jogo
     jogo2->background = al_load_bitmap("assets/images/caminho.png");
     jogo2->event_queue = al_create_event_queue();
     al_register_event_source(jogo2->event_queue, al_get_display_event_source(jogo2->display));
@@ -74,9 +72,9 @@ void init_jogo2(Jogo2* jogo2) {
     al_register_event_source(jogo2->event_queue, al_get_keyboard_event_source());
     al_start_timer(jogo2->timer);
 }
- 
-// FunÃ§Ã£o que desenha o jogador
-static void desenha_jogador2(Jogador2* jogador2) {
+
+// Função que desenha o jogador
+static void desenha_jogador_corredor(Jogador_corredor* jogador2) {
     int frame_x[] = { 0, 213, 346 };
     int frame_cx = frame_x[jogador2->current_frame];
     int frame_cy = 0;
@@ -92,31 +90,28 @@ static void desenha_jogador2(Jogador2* jogador2) {
     );
 }
 
-void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
-    Jogo2 jogo2;
+void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
+    Jogo_corredor jogo2;
     jogo2.display = display;
-    init_jogo2(&jogo2);
+    init_jogo_corredor(&jogo2);
 
-    Jogador2 jogador2;
-    init_jogador2(&jogador2, al_get_display_height(display));
+    Jogador_corredor jogador2;
+    init_jogador_corredor(&jogador2, al_get_display_height(display));
 
-    bool running = true;
+    jogo2.background = al_load_bitmap("assets/images/corredor.png");
 
-    if (jogador2.x > 0) {
-        jogador2.pos_x = 1150;
-    }
+    bool running = true;  // Indica se o loop do jogo está rodando
 
     // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
-        al_wait_for_event(jogo2.event_queue, &event);
+        al_wait_for_event(jogo2.event_queue, &event);// Espera por um evento (teclado, timer, etc.)
 
-        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {// Se o usuário fechar a janela, encerra o jogo
             running = false;
         }
-       
-        x++;
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla Ã© pressionada
+
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
             if (!jogador2.knocked_back) {
                 if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
                     jogador2.move_right = true;
@@ -131,9 +126,22 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
                 else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
                     jogador2.jumping = true;
                 }
+                // F muda a tela
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 20 && jogador2.pos_x <= 160) {
+                    quarto(display, &game_state);
+                    running = false;
+                    printf("deu");
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 500 && jogador2.pos_x <= 630) {
+                    quarto(display, &game_state);
+                    running = false;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 970 && jogador2.pos_x <= 1110) {
+                   //banheiro(display);
+                }
             }
         }
-        else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla Ã© solta
+        else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla é solta
             if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Para de se mover para a direita
                 jogador2.move_right = false;
                 if (!jogador2.move_left) jogador2.moving = false;
@@ -150,7 +158,7 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
             if (jogador2.move_left) jogador2.pos_x -= jogador2.movement_speed;
         }
 
-        // LÃ³gica de pulo
+        // Lógica de pulo
         if (jogador2.jumping) {
             jogador2.pos_y += jogador2.jump_velocity;
             jogador2.jump_velocity += jogador2.gravity;
@@ -161,7 +169,7 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
-        // Controle da animaÃ§Ã£o do movimento
+        // Controle da animação do movimento
         if (jogador2.moving) {
             jogador2.frame_timer += 1.0 / 30.0;
             if (jogador2.frame_timer >= jogador2.frame_time) {
@@ -170,7 +178,7 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
         else {
-            jogador2.current_frame = 0;// Se nÃ£o estiver se movendo, exibe o primeiro frame
+            jogador2.current_frame = 0;// Se não estiver se movendo, exibe o primeiro frame
         }
 
         if (jogador2.knocked_back) {
@@ -191,29 +199,26 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
-        // TransiÃ§Ã£o para o corredor
-        if (jogador2.pos_x > 1180) {
-            iniciar_fase_2_3(display, &game_state);
-            running = false;
+        if (jogador2.pos_x > 1200) {
+            jogador2.move_right = false;
         }
-
         if (jogador2.pos_x < 0) {
-            jogador2.move_left = false;
+            iniciar_fase_2(display, &game_state); // Chama a tela do fase 2
+            running = false;   // Sai do loop da fase atual
         }
 
-        // Limpa a tela e desenha o cenÃ¡rio e o personagem
+        // Limpa a tela e desenha o cenário e o personagem
         al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
             al_get_bitmap_height(jogo2.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
 
-        // Desenha o personagem na direÃ§Ã£o correta com ajuste de escala
-        desenha_jogador2(&jogador2);
+        // Desenha o personagem na direção correta com ajuste de escala
+        desenha_jogador_corredor(&jogador2);
         al_flip_display();// Atualiza a tela
 
-        printf("%d\n", jogador2.pos_x);
     }
-    // DestrÃ³i os recursos apÃ³s o fim do jogo
+    // Destrói os recursos após o fim do jogo
     al_destroy_bitmap(jogo2.background);
     al_destroy_bitmap(jogador2.sprite_sheet);
     al_destroy_timer(jogo2.timer);
