@@ -2,9 +2,14 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
+<<<<<<< HEAD
 #include "headers/game.h"
 #include "headers/mapa.h"
 #include "headers/resumo_fase.h"
+=======
+#include "game.h"
+#include "resumo_fase.h"
+>>>>>>> 05c5bee (correção)
 
 ALLEGRO_BITMAP* background_mapa = NULL;
 ALLEGRO_BITMAP* red_circle = NULL;

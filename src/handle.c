@@ -1,7 +1,7 @@
-#include "headers/handle.h"
-#include "headers/screens.h"
-#include "headers/helper.h"
-#include "headers/mapa.h"  // Adicionado para incluir as funções do mapa
+#include "handle.h"
+#include "screens.h"
+#include "helper.h"
+#include "mapa.h"  // Adicionado para incluir as funções do mapa
 
 // Função que gerencia as transições de telas e estados do jogo
 bool handleScrens(struct AllegroGame* game) {
