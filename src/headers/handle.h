@@ -1,12 +1,11 @@
 #ifndef HANDLE_H  // Previne que o arquivo seja incluído mais de uma vez
-
 #define HANDLE_H
 
 #include <stdbool.h>     // Inclui suporte para o tipo booleano (true/false)
 #include "game.h"        // Inclui game.h para acessar GameState e AllegroGame
 
 // Função que lida com a lógica de transição entre as telas do jogo
-bool handleScrens(struct AllegroGame* game, GameState* gameState);
+bool handleScrens(struct AllegroGame* game);
 
 #endif  // Fim da verificação de inclusão múltipla
 
