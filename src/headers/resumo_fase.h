@@ -2,7 +2,7 @@
 #ifndef RESUMO_FASE_H
 #define RESUMO_FASE_H
 
-#include "game.h" 
+#include "headers/game.h" 
 
 #include <allegro5/allegro.h>
 
