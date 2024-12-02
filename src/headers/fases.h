@@ -2,7 +2,7 @@
 #define FASES_H
 
 #include <allegro5/allegro.h>
-#include "game.h"
+#include "headers/game.h"
 
 // Declaração das funções para iniciar cada fase
 void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state);

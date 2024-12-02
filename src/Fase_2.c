@@ -169,7 +169,6 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
-
         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
             if (!jogador2.knocked_back) {
                 if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita

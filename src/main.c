@@ -2,11 +2,10 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "game.h"
-#include "Tela_inicio.h"
-#include "resumo_fase.h"
-#include "fases.h"
-#include "pause_menu.h"  // Incluído para acessar a tela de pausa
+#include "headers/game.h"
+#include "headers/Tela_inicio.h"
+#include "headers/resumo_fase.h"
+#include "headers/fases.h"
 
 // Variável global que define o estado do jogo
 GameState game_state = TELA_INICIO;

@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h> // Para geração de números aleatórios
-#include "game.h"
+#include "headers/game.h"
+#include "headers/mapa.h"
 
 // Estrutura para armazenar informações sobre cada pergunta
 typedef struct {
@@ -21,8 +22,7 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     int resposta_certa_original = pergunta->resposta_certa;
 
     for (int i = 0; i < 3; i++) {
-        strncpy(alternativas_temp[i], pergunta->alternativas[i], sizeof(alternativas_temp[i]) - 1);
-        alternativas_temp[i][sizeof(alternativas_temp[i]) - 1] = '\0'; // Garantir que termina em '\0'
+        strcpy_s(alternativas_temp[i], sizeof(alternativas_temp[i]), pergunta->alternativas[i]);
     }
 
     for (int i = 2; i > 0; i--) {
@@ -33,8 +33,7 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     }
 
     for (int i = 0; i < 3; i++) {
-        strncpy(pergunta->alternativas[i], alternativas_temp[indices[i]], sizeof(pergunta->alternativas[i]) - 1);
-        pergunta->alternativas[i][sizeof(pergunta->alternativas[i]) - 1] = '\0'; // Garantir que termina em '\0'
+        strcpy_s(pergunta->alternativas[i], sizeof(pergunta->alternativas[i]), alternativas_temp[indices[i]]);
 
         if (indices[i] == resposta_certa_original) {
             pergunta->resposta_certa = i;
