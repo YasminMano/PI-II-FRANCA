@@ -1,25 +1,25 @@
-// pause_menu.h
-#ifndef PAUSE_MENU_H
-#define PAUSE_MENU_H
+// // pause_menu.h
+// #ifndef PAUSE_MENU_H
+// #define PAUSE_MENU_H
 
-#include "game.h"
+// #include "game.h"
 
-void handle_pause_menu(AllegroGame* game, GameState* state);
+// void handle_pause_menu(AllegroGame* game, GameState* state);
 
-#endif // PAUSE_MENU_H
+// #endif // PAUSE_MENU_H
 
 
 
-/**
- * handle_pause_menu - Exibe o menu de pausa e lida com a escolha do jogador.
- *
- * Essa função pausa o jogo e exibe um menu que permite ao jogador escolher
- * entre voltar ao menu principal ou retornar à tela de mapa. Ela atualiza
- * o estado do jogo com base na escolha do jogador.
- *
- * Parâmetros:
- * - AllegroGame *game: ponteiro para a estrutura principal do jogo, contendo
- *   o display, fila de eventos, fontes, etc.
- * - GameState *state: ponteiro para o estado atual do jogo, que será modificado
- *   conforme a escolha do jogador no menu de pausa.
- */
+// /**
+//  * handle_pause_menu - Exibe o menu de pausa e lida com a escolha do jogador.
+//  *
+//  * Essa funï¿½ï¿½o pausa o jogo e exibe um menu que permite ao jogador escolher
+//  * entre voltar ao menu principal ou retornar ï¿½ tela de mapa. Ela atualiza
+//  * o estado do jogo com base na escolha do jogador.
+//  *
+//  * Parï¿½metros:
+//  * - AllegroGame *game: ponteiro para a estrutura principal do jogo, contendo
+//  *   o display, fila de eventos, fontes, etc.
+//  * - GameState *state: ponteiro para o estado atual do jogo, que serï¿½ modificado
+//  *   conforme a escolha do jogador no menu de pausa.
+//  */

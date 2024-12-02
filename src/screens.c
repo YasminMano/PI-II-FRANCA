@@ -5,7 +5,7 @@
 #include "headers/handle.h"  // Para o controle de eventos e transição de telas
 
 // Função para desenhar a tela inicial do menu
-bool drawTelaInicio(struct AllegroGame* game, GameState* gameState) {
+bool drawTelaInicio(struct AllegroGame* game) {
     // Carrega a imagem de fundo da tela de início
     ALLEGRO_BITMAP* bitmap = al_load_bitmap("assets/images/telainicio.png");
     if (!bitmap) {
@@ -16,6 +16,11 @@ bool drawTelaInicio(struct AllegroGame* game, GameState* gameState) {
 
     // Desenha a imagem de fundo na tela
     al_draw_bitmap(bitmap, 0, 0, 0);
+
+    // Lida com transição de estado: verifica se a tecla ENTER foi pressionada
+    if (game->event.type == ALLEGRO_EVENT_KEY_DOWN && game->event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+        game_state = MAPA;  // Transição para o estado MAPA
+    }
 
     // Libera a memória ocupada pela imagem
     al_destroy_bitmap(bitmap);
@@ -34,6 +39,11 @@ bool drawFase1(struct AllegroGame* game) {
 
     // Desenha a imagem de fundo na tela
     al_draw_bitmap(bitmap, 0, 0, 0);
+
+    // Lida com transição de estado: verifica se a tecla ENTER foi pressionada
+    if (game->event.type == ALLEGRO_EVENT_KEY_DOWN && game->event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+        game_state = FASE_2;  // Transição para o estado FASE_2
+    }
 
     // Libera a memória ocupada pela imagem
     al_destroy_bitmap(bitmap);
@@ -60,7 +70,6 @@ bool drawFase2(struct AllegroGame* game) {
 
 /*
 Resumo:
-O arquivo screens.c contém funções que desenham as telas do jogo, incluindo a tela inicial (menu) e as fases 1 e 2.
-Cada função carrega uma imagem de fundo, desenha na tela e libera a memória usada pela imagem.
-Se a imagem não puder ser carregada, uma mensagem de erro é exibida e a função retorna false.
+O arquivo screens.c foi ajustado para usar a variável global game_state em vez de um ponteiro para GameState.
+As transições de estado agora utilizam game_state diretamente, mantendo consistência com o restante do projeto.
 */

@@ -46,18 +46,15 @@ void draw_mapa() {
     // Desenha a caixa de mensagem
     al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
         caixa1_x, caixa1_y, caixa_size, caixa_size, 0);
-    
     al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
         caixa2_x, caixa2_y, caixa_size, caixa_size, 0);
-
     al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
         caixa3_x, caixa3_y, caixa_size, caixa_size, 0);
-
 }
 
 bool is_mouse_over_area(int mouse_x, int mouse_y, int area_x, int area_y, int area_size) {
     return (mouse_x >= area_x && mouse_x <= (area_x + area_size) &&
-        mouse_y >= area_y && mouse_y <= (area_y + area_size));
+            mouse_y >= area_y && mouse_y <= (area_y + area_size));
 }
 
 void handle_mapa_event(ALLEGRO_EVENT event, GameState* game_state) {
@@ -66,25 +63,17 @@ void handle_mapa_event(ALLEGRO_EVENT event, GameState* game_state) {
         int mouse_y = event.mouse.y;
 
         if (is_mouse_over_area(mouse_x, mouse_y, caixa1_x, caixa1_y, caixa_size)) {
-            // Abre a tela de resumo da Fase 1
             init_resumo_fase_1(al_get_current_display(), game_state);
-        }
-        else if (is_mouse_over_area(mouse_x, mouse_y, caixa2_x, caixa2_y, caixa_size)) {
-            // Abre a tela de resumo da Fase 3
+        } else if (is_mouse_over_area(mouse_x, mouse_y, caixa2_x, caixa2_y, caixa_size)) {
             init_resumo_fase_2(al_get_current_display(), game_state);
-        }
-        else if (is_mouse_over_area(mouse_x, mouse_y, caixa3_x, caixa3_y, caixa_size)) {
-            // Abre a tela de resumo da Fase 3
+        } else if (is_mouse_over_area(mouse_x, mouse_y, caixa3_x, caixa3_y, caixa_size)) {
             init_resumo_fase_3(al_get_current_display(), game_state);
-        }
-        else if (is_mouse_over_area(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
-            *game_state = FASE_1; // Vai direto para a Fase 1
-        }
-        else if (is_mouse_over_area(mouse_x, mouse_y, bolinha2_x, bolinha2_y, bolinha_size)) {
-            *game_state = FASE_2; // Vai para a Fase 2
-        }
-        else if (is_mouse_over_area(mouse_x, mouse_y, bolinha3_x, bolinha3_y, bolinha_size)) {
-            *game_state = FASE_3; // Vai para a Fase 3
+        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
+            *game_state = FASE_1;
+        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha2_x, bolinha2_y, bolinha_size)) {
+            *game_state = FASE_2;
+        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha3_x, bolinha3_y, bolinha_size)) {
+            *game_state = FASE_3;
         }
     }
 }
