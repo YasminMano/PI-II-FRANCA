@@ -1,88 +1,95 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Arquivos de Origem">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Arquivos de Cabeçalho">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Arquivos de Recurso">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\Fase_1.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Fase_2.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fase_2_3.c">
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Fase_3.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
     <ClCompile Include="src\handle.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
     <ClCompile Include="src\helper.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
     <ClCompile Include="src\main.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
     <ClCompile Include="src\mapa.c">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\screens.c">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tela_inicio.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
     <ClCompile Include="src\pause_menu.c">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    <ClCompile Include="Fase_2_3.c">
-=======
     <ClCompile Include="src\resumo_fase.c">
->>>>>>> ba6ad54 (Criado a tela de resumo para a fase 1)
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClCompile>
->>>>>>> acd4d3f (Criado a tela de resumo para a fase 1)
+    <ClCompile Include="src\resumo_inicio.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\screens.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tela_inicio.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\corredor.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\banheiro.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\quarto.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\headers\fases.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
     <ClInclude Include="src\headers\game.h">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\handle.h">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\helper.h">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\mapa.h">
-      <Filter>Arquivos de Origem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\headers\screens.h">
-      <Filter>Arquivos de Origem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\headers\Tela_inicio.h">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\pause_menu.h">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\resumo_fase.h">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de origem</Filter>
     </ClInclude>
+    <ClInclude Include="src\headers\resumo_inicio.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\screens.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\Tela_inicio.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Arquivos de origem">
+      <UniqueIdentifier>{38c93ff7-e331-46ef-a099-951337d79f15}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <Filter>Arquivos de origem</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -2,10 +2,10 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "game.h"
-#include "Tela_inicio.h"
-#include "resumo_fase.h"
-#include "fases.h"
+#include "headers/game.h"
+#include "headers/Tela_inicio.h"
+#include "headers/resumo_fase.h"
+#include "headers/fases.h"
 
 // Variável global que define o estado do jogo
 GameState game_state = TELA_INICIO;
@@ -84,6 +84,22 @@ int main() {
 
             case FASE_2:
                 iniciar_fase_2(display, &game_state);
+                break;
+
+            case FASE_2_3:
+                iniciar_fase_2_3(display, &game_state);
+                break;
+
+            case CORREDOR:
+                corredor(display, &game_state);
+                break;
+
+            case QUARTO:
+                quarto(display, &game_state);
+                break;
+
+            case BANHEIRO:
+                banheiro(display, &game_state);
                 break;
 
             case FASE_3:

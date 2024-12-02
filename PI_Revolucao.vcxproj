@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\gabri_\source\repos\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,25 +145,32 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\banheiro.c" />
+    <ClCompile Include="src\corredor.c" />
     <ClCompile Include="src\Fase_1.c" />
     <ClCompile Include="src\Fase_2.c" />
+    <ClCompile Include="src\Fase_2_3.c" />
     <ClCompile Include="src\Fase_3.c" />
     <ClCompile Include="src\handle.c" />
     <ClCompile Include="src\helper.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mapa.c" />
     <ClCompile Include="src\pause_menu.c" />
+    <ClCompile Include="src\quarto.c" />
     <ClCompile Include="src\resumo_fase.c" />
+    <ClCompile Include="src\resumo_inicio.c" />
     <ClCompile Include="src\screens.c" />
     <ClCompile Include="src\Tela_inicio.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\headers\fases.h" />
     <ClInclude Include="src\headers\game.h" />
     <ClInclude Include="src\headers\handle.h" />
     <ClInclude Include="src\headers\helper.h" />
     <ClInclude Include="src\headers\mapa.h" />
     <ClInclude Include="src\headers\pause_menu.h" />
     <ClInclude Include="src\headers\resumo_fase.h" />
+    <ClInclude Include="src\headers\resumo_inicio.h" />
     <ClInclude Include="src\headers\screens.h" />
     <ClInclude Include="src\headers\Tela_inicio.h" />
   </ItemGroup>
