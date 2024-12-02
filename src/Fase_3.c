@@ -35,7 +35,6 @@ void embaralhar_alternativas(Pergunta* pergunta) {
 
     for (int i = 0; i < 3; i++) {
         strcpy_s(pergunta->alternativas[i], sizeof(pergunta->alternativas[i]), alternativas_temp[indices[i]]);
-
         if (indices[i] == resposta_certa_original) {
             pergunta->resposta_certa = i;
         }
