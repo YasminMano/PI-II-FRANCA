@@ -21,6 +21,7 @@ typedef enum {
     BAU,
     BANHEIRO,
     FASE_3,       // Terceira fase do jogo
+    PAUSE_MENU,   // Tela de pausa
     SAIR          // Estado para encerrar o jogo
 } GameState;
 
