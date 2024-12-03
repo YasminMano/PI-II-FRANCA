@@ -276,6 +276,7 @@ void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
             largura_imagem* escala, altura_imagem* escala,// Novo tamanho
             0);// Nenhuma rota��o
         al_flip_display();// Atualiza a tela
+        printf("%d\n", jogador2.pos_x);
     }
     // Destr�i os recursos ap�s o fim do jogo
     al_destroy_bitmap(jogo2.background);
