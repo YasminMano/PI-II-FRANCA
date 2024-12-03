@@ -10,16 +10,13 @@
 #include "guarda.h"
 #include "jogo.h"
 
-void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
+void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo jogo;
     jogo.display = display;
     init_jogo(&jogo);
 
     Jogador jogador;
     init_jogador(&jogador, al_get_display_height(display));
-
-    Guarda guarda;
-    init_guarda(&guarda, al_get_display_width(display), al_get_display_height(display));
 
     bool running = true;
 
@@ -93,46 +90,6 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             jogador.current_frame = 0;
         }
 
-        // Atualiza o movimento do guarda
-        if (guarda.move_right) {
-            guarda.pos_x += guarda.movement_speed;
-            if (guarda.pos_x >= guarda.max_x) {
-                guarda.move_right = false;
-            }
-        }
-        else {
-            guarda.pos_x -= guarda.movement_speed;
-            if (guarda.pos_x <= guarda.min_x) {
-                guarda.move_right = true;
-            }
-        }
-
-        // Verifica a colisão entre o jogador e o guarda
-        if (detectar_colisao(&jogador, &guarda)) {
-            printf("Colisão detectada!\n");
-
-            // Se a colisão for com a parte superior do guarda, destrói o guarda
-            if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda.pos_y + 50) {
-                printf("O guarda foi derrotado!\n");
-                guarda.morto = true;  // Marca o guarda como morto
-                guarda.pos_x = -guarda.frame_width * guarda.scale_factor;  // Reposiciona o guarda fora da tela
-            }
-            else {
-                // Caso contrário, o jogador é empurrado
-                jogador.knocked_back = true;
-                jogador.knockback_velocity = 5.0f;  // Empurra o jogador
-                jogador.jump_velocity = -5.5f;     // Impede o jogador de pular após ser empurrado
-
-                jogador.vidas--;  // Perde uma vida
-                printf("Vidas restantes: %d\n", jogador.vidas);
-
-                if (jogador.vidas <= 0) {  // Game Over
-                    printf("Game Over!\n");
-                    running = false;
-                }
-            }
-        }
-
         // Lógica de empurrão do jogador
         if (jogador.knocked_back) {
             if (jogador.facing_right) {
@@ -142,21 +99,14 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
                 jogador.pos_x += jogador.knockback_velocity;
             }
             jogador.pos_y += jogador.jump_velocity;
-            jogador.knockback_velocity -= 0.2f;  // Diminui a velocidade do empurrão
+            jogador.knockback_velocity -= 0.2f;
             jogador.jump_velocity += jogador.gravity;
 
             if (jogador.pos_y >= jogador.initial_pos_y) {
-                jogador.pos_y = jogador.initial_pos_y;  // O jogador volta ao chão
+                jogador.pos_y = jogador.initial_pos_y;
                 jogador.knocked_back = false;
-                jogador.jump_velocity = -12.0f;  // Reinicia o pulo
+                jogador.jump_velocity = -12.0f;
             }
-        }
-
-        // Atualiza a animação do guarda
-        guarda.frame_timer += 1.0 / 30.0;
-        if (guarda.frame_timer >= guarda.frame_time) {
-            guarda.current_frame = (guarda.current_frame + 1) % guarda.total_frames;
-            guarda.frame_timer = 0;
         }
 
         // Se o jogo estiver pausado, ignore o restante da lógica
@@ -180,15 +130,21 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             running = false;  // Encerra o loop da fase 1
         }
 
+
+        // Verifica se o jogador chegou à posição desejada para transitar para a próxima fase
+        if (jogador.pos_x >= 1000) {
+            *game_state = MAPA;  // Altera o estado do jogo para a próxima fase
+            running = false;
+        }
+
         // Limpa a tela e desenha o fundo
         al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_scaled_bitmap(jogo.background, 0, 0, al_get_bitmap_width(jogo.background),
             al_get_bitmap_height(jogo.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
 
-        // Desenha o jogador e o guarda (se não estiver morto)
+        // Desenha o jogador
         desenha_jogador(&jogador);
-        desenha_guarda(&guarda);
 
         // Atualiza a tela
         al_flip_display();
@@ -197,7 +153,6 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     // Libera recursos
     al_destroy_bitmap(jogo.background);
     al_destroy_bitmap(jogador.sprite_sheet);
-    al_destroy_bitmap(guarda.sprite_sheet);
     al_destroy_timer(jogo.timer);
     al_destroy_event_queue(jogo.event_queue);
 }

@@ -10,7 +10,7 @@
 #include "guarda.h"
 #include "jogo.h"
 
-void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
+void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo jogo;
     jogo.display = display;
     init_jogo(&jogo);
@@ -18,8 +18,13 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogador jogador;
     init_jogador(&jogador, al_get_display_height(display));
 
-    Guarda guarda;
-    init_guarda(&guarda, al_get_display_width(display), al_get_display_height(display));
+    // Criando o primeiro guarda (ajustado para ficar mais à esquerda)
+    Guarda guarda1;
+    init_guarda(&guarda1, al_get_display_width(display) - 400, al_get_display_height(display));  // Ajuste a posição conforme necessário
+
+    // Criando o segundo guarda (ajustado para ficar mais à esquerda)
+    Guarda guarda2;
+    init_guarda(&guarda2, al_get_display_width(display) - 600, al_get_display_height(display));  // Ajuste a posição conforme necessário
 
     bool running = true;
 
@@ -93,45 +98,79 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             jogador.current_frame = 0;
         }
 
-        // Atualiza o movimento do guarda
-        if (guarda.move_right) {
-            guarda.pos_x += guarda.movement_speed;
-            if (guarda.pos_x >= guarda.max_x) {
-                guarda.move_right = false;
+        // Atualiza o movimento do primeiro guarda
+        if (guarda1.move_right) {
+            guarda1.pos_x += guarda1.movement_speed;
+            if (guarda1.pos_x >= guarda1.max_x) {
+                guarda1.move_right = false;
             }
         }
         else {
-            guarda.pos_x -= guarda.movement_speed;
-            if (guarda.pos_x <= guarda.min_x) {
-                guarda.move_right = true;
+            guarda1.pos_x -= guarda1.movement_speed;
+            if (guarda1.pos_x <= guarda1.min_x) {
+                guarda1.move_right = true;
             }
         }
 
-        // Verifica a colisão entre o jogador e o guarda
-        if (detectar_colisao(&jogador, &guarda)) {
-            printf("Colisão detectada!\n");
-
-            // Se a colisão for com a parte superior do guarda, destrói o guarda
-            if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda.pos_y + 50) {
-                printf("O guarda foi derrotado!\n");
-                guarda.morto = true;  // Marca o guarda como morto
-                guarda.pos_x = -guarda.frame_width * guarda.scale_factor;  // Reposiciona o guarda fora da tela
-            }
-            else {
-                // Caso contrário, o jogador é empurrado
-                jogador.knocked_back = true;
-                jogador.knockback_velocity = 5.0f;  // Empurra o jogador
-                jogador.jump_velocity = -5.5f;     // Impede o jogador de pular após ser empurrado
-
-                jogador.vidas--;  // Perde uma vida
-                printf("Vidas restantes: %d\n", jogador.vidas);
-
-                if (jogador.vidas <= 0) {  // Game Over
-                    printf("Game Over!\n");
-                    running = false;
-                }
+        // Atualiza o movimento do segundo guarda
+        if (guarda2.move_right) {
+            guarda2.pos_x += guarda2.movement_speed;
+            if (guarda2.pos_x >= guarda2.max_x) {
+                guarda2.move_right = false;
             }
         }
+        else {
+            guarda2.pos_x -= guarda2.movement_speed;
+            if (guarda2.pos_x <= guarda2.min_x) {
+                guarda2.move_right = true;
+            }
+        }
+
+        // // Verifica a colisão entre o jogador e o primeiro guarda
+        // if (detectar_colisao(&jogador, &guarda1)) {
+        //     printf("Colisão com o primeiro guarda detectada!\n");
+
+        //     if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda1.pos_y + 50) {
+        //         printf("O primeiro guarda foi derrotado!\n");
+        //         guarda1.morto = true;
+        //         guarda1.pos_x = -guarda1.frame_width * guarda1.scale_factor;
+        //     }
+        //     else {
+        //         jogador.knocked_back = true;
+        //         jogador.knockback_velocity = 5.0f;
+        //         jogador.jump_velocity = -5.5f;
+        //         jogador.vidas--;
+        //         printf("Vidas restantes: %d\n", jogador.vidas);
+
+        //         if (jogador.vidas <= 0) {
+        //             printf("Game Over!\n");
+        //             running = false;
+        //         }
+        //     }
+        // }
+
+        // // Verifica a colisão entre o jogador e o segundo guarda
+        // if (detectar_colisao(&jogador, &guarda2)) {
+        //     printf("Colisão com o segundo guarda detectada!\n");
+
+        //     if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda2.pos_y + 50) {
+        //         printf("O segundo guarda foi derrotado!\n");
+        //         guarda2.morto = true;
+        //         guarda2.pos_x = -guarda2.frame_width * guarda2.scale_factor;
+        //     }
+        //     else {
+        //         jogador.knocked_back = true;
+        //         jogador.knockback_velocity = 5.0f;
+        //         jogador.jump_velocity = -5.5f;
+        //         jogador.vidas--;
+        //         printf("Vidas restantes: %d\n", jogador.vidas);
+
+        //         if (jogador.vidas <= 0) {
+        //             printf("Game Over!\n");
+        //             running = false;
+        //         }
+        //     }
+        // }
 
         // Lógica de empurrão do jogador
         if (jogador.knocked_back) {
@@ -142,21 +181,28 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
                 jogador.pos_x += jogador.knockback_velocity;
             }
             jogador.pos_y += jogador.jump_velocity;
-            jogador.knockback_velocity -= 0.2f;  // Diminui a velocidade do empurrão
+            jogador.knockback_velocity -= 0.2f;
             jogador.jump_velocity += jogador.gravity;
 
             if (jogador.pos_y >= jogador.initial_pos_y) {
-                jogador.pos_y = jogador.initial_pos_y;  // O jogador volta ao chão
+                jogador.pos_y = jogador.initial_pos_y;
                 jogador.knocked_back = false;
-                jogador.jump_velocity = -12.0f;  // Reinicia o pulo
+                jogador.jump_velocity = -12.0f;
             }
         }
 
-        // Atualiza a animação do guarda
-        guarda.frame_timer += 1.0 / 30.0;
-        if (guarda.frame_timer >= guarda.frame_time) {
-            guarda.current_frame = (guarda.current_frame + 1) % guarda.total_frames;
-            guarda.frame_timer = 0;
+        // Atualiza a animação do primeiro guarda
+        guarda1.frame_timer += 1.0 / 30.0;
+        if (guarda1.frame_timer >= guarda1.frame_time) {
+            guarda1.current_frame = (guarda1.current_frame + 1) % guarda1.total_frames;
+            guarda1.frame_timer = 0;
+        }
+
+        // Atualiza a animação do segundo guarda
+        guarda2.frame_timer += 1.0 / 30.0;
+        if (guarda2.frame_timer >= guarda2.frame_time) {
+            guarda2.current_frame = (guarda2.current_frame + 1) % guarda2.total_frames;
+            guarda2.frame_timer = 0;
         }
 
         // Se o jogo estiver pausado, ignore o restante da lógica
@@ -180,15 +226,23 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             running = false;  // Encerra o loop da fase 1
         }
 
+
+        // Verifica se o jogador chegou à posição desejada para transitar para a próxima fase
+        if (jogador.pos_x >= 1000) {
+            *game_state = FASE1_3;  // Altera o estado do jogo para a próxima fase
+            running = false;
+        }
+
         // Limpa a tela e desenha o fundo
         al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_scaled_bitmap(jogo.background, 0, 0, al_get_bitmap_width(jogo.background),
             al_get_bitmap_height(jogo.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
 
-        // Desenha o jogador e o guarda (se não estiver morto)
+        // Desenha o jogador e os dois guardas
         desenha_jogador(&jogador);
-        desenha_guarda(&guarda);
+        desenha_guarda(&guarda1);
+        desenha_guarda(&guarda2);
 
         // Atualiza a tela
         al_flip_display();
@@ -197,7 +251,8 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     // Libera recursos
     al_destroy_bitmap(jogo.background);
     al_destroy_bitmap(jogador.sprite_sheet);
-    al_destroy_bitmap(guarda.sprite_sheet);
+    al_destroy_bitmap(guarda1.sprite_sheet);
+    al_destroy_bitmap(guarda2.sprite_sheet);
     al_destroy_timer(jogo.timer);
     al_destroy_event_queue(jogo.event_queue);
 }
