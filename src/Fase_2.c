@@ -552,7 +552,7 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display) {
 
     // Carregar as imagens do personagem e do cenário
     ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/mulher.png");
-    ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/caminho.png");
+    ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/backgroundfase2.png");
 
     // Verifica se as imagens foram carregadas corretamente, caso contrário, destrói o display e encerra
     if (!bg || !sprite_sheet) {
@@ -584,8 +584,10 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display) {
 
     // Posição inicial do personagem (ajustando para que fique no chão)
     int pos_x = 50;  // Posição X inicial
-    int pos_y = al_get_display_height(display) - frame_height * scale_factor-50;  // Ajuste para que o personagem toque o chão
-    int initial_pos_y = pos_y;  // Armazena a posição inicial do personagem para controlar o pulo
+    int pos_y = 350;  // Ajuste para que o personagem toque o chão
+    
+    
+    
 
     // Controle do pulo
     bool jumping = false;  // Indica se o personagem está pulando
@@ -653,8 +655,8 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display) {
         if (jumping) {
             pos_y += jump_velocity;
             jump_velocity += gravity;
-            if (pos_y >= initial_pos_y) {  // Se o personagem tocar o chão, o pulo termina
-                pos_y = initial_pos_y;
+            if (pos_y >= 350) {  // Se o personagem tocar o chão, o pulo termina
+                pos_y = 350;
                 jumping = false;
                 jump_velocity = -15.0f;
             }

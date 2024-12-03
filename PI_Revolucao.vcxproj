@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\MOHAMAD\Source\Repos\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,6 +170,11 @@
     <ClInclude Include="src\headers\resumo_inicio.h" />
     <ClInclude Include="src\headers\screens.h" />
     <ClInclude Include="src\headers\Tela_inicio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\images\backgroundfase2.png" />
+    <Image Include="assets\images\fase_2buracos.png" />
+    <Image Include="assets\images\teste.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
