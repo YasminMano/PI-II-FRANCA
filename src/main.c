@@ -98,6 +98,14 @@ int main() {
                 quarto(display, &game_state);
                 break;
 
+            case QUARTO2:
+                quarto2(display, &game_state);
+                break;
+
+            case BAU:
+                bau(display, &game_state);
+                break;
+
             case BANHEIRO:
                 banheiro(display, &game_state);
                 break;

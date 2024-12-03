@@ -32,7 +32,7 @@ void init_jogador_corredor(Jogador_corredor* jogador2, int display_height) {
     jogador2->frame_width = 136;// Largura de cada frame do personagem
     jogador2->frame_height = 250;// Altura de cada frame do personagem
     jogador2->pos_x = 50;// Posição X inicial
-    jogador2->scale_factor = 0.9;// Escala do personagem ajustada
+    jogador2->scale_factor = 1.0;// Escala do personagem ajustada
     jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 40;// Ajuste para que o personagem toque o chão
     jogador2->initial_pos_y = jogador2->pos_y;// Armazena a posição inicial do personagem para controlar o pulo
     jogador2->jump_velocity = -15.0f;// Velocidade inicial do pulo
@@ -142,14 +142,14 @@ void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
                     quarto(display, &game_state);
                     running = false;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 555 && jogador2.pos_x <= 670) {
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 545 && jogador2.pos_x <= 670) {
                     z = 2;
                     quarto(display, &game_state);
                     running = false;
                 }
                 else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 1015 && jogador2.pos_x <= 1160) {
                     z = 3;
-                    quarto(display, &game_state);
+                    quarto2(display, &game_state);
                     running = false;
                 }
             }
@@ -228,7 +228,6 @@ void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Desenha o personagem na direção correta com ajuste de escala
         desenha_jogador_corredor(&jogador2);
         al_flip_display();// Atualiza a tela
-        printf("%d\n", z);
     }
     // Destrói os recursos após o fim do jogo
     al_destroy_bitmap(jogo2.background);
