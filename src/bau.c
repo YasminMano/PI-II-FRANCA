@@ -13,11 +13,11 @@ typedef struct {
     ALLEGRO_BITMAP* background;
 } Jogo_bau;
 
-// Função para inicializar o jogo
+// Funï¿½ï¿½o para inicializar o jogo
 void init_jogo_bau(Jogo_bau* jogo2) {
     al_init();
     al_install_keyboard();
-    jogo2->timer = al_create_timer(1.0 / 30.0);// Cria um timer para controlar a taxa de atualização do jogo
+    jogo2->timer = al_create_timer(1.0 / 30.0);// Cria um timer para controlar a taxa de atualizaï¿½ï¿½o do jogo
     jogo2->background = al_load_bitmap("assets/images/final2.png");
     jogo2->event_queue = al_create_event_queue();
     al_register_event_source(jogo2->event_queue, al_get_display_event_source(jogo2->display));
@@ -31,7 +31,7 @@ void bau(ALLEGRO_DISPLAY* display, GameState* game_state, int quartos, int numer
     jogo2.display = display;
     init_jogo_bau(&jogo2);
 
-    bool running = true;// Indica se o loop do jogo está rodando
+    bool running = true;// Indica se o loop do jogo estï¿½ rodando
 
     if (numero_aleatorio % 2 == 0 && quartos==2) {
         jogo2.background = al_load_bitmap("assets/images/final1.png");
@@ -47,11 +47,11 @@ void bau(ALLEGRO_DISPLAY* display, GameState* game_state, int quartos, int numer
         ALLEGRO_EVENT event;
         al_wait_for_event(jogo2.event_queue, &event);// Espera por um evento (teclado, timer, etc.)
 
-        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {// Se o usuário fechar a janela, encerra o jogo
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {// Se o usuï¿½rio fechar a janela, encerra o jogo
             running = false;
         }
 
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla é pressionada
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla ï¿½ pressionada
             if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && numero_aleatorio % 2 == 0) {
                 *game_state = MAPA;
                 running = false;
@@ -69,7 +69,7 @@ void bau(ALLEGRO_DISPLAY* display, GameState* game_state, int quartos, int numer
                 running = false;
             }
         }
-        // Limpa a tela e desenha o cenário e o personagem
+        // Limpa a tela e desenha o cenï¿½rio e o personagem
         al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
             al_get_bitmap_height(jogo2.background), 0, 0,
@@ -77,7 +77,7 @@ void bau(ALLEGRO_DISPLAY* display, GameState* game_state, int quartos, int numer
         al_flip_display();// Atualiza a tela
     }
 
-    // Destrói os recursos após o fim do jogo
+    // Destrï¿½i os recursos apï¿½s o fim do jogo
     al_destroy_bitmap(jogo2.background);
     al_destroy_timer(jogo2.timer);
     al_destroy_event_queue(jogo2.event_queue);
