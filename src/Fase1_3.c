@@ -18,6 +18,14 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogador jogador;
     init_jogador(&jogador, al_get_display_height(display));
 
+     // Carregar a imagem da tecla de pausa
+    ALLEGRO_BITMAP* tecla_pause = al_load_bitmap("assets/images/tecle_pause.png");
+    if (!tecla_pause) {
+        printf("Falha ao carregar a imagem tecla_pause.png!\n");
+        return;  // Se falhar em carregar a imagem, sair da função
+    }
+
+
     bool running = true;
 
     // Loop principal do jogo
@@ -142,6 +150,22 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         al_draw_scaled_bitmap(jogo.background, 0, 0, al_get_bitmap_width(jogo.background),
             al_get_bitmap_height(jogo.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
+
+        // Desenha a imagem da tecla de pausa no centro da tela (ajustada)
+        // Fator de escala para diminuir a imagem
+        float escala = 0.15f;  // Reduz a imagem para 50% do tamanho original
+        int offset_x = 25; // Move para a direita
+        int offset_y = 25; // Move para cima
+
+        int largura_imagem = al_get_bitmap_width(tecla_pause);
+        int altura_imagem = al_get_bitmap_height(tecla_pause);
+
+        al_draw_scaled_bitmap(tecla_pause,
+                       0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
+                       (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
+                       (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
+                       largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
+                       0);  // Nenhuma rotação
 
         // Desenha o jogador
         desenha_jogador(&jogador);
