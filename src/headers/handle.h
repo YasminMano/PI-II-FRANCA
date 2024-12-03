@@ -2,7 +2,7 @@
 #define HANDLE_H
 
 #include <stdbool.h>     // Inclui suporte para o tipo booleano (true/false)
-#include "headers/game.h"        // Inclui game.h para acessar GameState e AllegroGame
+#include "game.h"        // Inclui game.h para acessar GameState e AllegroGame
 
 // Função que lida com a lógica de transição entre as telas do jogo
 bool handleScrens(struct AllegroGame* game);

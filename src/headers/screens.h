@@ -1,7 +1,7 @@
 #ifndef SCREENS_H
 #define SCREENS_H
 
-#include "headers/game.h"  // Incluindo game.h para usar GameState e AllegroGame
+#include "game.h"  // Incluindo game.h para usar GameState e AllegroGame
 
 // Função que desenha a tela de início (menu principal) do jogo.
 // Utiliza a estrutura AllegroGame para acessar as informações do display e eventos.

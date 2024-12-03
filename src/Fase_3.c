@@ -23,7 +23,6 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     for (int i = 0; i < 3; i++) {
         strncpy(alternativas_temp[i], pergunta->alternativas[i], sizeof(alternativas_temp[i]) - 1);
         alternativas_temp[i][sizeof(alternativas_temp[i]) - 1] = '\0'; // Garantir que termina em '\0'
-
     }
 
 

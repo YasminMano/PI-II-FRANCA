@@ -6,7 +6,6 @@
 #include "headers/mapa.h"
 #include "headers/resumo_fase.h"
 #include "game.h"
-#include "resumo_fase.h"
 
 ALLEGRO_BITMAP* background_mapa = NULL;
 ALLEGRO_BITMAP* red_circle = NULL;
