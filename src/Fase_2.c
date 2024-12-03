@@ -548,7 +548,7 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display) {
     al_init();  // Inicializa a biblioteca Allegro
     al_install_keyboard();  // Instala o suporte ao teclado
 
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);  // Cria um timer para controlar a taxa de atualização do jogo
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);  // Cria um timer para controlar a taxa de atualização
 
     // Carregar as imagens do personagem e do cenário
     ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/mulher.png");
