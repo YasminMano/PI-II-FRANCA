@@ -51,7 +51,6 @@ void init_jogador2(Jogador2* jogador2, int display_height) {
     jogador2->knocked_back = false;
     jogador2->knockback_velocity = 0;
     jogador2->vidas = 3;
-    jogador2->x = 0;
 }
 
 // Estrutura para o contexto do jogo
@@ -76,7 +75,7 @@ void init_jogo2(Jogo2* jogo2) {
 }
  
 // Função que desenha o jogador
-static void desenha_jogador2(Jogador2* jogador2) {
+void desenha_jogador2(Jogador2* jogador2) {
     int frame_x[] = { 0, 213, 346 };
     int frame_cx = frame_x[jogador2->current_frame];
     int frame_cy = 0;
@@ -91,7 +90,7 @@ static void desenha_jogador2(Jogador2* jogador2) {
         jogador2->facing_right ? 0 : ALLEGRO_FLIP_HORIZONTAL
     );
 }
-
+int x = 0;
 void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo2 jogo2;
     jogo2.display = display;
@@ -102,20 +101,19 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
     bool running = true;
 
-    if (jogador2.x > 0) {
+    if (x > 0) {
         jogador2.pos_x = 1150;
     }
-
     // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
         al_wait_for_event(jogo2.event_queue, &event);
+        x++;
 
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
        
-        x++;
         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
             if (!jogador2.knocked_back) {
                 if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
@@ -210,8 +208,6 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Desenha o personagem na direção correta com ajuste de escala
         desenha_jogador2(&jogador2);
         al_flip_display();// Atualiza a tela
-
-        printf("%d\n", jogador2.pos_x);
     }
     // Destrói os recursos após o fim do jogo
     al_destroy_bitmap(jogo2.background);

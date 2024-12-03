@@ -27,7 +27,7 @@ typedef struct {
 } Jogador2_3;
 
 // Função para inicializar o jogador
-void init_jogador2_3(Jogador2_3* jogador2, int display_height) {
+static void init_jogador2_3(Jogador2_3* jogador2, int display_height) {
     jogador2->sprite_sheet = al_load_bitmap("assets/images/mulher.png");
     jogador2->frame_width = 136;// Largura de cada frame do personagem
     jogador2->frame_height = 250;// Altura de cada frame do personagem
@@ -61,7 +61,7 @@ typedef struct {
 } Jogo2_3;
 
 // Função para inicializar o jogo
-void init_jogo2_3(Jogo2_3* jogo2) {
+static void init_jogo2_3(Jogo2_3* jogo2) {
     al_init();
     al_install_keyboard();
     jogo2->timer = al_create_timer(1.0 / 30.0);// Cria um timer para controlar a taxa de atualização do jogo
@@ -123,6 +123,10 @@ void iniciar_fase_2_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
                 }
                 else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
                     jogador2.jumping = true;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x>=785 && jogador2.pos_x<=915) {
+                    corredor(display, &game_state);
+                    running = false;
                 }
             }
         }
@@ -186,8 +190,7 @@ void iniciar_fase_2_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         // Transição para o corredor
         if (jogador2.pos_x > 1180) {
-            corredor(display, &game_state);
-            running = false;
+            jogador2.move_right = false;
         }
 
         if (jogador2.pos_x < 0) {
@@ -204,8 +207,6 @@ void iniciar_fase_2_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Desenha o personagem na direção correta com ajuste de escala
         desenha_jogador2_3(&jogador2);
         al_flip_display();// Atualiza a tela
-
-        printf("%d\n", jogador2.pos_x);
     }
     // Destrói os recursos após o fim do jogo
     al_destroy_bitmap(jogo2.background);
