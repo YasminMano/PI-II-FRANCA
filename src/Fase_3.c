@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h> // Para geração de números aleatórios
-#include "headers/game.h"
-#include "headers/mapa.h"
+#include "game.h"
 
 // Estrutura para armazenar informações sobre cada pergunta
 typedef struct {
@@ -22,7 +21,8 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     int resposta_certa_original = pergunta->resposta_certa;
 
     for (int i = 0; i < 3; i++) {
-        strcpy_s(alternativas_temp[i], sizeof(alternativas_temp[i]), pergunta->alternativas[i]);
+        strncpy(alternativas_temp[i], pergunta->alternativas[i], sizeof(alternativas_temp[i]) - 1);
+        alternativas_temp[i][sizeof(alternativas_temp[i]) - 1] = '\0'; // Garantir que termina em '\0'
     }
 
     for (int i = 2; i > 0; i--) {
@@ -33,7 +33,9 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     }
 
     for (int i = 0; i < 3; i++) {
-        strcpy_s(pergunta->alternativas[i], sizeof(pergunta->alternativas[i]), alternativas_temp[indices[i]]);
+        strncpy(pergunta->alternativas[i], alternativas_temp[indices[i]], sizeof(pergunta->alternativas[i]) - 1);
+        pergunta->alternativas[i][sizeof(pergunta->alternativas[i]) - 1] = '\0'; // Garantir que termina em '\0'
+
         if (indices[i] == resposta_certa_original) {
             pergunta->resposta_certa = i;
         }
@@ -91,15 +93,21 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         return;
     }
 
-    int pause_x = al_get_display_width(display) / 2 - al_get_bitmap_width(botao_pause) / 2;
-    int pause_y = al_get_display_height(display) / 2 - al_get_bitmap_height(botao_pause) / 2;
+    // Reduzir o tamanho do botão de pausa
+    float botao_pause_scale = 0.15;
+    int pause_width = al_get_bitmap_width(botao_pause) * botao_pause_scale;
+    int pause_height = al_get_bitmap_height(botao_pause) * botao_pause_scale;
+
+    // Posicionar no canto superior direito
+    int pause_x = al_get_display_width(display) - pause_width - 10; // 10px de margem
+    int pause_y = 10; // 10px de margem superior
 
     Pergunta perguntas[5] = {
-        {al_load_bitmap("assets/images/question1.png"), {"Foi a Guerra dos Cem Anos!", "Foi a corte luxuosa!", "Foi a Revolução Industrial!"}, 1},
+        {al_load_bitmap("assets/images/question1.png"), {"Foi a Guerra dos Cem Anos, que ainda nos afeta!", "Foi a sua corte luxuosa e os impostos esmagadores!", "Foi a Revolução Industrial que desestabilizou tudo!"}, 1},
         {al_load_bitmap("assets/images/question2.png"), {"Liberdade, Igualdade e Fraternidade!", "Paz, Pão e Terra!", "Ordem e Progresso!"}, 0},
-        {al_load_bitmap("assets/images/question3.png"), {"Comerciantes ricos!", "Filósofos inativos!", "A monarquia!"}, 2},
-        {al_load_bitmap("assets/images/question4.png"), {"Rousseau!", "Robespierre!", "Napoleão!"}, 1},
-        {al_load_bitmap("assets/images/question5.png"), {"Constituição de 1791!", "Declaração Universal!", "Declaração dos Direitos do Homem!"}, 2}
+        {al_load_bitmap("assets/images/question3.png"), {"Os comerciantes que enriqueceram às nossas custas!", "Os filósofos que só sabem falar e nunca agir!", "Foi a monarquia que nos explorou!"}, 2},
+        {al_load_bitmap("assets/images/question4.png"), {"Jean-Jacques Rousseau, o filósofo rebelde!", "Foi Maximilien Robespierre, o verdadeiro líder!", "Foi Napoleão, claro!"}, 1},
+        {al_load_bitmap("assets/images/question5.png"), {"Constituição de 1791!", "Declaração Universal!", "A Declaração dos Direitos do Homem e do Cidadão!"}, 2}
     };
 
     for (int i = 0; i < 5; i++) {
@@ -135,11 +143,11 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
             int mouse_x = event.mouse.x;
             int mouse_y = event.mouse.y;
 
-            if (mouse_x >= pause_x && mouse_x <= pause_x + al_get_bitmap_width(botao_pause) &&
-                mouse_y >= pause_y && mouse_y <= pause_y + al_get_bitmap_height(botao_pause)) {
+            if (mouse_x >= pause_x && mouse_x <= pause_x + pause_width &&
+                mouse_y >= pause_y && mouse_y <= pause_y + pause_height) {
                 printf("Botão de pausa clicado. Voltando ao mapa.\n");
                 running = false;
-                *game_state = MAPA; // Corrigido para atualizar o estado corretamente
+                *game_state = PAUSE_MENU; // Corrigido para atualizar o estado corretamente
             }
 
             for (int i = 0; i < 3; i++) {
@@ -174,7 +182,9 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         al_draw_bitmap(perguntas[indice_pergunta].imagem_pergunta, 450, -110, 0);
 
-        al_draw_bitmap(botao_pause, pause_x, pause_y, 0);
+        // Desenhar botão de pausa escalado no canto superior direito
+        al_draw_scaled_bitmap(botao_pause, 0, 0, al_get_bitmap_width(botao_pause), al_get_bitmap_height(botao_pause),
+                              pause_x, pause_y, pause_width, pause_height, 0);
 
         for (int i = 0; i < 3; i++) {
             al_draw_filled_rectangle(botao_x, botao_y[i], botao_x + largura, botao_y[i] + altura, button_color);

@@ -15,6 +15,7 @@ typedef enum {
     FASE_1,       // Primeira fase do jogo
     FASE_2,       // Segunda fase do jogo
     FASE_3,       // Terceira fase do jogo
+    PAUSE_MENU,   // Tela de pausa
     SAIR          // Estado para encerrar o jogo
 } GameState;
 
