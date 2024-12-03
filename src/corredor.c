@@ -32,8 +32,8 @@ void init_jogador_corredor(Jogador_corredor* jogador2, int display_height) {
     jogador2->frame_width = 136;// Largura de cada frame do personagem
     jogador2->frame_height = 250;// Altura de cada frame do personagem
     jogador2->pos_x = 50;// Posição X inicial
-    jogador2->scale_factor = 0.8;// Escala do personagem ajustada
-    jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 60;// Ajuste para que o personagem toque o chão
+    jogador2->scale_factor = 0.9;// Escala do personagem ajustada
+    jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 40;// Ajuste para que o personagem toque o chão
     jogador2->initial_pos_y = jogador2->pos_y;// Armazena a posição inicial do personagem para controlar o pulo
     jogador2->jump_velocity = -15.0f;// Velocidade inicial do pulo
     jogador2->gravity = 0.7f;// Gravidade para desacelerar o pulo
@@ -89,7 +89,7 @@ static void desenha_jogador_corredor(Jogador_corredor* jogador2) {
         jogador2->facing_right ? 0 : ALLEGRO_FLIP_HORIZONTAL
     );
 }
-
+int z = 0;
 void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo_corredor jogo2;
     jogo2.display = display;
@@ -99,6 +99,16 @@ void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
     init_jogador_corredor(&jogador2, al_get_display_height(display));
 
     jogo2.background = al_load_bitmap("assets/images/corredor.png");
+
+    if (z == 1) {
+        jogador2.pos_x = 135;
+    }
+    else if (z == 2) {
+        jogador2.pos_x = 610;
+    }
+    else if (z == 3) {
+        jogador2.pos_x = 1090;
+    }
 
     bool running = true;  // Indica se o loop do jogo está rodando
 
@@ -127,17 +137,20 @@ void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
                     jogador2.jumping = true;
                 }
                 // F muda a tela
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 20 && jogador2.pos_x <= 160) {
-                    quarto(display, &game_state);
-                    running = false;
-                    printf("deu");
-                }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 500 && jogador2.pos_x <= 630) {
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 60 && jogador2.pos_x <= 215) {
+                    z = 1; 
                     quarto(display, &game_state);
                     running = false;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 970 && jogador2.pos_x <= 1110) {
-                   //banheiro(display);
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 555 && jogador2.pos_x <= 670) {
+                    z = 2;
+                    quarto(display, &game_state);
+                    running = false;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 1015 && jogador2.pos_x <= 1160) {
+                    z = 3;
+                    quarto(display, &game_state);
+                    running = false;
                 }
             }
         }
@@ -199,12 +212,11 @@ void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
-        if (jogador2.pos_x > 1200) {
+        if (jogador2.pos_x > 1180) {
             jogador2.move_right = false;
         }
         if (jogador2.pos_x < 0) {
-            iniciar_fase_2(display, &game_state); // Chama a tela do fase 2
-            running = false;   // Sai do loop da fase atual
+            jogador2.move_left = false;
         }
 
         // Limpa a tela e desenha o cenário e o personagem
@@ -216,7 +228,7 @@ void corredor(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Desenha o personagem na direção correta com ajuste de escala
         desenha_jogador_corredor(&jogador2);
         al_flip_display();// Atualiza a tela
-
+        printf("%d\n", z);
     }
     // Destrói os recursos após o fim do jogo
     al_destroy_bitmap(jogo2.background);
