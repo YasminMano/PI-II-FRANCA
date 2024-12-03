@@ -19,6 +19,8 @@ typedef enum {
     FASE_2_3,
     CORREDOR,
     QUARTO,
+    QUARTO2,
+    BAU,
     BANHEIRO,
     FASE_3,       // Terceira fase do jogo
     PAUSE_MENU,   // Tela de pausa

@@ -31,9 +31,9 @@ void init_jogador_quarto(Jogador_quarto* jogador2, int display_height) {
     jogador2->sprite_sheet = al_load_bitmap("assets/images/mulher.png");
     jogador2->frame_width = 136;// Largura de cada frame do personagem
     jogador2->frame_height = 250;// Altura de cada frame do personagem
-    jogador2->pos_x = 50;// Posição X inicial
-    jogador2->scale_factor = 0.8;// Escala do personagem ajustada
-    jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 60;// Ajuste para que o personagem toque o chão
+    jogador2->pos_x = 525;// Posição X inicial
+    jogador2->scale_factor = 1.0;// Escala do personagem ajustada
+    jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 30;// Ajuste para que o personagem toque o chão
     jogador2->initial_pos_y = jogador2->pos_y;// Armazena a posição inicial do personagem para controlar o pulo
     jogador2->jump_velocity = -15.0f;// Velocidade inicial do pulo
     jogador2->gravity = 0.7f;// Gravidade para desacelerar o pulo
@@ -65,7 +65,7 @@ void init_jogo_quarto(Jogo_quarto* jogo2) {
     al_init();
     al_install_keyboard();
     jogo2->timer = al_create_timer(1.0 / 30.0);// Cria um timer para controlar a taxa de atualização do jogo
-    jogo2->background = al_load_bitmap("assets/images/caminho.png");
+    jogo2->background = al_load_bitmap("assets/images/quarto.png");
     jogo2->event_queue = al_create_event_queue();
     al_register_event_source(jogo2->event_queue, al_get_display_event_source(jogo2->display));
     al_register_event_source(jogo2->event_queue, al_get_timer_event_source(jogo2->timer));
@@ -89,7 +89,7 @@ static void desenha_jogador_quarto(Jogador_quarto* jogador2) {
         jogador2->facing_right ? 0 : ALLEGRO_FLIP_HORIZONTAL
     );
 }
-
+int w = 0;
 void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo_quarto jogo2;
     jogo2.display = display;
@@ -98,15 +98,28 @@ void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogador_quarto jogador2;
     init_jogador_quarto(&jogador2, al_get_display_height(display));
 
-    jogo2.background = al_load_bitmap("assets/images/quarto.png");
-
     bool running = true;  // Indica se o loop do jogo está rodando
-
+    if (w == 1) {
+        jogador2.pos_x = 20;
+        w = 0;
+    }
+    else if (w == 2) {
+        jogador2.pos_x = 1090;
+        w = 0;
+    }
+    else if (w == 3) {
+        jogador2.pos_x = 750;
+        w = 0;
+    }
+    else {
+        jogador2.pos_x = 525;
+        w = 0;
+    }
     // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
         al_wait_for_event(jogo2.event_queue, &event);// Espera por um evento (teclado, timer, etc.)
-
+        w++;
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {// Se o usuário fechar a janela, encerra o jogo
             running = false;
         }
@@ -127,20 +140,25 @@ void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
                     jogador2.jumping = true;
                 }
                 // F abri outra porta
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 494 && jogador2.pos_x <= 590) {// porta para voltar
-                    corredor(display, &game_state); // Chama a tela do fase 2
-                    running = false;   // Sai do loop da fase atual
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 475 && jogador2.pos_x <= 605) {// porta para voltar
+                    corredor(display, &game_state);
+                    running = false;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 718 && jogador2.pos_x <= 818) {// porta para o banheiro
-                    banheiro(display, &game_state); // Chama a tela do fase 2
-                    running = false;   // Sai do loop da fase atual
+                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 700 && jogador2.pos_x <= 830) {// porta para o banheiro
+                    w = 3;
+                    banheiro(display, &game_state,1);
+                    running = false;
                 }
                 // E abri os baus
-                else if (event.keyboard.keycode == ALLEGRO_KEY_E && jogador2.pos_x >= -4 && jogador2.pos_x <= 114) {// abri o bau 1
-                    //bau(display);
+                else if (event.keyboard.keycode == ALLEGRO_KEY_E && jogador2.pos_x >= -10 && jogador2.pos_x <= 120) {// abri o bau 1
+                    w = 1;
+                    bau(display, &game_state, 1, 1);
+                    running = false;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_E && jogador2.pos_x >= 1082 && jogador2.pos_x <= 1198) {// abri o bau 2
-                    //bau(display);
+                else if (event.keyboard.keycode == ALLEGRO_KEY_E && jogador2.pos_x >= 1045 && jogador2.pos_x <= 1190) {// abri o bau 2
+                    w = 2;
+                    bau(display, &game_state, 1, 1);
+                    running = false;
                 }
             }
         }
@@ -202,7 +220,7 @@ void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
-        if (jogador2.pos_x > 1200) {
+        if (jogador2.pos_x > 1185) {
             jogador2.move_right = false;
         }
         if (jogador2.pos_x < 0) {
@@ -218,6 +236,7 @@ void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Desenha o personagem na direção correta com ajuste de escala
         desenha_jogador_quarto(&jogador2);
         al_flip_display();// Atualiza a tela
+        printf("%d\n", jogador2.pos_x);
     }
     // Destrói os recursos após o fim do jogo
     al_destroy_bitmap(jogo2.background);

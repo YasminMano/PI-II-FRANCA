@@ -101,6 +101,12 @@
     <ClCompile Include="src\quarto.c">
       <Filter>Arquivos de origem</Filter>
     </ClCompile>
+    <ClCompile Include="src\quarto2.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bau.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\fases.h">

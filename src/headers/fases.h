@@ -12,6 +12,8 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state);
 void iniciar_fase_2_3(ALLEGRO_DISPLAY* display, GameState* game_state);
 void corredor(ALLEGRO_DISPLAY* display, GameState* game_state);
 void quarto(ALLEGRO_DISPLAY* display, GameState* game_state);
+void quarto2(ALLEGRO_DISPLAY* display, GameState* game_state);
+void bau(ALLEGRO_DISPLAY* display, GameState* game_state);
 void banheiro(ALLEGRO_DISPLAY* display, GameState* game_state);
 void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state);
 

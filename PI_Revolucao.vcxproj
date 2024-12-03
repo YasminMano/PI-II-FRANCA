@@ -155,6 +155,7 @@
     <ClCompile Include="src\Fase1_2.c" />
     <ClCompile Include="src\Fase1_3.c" />
     <ClCompile Include="src\banheiro.c" />
+    <ClCompile Include="src\bau.c" />
     <ClCompile Include="src\corredor.c" />
     <ClCompile Include="src\Fase_1.c" />
     <ClCompile Include="src\Fase_2.c" />
@@ -169,6 +170,7 @@
     <ClCompile Include="src\mapa.c" />
     <ClCompile Include="src\pause_menu.c" />
     <ClCompile Include="src\quarto.c" />
+    <ClCompile Include="src\quarto2.c" />
     <ClCompile Include="src\resumo_fase.c" />
     <ClCompile Include="src\resumo_inicio.c" />
     <ClCompile Include="src\screens.c" />

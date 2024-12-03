@@ -32,7 +32,7 @@ static void init_jogador2_3(Jogador2_3* jogador2, int display_height) {
     jogador2->frame_width = 136;// Largura de cada frame do personagem
     jogador2->frame_height = 250;// Altura de cada frame do personagem
     jogador2->pos_x = 20;// Posição X inicial
-    jogador2->scale_factor = 0.8;// Escala do personagem ajustada
+    jogador2->scale_factor = 0.9;// Escala do personagem ajustada
     jogador2->pos_y = display_height - jogador2->frame_height * jogador2->scale_factor - 60;// Ajuste para que o personagem toque o chão
     jogador2->initial_pos_y = jogador2->pos_y;// Armazena a posição inicial do personagem para controlar o pulo
     jogador2->jump_velocity = -15.0f;// Velocidade inicial do pulo
