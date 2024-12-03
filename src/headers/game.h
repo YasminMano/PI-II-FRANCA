@@ -6,15 +6,17 @@
 
 // Enum que define os possíveis estados do jogo
 typedef enum {
-    MENU,         // Menu principal do jogo
-    RESUMO,       // Tela de resumo
+    TELA_INICIO,  // Tela inicial do jogo (menu principal)
+    RESUMO,       // Tela de resumo inicial
+    RESUMO_1,     // Resumo da Fase 1
+    RESUMO_2,     // Resumo da Fase 2
+    RESUMO_3,     // Resumo da Fase 3
     MAPA,         // Tela do mapa
     FASE_1,       // Primeira fase do jogo
     FASE_2,       // Segunda fase do jogo
     FASE_3,       // Terceira fase do jogo
-    CONFIG,       // Tela de configurações
-    GAME,         // Estado de jogo ativo
-    TELA_INICIO   // Tela de início do jogo
+    PAUSE_MENU,   // Tela de pausa
+    SAIR          // Estado para encerrar o jogo
 } GameState;
 
 // Estrutura que contém todas as informações necessárias para gerenciar o jogo
@@ -31,5 +33,8 @@ typedef struct AllegroGame {
     bool was_mouse_pressed;            // Indica se o mouse estava pressionado anteriormente
     bool is_sound;                     // Indica se o som está ativado
 } AllegroGame;
+
+// Declara a variável global que armazena o estado atual do jogo
+extern GameState game_state;
 
 #endif // GAME_H

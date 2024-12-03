@@ -2,77 +2,89 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "headers/game.h"
+#include "game.h"
 
-ALLEGRO_BITMAP *background_mapa = NULL;
-ALLEGRO_BITMAP *red_circle = NULL;
+ALLEGRO_BITMAP* background_mapa = NULL;
+ALLEGRO_BITMAP* red_circle = NULL;
+ALLEGRO_BITMAP* message_box = NULL; // Adicionada a caixa de mensagem
 
-// Coordenadas e tamanhos das áreas clicáveis (bolinhas)
+// Coordenadas e tamanhos das áreas clicáveis (bolinhas e caixa)
 int bolinha1_x = 570, bolinha1_y = 250, bolinha_size = 50;
 int bolinha2_x = 450, bolinha2_y = 450;
 int bolinha3_x = 690, bolinha3_y = 570;
+int caixa1_x = 620, caixa1_y = 250, caixa_size = 50;
+int caixa2_x = 500, caixa2_y = 450;
+int caixa3_x = 740, caixa3_y = 570;
 
-// Função que inicializa o mapa
 void init_mapa() {
-    // Carregar a imagem do mapa e a bolinha vermelha
+    // Carregar a imagem do mapa, bolinha vermelha e caixa de mensagem
     background_mapa = al_load_bitmap("assets/images/mapa_2.png");
     red_circle = al_load_bitmap("assets/images/vermelho.png");
+    message_box = al_load_bitmap("assets/images/caixa_mensagem.png");
 
-    if (!background_mapa || !red_circle) {
-        printf("Erro ao carregar a imagem do mapa ou círculo vermelho.\n");
+    if (!background_mapa || !red_circle || !message_box) {
+        printf("Erro ao carregar a imagem do mapa, círculo vermelho ou caixa de mensagem.\n");
     }
 }
 
-// Função que desenha o mapa e as bolinhas clicáveis
 void draw_mapa() {
     if (background_mapa) {
         // Desenha o mapa redimensionado para a tela inteira
-        al_draw_scaled_bitmap(background_mapa, 0, 0, al_get_bitmap_width(background_mapa), al_get_bitmap_height(background_mapa), 
-                              0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), 0);
+        al_draw_scaled_bitmap(background_mapa, 0, 0, al_get_bitmap_width(background_mapa), al_get_bitmap_height(background_mapa),
+            0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), 0);
     }
 
-    // Desenha as bolinhas vermelhas nas suas posições
+    // Desenha as bolinhas vermelhas
     al_draw_scaled_bitmap(red_circle, 0, 0, al_get_bitmap_width(red_circle), al_get_bitmap_height(red_circle),
-                          bolinha1_x, bolinha1_y, bolinha_size, bolinha_size, 0); // Bolinha 1
+        bolinha1_x, bolinha1_y, bolinha_size, bolinha_size, 0);
     al_draw_scaled_bitmap(red_circle, 0, 0, al_get_bitmap_width(red_circle), al_get_bitmap_height(red_circle),
-                          bolinha2_x, bolinha2_y, bolinha_size, bolinha_size, 0); // Bolinha 2
+        bolinha2_x, bolinha2_y, bolinha_size, bolinha_size, 0);
     al_draw_scaled_bitmap(red_circle, 0, 0, al_get_bitmap_width(red_circle), al_get_bitmap_height(red_circle),
-                          bolinha3_x, bolinha3_y, bolinha_size, bolinha_size, 0); // Bolinha 3
+        bolinha3_x, bolinha3_y, bolinha_size, bolinha_size, 0);
+
+    // Desenha a caixa de mensagem
+    al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
+        caixa1_x, caixa1_y, caixa_size, caixa_size, 0);
+    al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
+        caixa2_x, caixa2_y, caixa_size, caixa_size, 0);
+    al_draw_scaled_bitmap(message_box, 0, 0, al_get_bitmap_width(message_box), al_get_bitmap_height(message_box),
+        caixa3_x, caixa3_y, caixa_size, caixa_size, 0);
 }
 
-// Função que verifica se o mouse clicou dentro de uma bolinha
-bool is_mouse_over_bolinha(int mouse_x, int mouse_y, int bolinha_x, int bolinha_y, int bolinha_size) {
-    return (mouse_x >= bolinha_x && mouse_x <= (bolinha_x + bolinha_size) &&
-            mouse_y >= bolinha_y && mouse_y <= (bolinha_y + bolinha_size));
+bool is_mouse_over_area(int mouse_x, int mouse_y, int area_x, int area_y, int area_size) {
+    return (mouse_x >= area_x && mouse_x <= (area_x + area_size) &&
+            mouse_y >= area_y && mouse_y <= (area_y + area_size));
 }
 
-// Função que lida com os eventos e cliques nas bolinhas
-void handle_mapa_event(ALLEGRO_EVENT event, GameState *game_state) {
+void handle_mapa_event(ALLEGRO_EVENT event, GameState* game_state) {
     if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
         int mouse_x = event.mouse.x;
         int mouse_y = event.mouse.y;
 
-        // Verifica se o clique foi na bolinha 1
-        if (is_mouse_over_bolinha(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
-            *game_state = FASE_1;  // Vai para a Fase 1
-        }
-        // Verifica se o clique foi na bolinha 2
-        else if (is_mouse_over_bolinha(mouse_x, mouse_y, bolinha2_x, bolinha2_y, bolinha_size)) {
-            *game_state = FASE_2;  // Vai para a Fase 2
-        }
-        // Verifica se o clique foi na bolinha 3
-        else if (is_mouse_over_bolinha(mouse_x, mouse_y, bolinha3_x, bolinha3_y, bolinha_size)) {
-            *game_state = FASE_3;  // Vai para a Fase 3
+        if (is_mouse_over_area(mouse_x, mouse_y, caixa1_x, caixa1_y, caixa_size)) {
+            init_resumo_fase_1(al_get_current_display(), game_state);
+        } else if (is_mouse_over_area(mouse_x, mouse_y, caixa2_x, caixa2_y, caixa_size)) {
+            init_resumo_fase_2(al_get_current_display(), game_state);
+        } else if (is_mouse_over_area(mouse_x, mouse_y, caixa3_x, caixa3_y, caixa_size)) {
+            init_resumo_fase_3(al_get_current_display(), game_state);
+        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha1_x, bolinha1_y, bolinha_size)) {
+            *game_state = FASE_1;
+        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha2_x, bolinha2_y, bolinha_size)) {
+            *game_state = FASE_2;
+        } else if (is_mouse_over_area(mouse_x, mouse_y, bolinha3_x, bolinha3_y, bolinha_size)) {
+            *game_state = FASE_3;
         }
     }
 }
 
-// Função que destrói os recursos do mapa
 void destroy_mapa() {
     if (background_mapa) {
         al_destroy_bitmap(background_mapa);
     }
     if (red_circle) {
         al_destroy_bitmap(red_circle);
+    }
+    if (message_box) {
+        al_destroy_bitmap(message_box);
     }
 }
