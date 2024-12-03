@@ -224,7 +224,6 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         }
 
 
-
         // Verifica se o jogador chegou à posição desejada para transitar para a próxima fase
         if (jogador.pos_x >= 1000) {
             *game_state = FASE1_2;  // Altera o estado do jogo para a próxima fase
