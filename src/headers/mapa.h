@@ -2,7 +2,7 @@
 #define MAPA_H
 
 #include <allegro5/allegro.h>
-#include "headers/game.h"
+#include "game.h"
 
 // Declaração da função init_mapa para receber a fila de eventos
 void init_mapa(ALLEGRO_EVENT_QUEUE* event_queue);
