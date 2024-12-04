@@ -140,54 +140,65 @@ void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
             running = false;
         }
 
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla � pressionada
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
             if (!jogador2.knocked_back) {
-                if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
-                    jogador2.move_right = true;
-                    jogador2.facing_right = true;
-                    jogador2.moving = true;
+                switch (event.keyboard.keycode) {
+                    case ALLEGRO_KEY_D:  // Move para a direita
+                        jogador2.move_right = true;
+                        jogador2.facing_right = true;
+                        jogador2.moving = true;
+                        break;
+                    case ALLEGRO_KEY_A:  // Move para a esquerda
+                        jogador2.move_left = true;
+                        jogador2.facing_right = false;
+                        jogador2.moving = true;
+                        break;
+                    case ALLEGRO_KEY_SPACE:  // Pulo
+                        if (!jogador2.jumping) {
+                            jogador2.jumping = true;
+                        }
+                        break;
+                    case ALLEGRO_KEY_F:  // Transições específicas
+                        if (jogador2.pos_x >= 475 && jogador2.pos_x <= 605) {
+                            corredor(display, &game_state);
+                            running = false;
+                        } else if (jogador2.pos_x >= 700 && jogador2.pos_x <= 830) {
+                            w = 3;
+                            banheiro(display, &game_state, 1);
+                            running = false;
+                        }
+                        break;
+                    case ALLEGRO_KEY_E:  // Abre os baús
+                        if (jogador2.pos_x >= -10 && jogador2.pos_x <= 120) {
+                            w = 1;
+                            bau(display, &game_state, 1, 1);
+                            running = false;
+                        } else if (jogador2.pos_x >= 1045 && jogador2.pos_x <= 1190) {
+                            w = 2;
+                            bau(display, &game_state, 1, 1);
+                            running = false;
+                        }
+                        break;
+                    case ALLEGRO_KEY_P:  // Pausa
+                        printf("Botão de pausa clicado. Voltando ao mapa.\n");
+                        *game_state = PAUSE_MENU;
+                        running = false;
+                        break;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Move para a esquerda
-                    jogador2.move_left = true;
-                    jogador2.facing_right = false;
-                    jogador2.moving = true;
-                }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
-                    jogador2.jumping = true;
-                }
-                // F abri outra porta
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 475 && jogador2.pos_x <= 605) {// porta para voltar
-                    corredor(display, &game_state);
-                    running = false;
-                }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_F && jogador2.pos_x >= 700 && jogador2.pos_x <= 830) {// porta para o banheiro
-                    w = 3;
-                    banheiro(display, &game_state,1);
-                    running = false;
-                }
-                // E abri os baus
-                else if (event.keyboard.keycode == ALLEGRO_KEY_E && jogador2.pos_x >= -10 && jogador2.pos_x <= 120) {// abri o bau 1
-                    w = 1;
-                    bau(display, &game_state, 1, 1);
-                    running = false;
-                }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_E && jogador2.pos_x >= 1045 && jogador2.pos_x <= 1190) {// abri o bau 2
-                    w = 2;
-                    bau(display, &game_state, 1, 1);
-                    running = false;
-                }
+            }
+        } else if (event.type == ALLEGRO_EVENT_KEY_UP) {
+            switch (event.keyboard.keycode) {
+                case ALLEGRO_KEY_D:  // Para de mover para a direita
+                    jogador2.move_right = false;
+                    if (!jogador2.move_left) jogador2.moving = false;
+                    break;
+                case ALLEGRO_KEY_A:  // Para de mover para a esquerda
+                    jogador2.move_left = false;
+                    if (!jogador2.move_right) jogador2.moving = false;
+                    break;
             }
         }
-        else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla � solta
-            if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Para de se mover para a direita
-                jogador2.move_right = false;
-                if (!jogador2.move_left) jogador2.moving = false;
-            }
-            else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Para de se mover para a esquerda
-                jogador2.move_left = false;
-                if (!jogador2.move_right) jogador2.moving = false;
-            }
-        }
+
 
         // Movimento horizontal
         if (!jogador2.knocked_back) {
@@ -241,20 +252,6 @@ void quarto(ALLEGRO_DISPLAY* display, GameState* game_state) {
         }
         if (jogador2.pos_x < 0) {
             jogador2.move_left = false;
-        }
-
-        // Se o jogo estiver pausado, ignore o restante da l�gica
-        if (*game_state == "PAUSE_MENU") {
-            continue;
-        }
-
-        // Detec��o de pressionamento da tecla 'P' para pausar
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-            if (event.keyboard.keycode == ALLEGRO_KEY_P) {
-                printf("Pausando o jogo.\n");
-                exibir_menu_pausa(display, &game_state);
-                running = false;
-            }
         }
 
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {

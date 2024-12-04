@@ -22,7 +22,9 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     int resposta_certa_original = pergunta->resposta_certa;
 
     for (int i = 0; i < 3; i++) {
-        strcpy_s(alternativas_temp[i], sizeof(alternativas_temp[i]), pergunta->alternativas[i]);
+        // strcpy_s(alternativas_temp[i], sizeof(alternativas_temp[i]), pergunta->alternativas[i]);
+        strncpy(alternativas_temp[i], pergunta->alternativas[i], sizeof(alternativas_temp[i]) - 1);
+        alternativas_temp[i][sizeof(alternativas_temp[i]) - 1] = '\0'; // Garantindo o terminador nulo
     }
 
     for (int i = 2; i > 0; i--) {
@@ -33,7 +35,9 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     }
 
     for (int i = 0; i < 3; i++) {
-        strcpy_s(pergunta->alternativas[i], sizeof(pergunta->alternativas[i]), alternativas_temp[indices[i]]);
+        // strcpy_s(pergunta->alternativas[i], sizeof(pergunta->alternativas[i]), alternativas_temp[indices[i]]);
+        strncpy(pergunta->alternativas[i], alternativas_temp[indices[i]], sizeof(pergunta->alternativas[i]) - 1);
+        pergunta->alternativas[i][sizeof(pergunta->alternativas[i]) - 1] = '\0'; // Garantindo o terminador nulo
 
         if (indices[i] == resposta_certa_original) {
             pergunta->resposta_certa = i;
