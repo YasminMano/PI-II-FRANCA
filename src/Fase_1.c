@@ -4,6 +4,7 @@
 #include <allegro5/keyboard.h>
 #include <allegro5/keycodes.h>
 #include <stdio.h>
+#include "headers/game.h"
 
 // Estrutura para o jogador
 typedef struct {
@@ -151,7 +152,7 @@ bool detectar_colisao(Jogador* jogador, Guarda* guarda) {
 }
 
 // Função que inicia a fase 1 do jogo
-void iniciar_fase_1(ALLEGRO_DISPLAY* display) {
+void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo jogo;
     jogo.display = display;
     init_jogo(&jogo);

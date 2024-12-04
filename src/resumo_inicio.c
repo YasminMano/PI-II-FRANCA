@@ -12,6 +12,12 @@ void iniciar_resumo(ALLEGRO_DISPLAY* display, GameState* game_state) {
         return;
     }
 
+    ALLEGRO_BITMAP* bg = al_load_bitmap("assets/images/fundo_inicio.png");
+    if (!bg) {
+        al_destroy_display(display);
+        return;
+    }
+
     if (!game_state) {
         printf("Erro: game_state é NULL dentro de iniciar_resumo.\n");
         return;
@@ -46,7 +52,7 @@ void iniciar_resumo(ALLEGRO_DISPLAY* display, GameState* game_state) {
             int mouse_x = event.mouse.x;
             int mouse_y = event.mouse.y;
 
-            if (mouse_x >= 300 && mouse_x <= 500 && mouse_y >= 400 && mouse_y <= 450) {
+            if (mouse_x >= 550 && mouse_x <= 750 && mouse_y >= 550 && mouse_y <= 620) {
                 running = false;
                 *game_state = TELA_INICIO; // Retorna para a tela inicial
             }
@@ -54,23 +60,30 @@ void iniciar_resumo(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         al_clear_to_color(al_map_rgb(0, 0, 0));
 
-        ALLEGRO_COLOR white = al_map_rgb(255, 255, 255);
+        ALLEGRO_COLOR white = al_map_rgb(0, 0, 0);
         int x = al_get_display_width(display) / 2;
-        int y = al_get_display_height(display) / 4;
+        int y = al_get_display_height(display) / 8;
 
+        al_clear_to_color(al_map_rgb(255, 255, 255));
+        al_draw_scaled_bitmap(bg, 0, 0, al_get_bitmap_width(bg), al_get_bitmap_height(bg), 0, 0, al_get_display_width(display), al_get_display_height(display), 0);
+        al_draw_filled_rectangle(550, 550, 750, 620, al_map_rgb(100, 100, 100));
+        al_draw_text(font, white, 650, 580, ALLEGRO_ALIGN_CENTER, "Voltar");
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Resumo Geral:");
-        al_draw_text(font, white, x, y + 40, ALLEGRO_ALIGN_CENTER, "A Revolução Francesa foi um movimento político e social.");
-        al_draw_text(font, white, x, y + 80, ALLEGRO_ALIGN_CENTER, "Ela ocorreu entre 1789 e 1799, marcando o início da democracia.");
-        al_draw_text(font, white, x, y + 120, ALLEGRO_ALIGN_CENTER, "Inspirou mudanças ao redor do mundo.");
-
-        // Botão "Voltar"
-        al_draw_filled_rectangle(300, 400, 500, 450, al_map_rgb(100, 100, 100));
-        al_draw_text(font, white, 400, 415, ALLEGRO_ALIGN_CENTER, "Voltar");
-
+        al_draw_text(font, white, x, y + 40, ALLEGRO_ALIGN_CENTER, "A Revolução Francesa (1789-1799) foi um movimento que derrubou");
+        al_draw_text(font, white, x, y + 80, ALLEGRO_ALIGN_CENTER, "a monarquia absoluta, motivado por desigualdades sociais, crises");
+        al_draw_text(font, white, x, y + 120, ALLEGRO_ALIGN_CENTER, "econômicas e ideais iluministas. Começou com a formação da");
+        al_draw_text(font, white, x, y + 160, ALLEGRO_ALIGN_CENTER, "Assembleia Nacional e proclamou a Declaração dos Direitos do");
+        al_draw_text(font, white, x, y + 200, ALLEGRO_ALIGN_CENTER, "Homem e do Cidadão, promovendo liberdade, igualdade e");
+        al_draw_text(font, white, x, y + 240, ALLEGRO_ALIGN_CENTER, "fraternidade. A monarquia de Luís XVI foi abolida, dando lugar à Primeira");
+        al_draw_text(font, white, x, y + 280, ALLEGRO_ALIGN_CENTER, "República. Contudo, o período foi marcado por instabilidade e o");
+        al_draw_text(font, white, x, y + 320, ALLEGRO_ALIGN_CENTER, "Reino do Terror, com execuções em massa. A revolução encerrou-se");
+        al_draw_text(font, white, x, y + 360, ALLEGRO_ALIGN_CENTER, "com o golpe de Napoleão Bonaparte, transformando a França e");
+        al_draw_text(font, white, x, y + 400, ALLEGRO_ALIGN_CENTER, "influenciando o mundo com ideais democráticos e de cidadania.");
         al_flip_display();
     }
 
     // Libera os recursos de forma adequada
     al_destroy_font(font);
     al_destroy_event_queue(queue);
+    al_destroy_bitmap(bg);
 }

@@ -14,6 +14,12 @@ typedef enum {
     MAPA,         // Tela do mapa
     FASE_1,       // Primeira fase do jogo
     FASE_2,       // Segunda fase do jogo
+    FASE_2_3,
+    CORREDOR,
+    QUARTO,
+    QUARTO2,
+    BAU,
+    BANHEIRO,
     FASE_3,       // Terceira fase do jogo
     PAUSE_MENU,   // Tela de pausa
     SAIR          // Estado para encerrar o jogo
