@@ -2,11 +2,13 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "game.h"
-#include "Tela_inicio.h"
-#include "resumo_fase.h"
-#include "fases.h"
-#include "pause_menu.h"  // Incluído para acessar a tela de pausa
+#include "headers/game.h"
+#include "headers/Tela_inicio.h"
+#include "headers/resumo_fase.h"
+#include "headers/resumo_inicio.h"
+#include "headers/fases.h"
+#include "headers/pause_menu.h"  // Incluído para acessar a tela de pausa
+#include "headers/mapa.h"
 
 // Variável global que define o estado do jogo
 GameState game_state = TELA_INICIO;
@@ -16,7 +18,6 @@ int main() {
         printf("Erro ao inicializar Allegro!\n");
         return -1;
     }
-
     // Inicializa os addons necessários
     al_init_image_addon();
     al_install_mouse();
@@ -82,9 +83,41 @@ int main() {
             case FASE_1:
                 iniciar_fase_1(display, &game_state);
                 break;
+            
+            case FASE1_2:
+                iniciar_fase1_2(display, &game_state);
+                break;
+
+            case FASE1_3:
+                iniciar_fase1_3(display, &game_state);
+                break;
 
             case FASE_2:
                 iniciar_fase_2(display, &game_state);
+                break;
+
+            case FASE_2_3:
+                iniciar_fase_2_3(display, &game_state);
+                break;
+
+            case CORREDOR:
+                corredor(display, &game_state);
+                break;
+
+            case QUARTO:
+                quarto(display, &game_state);
+                break;
+
+            case QUARTO2:
+                quarto2(display, &game_state);
+                break;
+
+            case BAU:
+                bau(display, &game_state);
+                break;
+
+            case BANHEIRO:
+                banheiro(display, &game_state);
                 break;
 
             case FASE_3:

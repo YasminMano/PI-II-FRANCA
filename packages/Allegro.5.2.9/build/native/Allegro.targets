@@ -283,6 +283,5 @@
         $(Allegro_AddonVideoPDBs);
       </AllPDBs>
     </PropertyGroup>
-    <Copy SourceFiles="$(AllPDBs)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
   </Target>
 </Project>

@@ -90,10 +90,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,12 +106,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,11 +122,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\gabri_\source\repos\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,27 +138,39 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\leona\source\repos\YasminMano\PI-II-FRANCA\src\headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Fase1_2.c" />
+    <ClCompile Include="src\Fase1_3.c" />
+    <ClCompile Include="src\banheiro.c" />
+    <ClCompile Include="src\bau.c" />
+    <ClCompile Include="src\corredor.c" />
     <ClCompile Include="src\Fase_1.c" />
     <ClCompile Include="src\Fase_2.c" />
     <ClCompile Include="src\Fase_2_3.c" />
     <ClCompile Include="src\Fase_3.c" />
+    <ClCompile Include="src\guarda.c" />
     <ClCompile Include="src\handle.c" />
     <ClCompile Include="src\helper.c" />
+    <ClCompile Include="src\jogador.c" />
+    <ClCompile Include="src\jogo.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mapa.c" />
     <ClCompile Include="src\pause_menu.c" />
+    <ClCompile Include="src\quarto.c" />
+    <ClCompile Include="src\quarto2.c" />
     <ClCompile Include="src\resumo_fase.c" />
     <ClCompile Include="src\resumo_inicio.c" />
     <ClCompile Include="src\screens.c" />
@@ -162,8 +179,11 @@
   <ItemGroup>
     <ClInclude Include="src\headers\fases.h" />
     <ClInclude Include="src\headers\game.h" />
+    <ClInclude Include="src\headers\guarda.h" />
     <ClInclude Include="src\headers\handle.h" />
     <ClInclude Include="src\headers\helper.h" />
+    <ClInclude Include="src\headers\jogador.h" />
+    <ClInclude Include="src\headers\jogo.h" />
     <ClInclude Include="src\headers\mapa.h" />
     <ClInclude Include="src\headers\pause_menu.h" />
     <ClInclude Include="src\headers\resumo_fase.h" />

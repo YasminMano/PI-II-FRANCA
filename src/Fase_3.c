@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h> // Para geração de números aleatórios
-#include "game.h"
+#include "headers/game.h"
+#include "headers/mapa.h"
 
 // Estrutura para armazenar informações sobre cada pergunta
 typedef struct {
@@ -21,9 +22,11 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     int resposta_certa_original = pergunta->resposta_certa;
 
     for (int i = 0; i < 3; i++) {
+        // strcpy_s(alternativas_temp[i], sizeof(alternativas_temp[i]), pergunta->alternativas[i]);
         strncpy(alternativas_temp[i], pergunta->alternativas[i], sizeof(alternativas_temp[i]) - 1);
-        alternativas_temp[i][sizeof(alternativas_temp[i]) - 1] = '\0'; // Garantir que termina em '\0'
+        alternativas_temp[i][sizeof(alternativas_temp[i]) - 1] = '\0'; // Garantindo o terminador nulo
     }
+
 
     for (int i = 2; i > 0; i--) {
         int j = rand() % (i + 1);
@@ -33,8 +36,9 @@ void embaralhar_alternativas(Pergunta* pergunta) {
     }
 
     for (int i = 0; i < 3; i++) {
+        // strcpy_s(pergunta->alternativas[i], sizeof(pergunta->alternativas[i]), alternativas_temp[indices[i]]);
         strncpy(pergunta->alternativas[i], alternativas_temp[indices[i]], sizeof(pergunta->alternativas[i]) - 1);
-        pergunta->alternativas[i][sizeof(pergunta->alternativas[i]) - 1] = '\0'; // Garantir que termina em '\0'
+        pergunta->alternativas[i][sizeof(pergunta->alternativas[i]) - 1] = '\0'; // Garantindo o terminador nulo
 
         if (indices[i] == resposta_certa_original) {
             pergunta->resposta_certa = i;
@@ -61,8 +65,9 @@ void exibir_tela_fim(ALLEGRO_DISPLAY* display, const char* caminho_imagem) {
     al_destroy_bitmap(imagem_fim);
 }
 
-// Função para iniciar a fase 3
+// Função para iniciar a fase 3 com vida e erro
 void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
+    // Inicializações
     if (!al_init_image_addon()) {
         printf("Falha ao inicializar o addon de imagens.\n");
         return;
@@ -88,8 +93,13 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
     ALLEGRO_BITMAP* rei = al_load_bitmap("assets/images/Luis_XIV.png");
     ALLEGRO_BITMAP* botao_pause = al_load_bitmap("assets/images/botao_pause.png");
 
-    if (!cenario || !personagens || !rei || !botao_pause) {
-        printf("Erro ao carregar o cenário, personagens ou botão de pausa.\n");
+    // Carregar as imagens de vida
+    ALLEGRO_BITMAP* vida_3 = al_load_bitmap("assets/images/vida_3.png");
+    ALLEGRO_BITMAP* vida_2 = al_load_bitmap("assets/images/vida_2.png");
+    ALLEGRO_BITMAP* vida_1 = al_load_bitmap("assets/images/vida_1.png");
+
+    if (!cenario || !personagens || !rei || !botao_pause || !vida_3 || !vida_2 || !vida_1) {
+        printf("Erro ao carregar recursos.\n");
         return;
     }
 
@@ -172,8 +182,17 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
+        // Seleciona a imagem de vida com base no número de erros
+        ALLEGRO_BITMAP* imagem_vida = vida_3;
+        if (erros == 1) {
+            imagem_vida = vida_2;
+        } else if (erros == 2) {
+            imagem_vida = vida_1;
+        }
+
         al_clear_to_color(al_map_rgb(0, 0, 0));
 
+        // Desenhar o cenário e outros elementos
         al_draw_scaled_bitmap(cenario, 0, 0, al_get_bitmap_width(cenario), al_get_bitmap_height(cenario),
                               0, 0, al_get_display_width(display), al_get_display_height(display), 0);
 
@@ -182,7 +201,19 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         al_draw_bitmap(perguntas[indice_pergunta].imagem_pergunta, 450, -110, 0);
 
-        // Desenhar botão de pausa escalado no canto superior direito
+        // Reduzir o tamanho das imagens de vida
+        float vida_scale = 0.35; // Escala reduzida das imagens de vida
+        int vida_width = al_get_bitmap_width(imagem_vida) * vida_scale;
+        int vida_height = al_get_bitmap_height(imagem_vida) * vida_scale;
+
+        int vida_x = 10; // Posição à esquerda
+        int vida_y = pause_y; // Alinhado com o botão de pausa
+  
+
+        al_draw_scaled_bitmap(imagem_vida, 0, 0, al_get_bitmap_width(imagem_vida), al_get_bitmap_height(imagem_vida),
+                              vida_x, vida_y, vida_width, vida_height, 0);
+
+        // Desenhar o botão de pausa
         al_draw_scaled_bitmap(botao_pause, 0, 0, al_get_bitmap_width(botao_pause), al_get_bitmap_height(botao_pause),
                               pause_x, pause_y, pause_width, pause_height, 0);
 
@@ -199,6 +230,9 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
     al_destroy_bitmap(personagens);
     al_destroy_bitmap(rei);
     al_destroy_bitmap(botao_pause);
+    al_destroy_bitmap(vida_3);
+    al_destroy_bitmap(vida_2);
+    al_destroy_bitmap(vida_1);
     for (int i = 0; i < 5; i++) {
         al_destroy_bitmap(perguntas[i].imagem_pergunta);
     }
@@ -206,3 +240,5 @@ void iniciar_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
 }
+
+
