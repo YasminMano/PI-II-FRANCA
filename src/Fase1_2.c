@@ -226,14 +226,11 @@ void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         }
 
         // Detecção de pressionamento da tecla 'P' para pausar
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-            if (event.keyboard.keycode == ALLEGRO_KEY_P) {
-                printf("Pausando o jogo.\n");
-                *game_state = PAUSE_MENU;  // Altera o estado para PAUSE_MENU
-                running = false;           // Finaliza a fase 1
-            }
+        if (event.keyboard.keycode == ALLEGRO_KEY_P) {
+            printf("Botão de pausa clicado. Voltando ao mapa.\n");
+            running = false;
+            *game_state = PAUSE_MENU; // Corrigido para atualizar o estado corretamente
         }
-
 
         // Verifica se o jogador chegou à posição desejada para transitar para a próxima fase
         if (jogador.pos_x >= 1000) {
