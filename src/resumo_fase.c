@@ -44,32 +44,32 @@ void init_resumo_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Resumo da Fase 1:");
         y += 40;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Na Fase 1, você enfrentará desafios perigosos.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Na Fase 1, você enfrentara desafios perigosos.");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Enfrente os guardas e avance na Revolução!");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Enfrente os guardas e avance na Revolucao!");
         y += 40;
 
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A Queda da Bastilha, ocorrida em 14 de julho de 1789,");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "foi um dos eventos mais emblemáticos da Revolução Francesa.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "foi um dos eventos mais emblematicos da Revolucao Francesa.");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A Bastilha era uma fortaleza-prisão em Paris que");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A Bastilha era uma fortaleza-prisao em Paris que");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "representava o poder arbitrário e a opressão do Antigo Regime,");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "sob o reinado de Luís XVI.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "sob o reinado de Luis XVI.");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Embora contivesse apenas alguns prisioneiros na época,");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Embora contivesse apenas alguns prisioneiros na epoca,");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "sua captura foi simbolicamente importante.");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Nesse dia, uma multidão revoltosa, em busca de armas e pólvora,");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Nesse dia, uma multidao revoltosa, em busca de armas e polvora,");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "cercou e invadiu a Bastilha.");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A queda da Bastilha sinalizou o início do colapso da autoridade real");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "e provocou uma onda de violência e revolta por toda a França.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "e provocou uma onda de violencia e revolta por toda a França.");
         y += 40;
 
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Objetivos:");
@@ -158,13 +158,13 @@ void init_resumo_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "liderado principalmente por mulheres de Paris.");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Insatisfeitas com a escassez de p�o e os altos pre�os,");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Insatisfeitas com a escassez de pao e os altos precos,");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, " elas marcharam at� o Pal�cio de Versalhes para exigir a��es do rei Luis XVI");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, " elas marcharam ate o Palacio de Versalhes para exigir acoes do rei Luis XVI");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "O movimento resultou na transfer�ncia da fam�lia real para Paris,");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "O movimento resultou na transferencia da familia real para Paris,");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "marcando um momento simb�lico de poder popular e influ�ncia feminina na revolu��o.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "marcando um momento simbolico de poder popular e influ�ncia feminina na revolucao.");
         y += 40; // Espa�o maior antes das instru��es
 
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Objetivos:");
@@ -246,7 +246,7 @@ void init_resumo_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Texto do resumo
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Resumo da Fase 3:");
         y += 40;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Na Fase 3, voc� enfrentara o causador da revolucao, Luis XVI");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Na Fase 3, voce enfrentara o causador da revolucao, Luis XVI");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Enfrente-o e conquiste a Franca!");
         y += 40; // Espa�o maior entre as se��es
@@ -254,11 +254,11 @@ void init_resumo_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Texto sobre a Queda da Bastilha
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A queda de Luis XVI culminou em sua execucao em 21 de janeiro de 1793.");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "pos a descoberta de documentos que comprovaram sua conspira��o contra a Revolu��o,");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "pos a descoberta de documentos que comprovaram sua conspiracao contra a Revolucao,");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "ele foi julgado pela Conven��o Nacional e condenado por trai��o.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "ele foi julgado pela Conven��o Nacional e condenado por traicao.");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A execucao por guilhotina na Pra�a da Revolucao simbolizou o fim definitivo da monarquia absolutista na Franca");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A execucao por guilhotina na Praca da Revolucao simbolizou o fim definitivo da monarquia absolutista na Franca");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "e consolidou a Republica, intensificando os conflitos ");
         y += 20;
@@ -271,20 +271,7 @@ void init_resumo_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "acabe com o reinado de Luis e retome a Franca para o povo!");
         y += 40;
-
-
-        // Instru��es de controle do personagem
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Controles do Personagem:");
-        y += 40;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione A para andar para a esquerda");
-        y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione D para andar para a direita");
-        y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione F para interagir");
-        y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione ESPACO para pular");
-
-        // Bot�o "Voltar"
+        // Botão "Voltar"
         al_draw_filled_rectangle(550, 600, 730, 650, al_map_rgb(100, 100, 100)); // Fundo cinza
         al_draw_text(font, white, 640, 615, ALLEGRO_ALIGN_CENTER, "Voltar");
 
