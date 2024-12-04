@@ -5,7 +5,10 @@
 #include "headers/game.h"
 #include "headers/Tela_inicio.h"
 #include "headers/resumo_fase.h"
+#include "headers/resumo_inicio.h"
 #include "headers/fases.h"
+#include "headers/pause_menu.h"  // Incluído para acessar a tela de pausa
+#include "headers/mapa.h"
 
 // Variável global que define o estado do jogo
 GameState game_state = TELA_INICIO;
@@ -79,6 +82,14 @@ int main() {
 
             case FASE_1:
                 iniciar_fase_1(display, &game_state);
+                break;
+            
+            case FASE1_2:
+                iniciar_fase1_2(display, &game_state);
+                break;
+
+            case FASE1_3:
+                iniciar_fase1_3(display, &game_state);
                 break;
 
             case FASE_2:

@@ -27,6 +27,7 @@ void embaralhar_alternativas(Pergunta* pergunta) {
         alternativas_temp[i][sizeof(alternativas_temp[i]) - 1] = '\0'; // Garantindo o terminador nulo
     }
 
+
     for (int i = 2; i > 0; i--) {
         int j = rand() % (i + 1);
         int temp = indices[i];

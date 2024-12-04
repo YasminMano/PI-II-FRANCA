@@ -2,12 +2,12 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-<<<<<<< HEAD
+#include "headers/game.h"
+#include "headers/mapa.h"
+#include "headers/resumo_fase.h"
 #include "game.h"
-=======
 #include "headers/game.h"
 #include "headers/resumo_fase.h"
->>>>>>> feature/Franca-20
 
 ALLEGRO_BITMAP* background_mapa = NULL;
 ALLEGRO_BITMAP* red_circle = NULL;
@@ -22,8 +22,7 @@ int caixa1_x = 620, caixa1_y = 250, caixa_size = 50;
 int caixa2_x = 500, caixa2_y = 450;
 int caixa3_x = 740, caixa3_y = 570;
 
-void init_mapa() {
-    // Carregar a imagem do mapa, bolinha vermelha, caixa de mensagem e texto do mapa
+void init_mapa(event_queue) {
     background_mapa = al_load_bitmap("assets/images/mapa_2.png");
     red_circle = al_load_bitmap("assets/images/vermelho.png");
     message_box = al_load_bitmap("assets/images/caixa_mensagem.png");

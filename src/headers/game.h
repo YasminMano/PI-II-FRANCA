@@ -13,6 +13,8 @@ typedef enum {
     RESUMO_3,     // Resumo da Fase 3
     MAPA,         // Tela do mapa
     FASE_1,       // Primeira fase do jogo
+    FASE1_2,
+    FASE1_3,
     FASE_2,       // Segunda fase do jogo
     FASE_2_3,
     CORREDOR,

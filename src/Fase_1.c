@@ -4,154 +4,12 @@
 #include <allegro5/keyboard.h>
 #include <allegro5/keycodes.h>
 #include <stdio.h>
-#include "headers/game.h"
+#include "fases.h"
+#include "game.h"
+#include "jogador.h"
+#include "guarda.h"
+#include "jogo.h"
 
-// Estrutura para o jogador
-typedef struct {
-    ALLEGRO_BITMAP* sprite_sheet;
-    int pos_x, pos_y;
-    int initial_pos_y;
-    int frame_width, frame_height;
-    int current_frame;
-    float scale_factor;
-    bool facing_right;
-    bool jumping;
-    bool knocked_back;
-    float knockback_velocity;
-    float jump_velocity;
-    float gravity;
-    bool move_left, move_right, moving;
-    float movement_speed;
-    float frame_time, frame_timer;
-    int total_moving_frames;
-    int vidas;
-} Jogador;
-
-// Estrutura para o guarda (inimigo)
-typedef struct {
-    ALLEGRO_BITMAP* sprite_sheet;
-    int pos_x, pos_y;
-    int frame_width, frame_height;
-    float scale_factor;
-    float movement_speed;
-    bool move_right;
-    int min_x, max_x;
-    int current_frame;
-    float frame_time, frame_timer;
-    int total_frames;
-    int frames_per_row;
-} Guarda;
-
-// Estrutura para o contexto do jogo
-typedef struct {
-    ALLEGRO_DISPLAY* display;
-    ALLEGRO_TIMER* timer;
-    ALLEGRO_EVENT_QUEUE* event_queue;
-    ALLEGRO_BITMAP* background;
-} Jogo;
-
-// Função para inicializar o jogador
-void init_jogador(Jogador* jogador, int display_height) {
-    jogador->sprite_sheet = al_load_bitmap("assets/images/teste_personagem.png");
-    jogador->frame_width = 265;
-    jogador->frame_height = 376;
-    jogador->pos_x = 50;
-    jogador->scale_factor = 0.6;
-    jogador->pos_y = display_height - jogador->frame_height * jogador->scale_factor;
-    jogador->initial_pos_y = jogador->pos_y;
-    jogador->jump_velocity = -10.0f;
-    jogador->gravity = 0.4f;
-    jogador->movement_speed = 2.0;
-    jogador->frame_time = 0.2;
-    jogador->frame_timer = 0;
-    jogador->total_moving_frames = 3;
-    jogador->current_frame = 0;
-    jogador->facing_right = true;
-    jogador->jumping = false;
-    jogador->move_left = false;
-    jogador->move_right = false;
-    jogador->moving = false;
-    jogador->knocked_back = false;
-    jogador->knockback_velocity = 0;
-    jogador->vidas = 3;
-}
-
-// Função para inicializar o guarda (inimigo)
-void init_guarda(Guarda* guarda, int display_width, int display_height) {
-    guarda->sprite_sheet = al_load_bitmap("assets/images/guarda.png");
-    guarda->frame_width = 120;  // Largura de cada quadro do guarda
-    guarda->frame_height = 170; // Altura de cada quadro do guarda
-    guarda->scale_factor = 1.2; // Ajuste de escala para manter o tamanho proporcional
-    guarda->pos_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
-    guarda->pos_y = display_height - guarda->frame_height * guarda->scale_factor;
-    guarda->movement_speed = 1.5;
-    guarda->move_right = false;
-    guarda->min_x = display_width - guarda->frame_width * guarda->scale_factor - 200;
-    guarda->max_x = display_width - guarda->frame_width * guarda->scale_factor - 50;
-    guarda->current_frame = 0;
-    guarda->frame_time = 0.3;
-    guarda->frame_timer = 0;
-    guarda->total_frames = 6;
-    guarda->frames_per_row = 2;
-}
-
-// Função para inicializar o jogo
-void init_jogo(Jogo* jogo) {
-    al_init();
-    al_install_keyboard();
-    jogo->timer = al_create_timer(1.0 / 30.0);
-    jogo->background = al_load_bitmap("assets/images/cenario1.png");
-    jogo->event_queue = al_create_event_queue();
-    al_register_event_source(jogo->event_queue, al_get_display_event_source(jogo->display));
-    al_register_event_source(jogo->event_queue, al_get_timer_event_source(jogo->timer));
-    al_register_event_source(jogo->event_queue, al_get_keyboard_event_source());
-    al_start_timer(jogo->timer);
-}
-
-// Função que desenha o jogador
-void desenha_jogador(Jogador* jogador) {
-    int frame_x[] = { 0, 265, 530 };
-    int frame_cx = frame_x[jogador->current_frame];
-    int frame_cy = 0;
-
-    al_draw_scaled_bitmap(
-        jogador->sprite_sheet,
-        frame_cx, frame_cy,
-        jogador->frame_width, jogador->frame_height,
-        jogador->pos_x, jogador->pos_y,
-        jogador->frame_width * jogador->scale_factor,
-        jogador->frame_height * jogador->scale_factor,
-        jogador->facing_right ? 0 : ALLEGRO_FLIP_HORIZONTAL
-    );
-}
-
-// Função que desenha o guarda (inimigo)
-void desenha_guarda(Guarda* guarda) {
-    int frame_coluna = guarda->current_frame % guarda->frames_per_row;
-    int frame_linha = guarda->current_frame / 3;
-    int frame_x = frame_coluna * guarda->frame_width;
-    int frame_y = frame_linha * guarda->frame_height;
-
-    al_draw_scaled_bitmap(guarda->sprite_sheet, frame_x, frame_y, guarda->frame_width, guarda->frame_height, guarda->pos_x, guarda->pos_y, guarda->frame_width * guarda->scale_factor, guarda->frame_height * guarda->scale_factor, ALLEGRO_FLIP_HORIZONTAL);
-}
-
-// Função para detectar colisão entre jogador e guarda
-bool detectar_colisao(Jogador* jogador, Guarda* guarda) {
-    int jogador_left = jogador->pos_x;
-    int jogador_right = jogador->pos_x + jogador->frame_width * jogador->scale_factor;
-    int jogador_top = jogador->pos_y;
-    int jogador_bottom = jogador->pos_y + jogador->frame_height * jogador->scale_factor;
-
-    int guarda_left = guarda->pos_x;
-    int guarda_right = guarda->pos_x + guarda->frame_width * guarda->scale_factor;
-    int guarda_top = guarda->pos_y;
-    int guarda_bottom = guarda->pos_y + guarda->frame_height * guarda->scale_factor;
-
-    return jogador_right > guarda_left && jogador_left < guarda_right &&
-        jogador_bottom > guarda_top && jogador_top < guarda_bottom;
-}
-
-// Função que inicia a fase 1 do jogo
 void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo jogo;
     jogo.display = display;
@@ -163,33 +21,52 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Guarda guarda;
     init_guarda(&guarda, al_get_display_width(display), al_get_display_height(display));
 
-    bool running = true;
+    // Carregar a imagem da tecla de pausa
+    ALLEGRO_BITMAP* tecla_pause = al_load_bitmap("assets/images/tecle_pause.png");
+    if (!tecla_pause) {
+        printf("Falha ao carregar a imagem tecla_pause.png!\n");
+        return;  // Se falhar em carregar a imagem, sair da função
+    }
+    ALLEGRO_BITMAP* caixa_mensagem = al_load_bitmap("assets/images/caixa_mensagem_fase1.png");
+    if (!caixa_mensagem) {
+        printf("Falha ao carregar a imagem caixa_mensagem_fase1.png!\n");
+        return;  // Se falhar em carregar a imagem, sair da função
+    }
 
+
+    bool running = true;
+    bool mostrar_caixa_mensagem = true;
+
+    // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
         al_wait_for_event(jogo.event_queue, &event);
 
+        // Fechar a janela do jogo
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
 
+        // Tratamento de pressionamento de teclas
         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
             if (!jogador.knocked_back) {
-                if (event.keyboard.keycode == ALLEGRO_KEY_D) {
+                if (event.keyboard.keycode == ALLEGRO_KEY_D) {  // Movimento para a direita
                     jogador.move_right = true;
                     jogador.facing_right = true;
                     jogador.moving = true;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {
+                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {  // Movimento para a esquerda
                     jogador.move_left = true;
                     jogador.facing_right = false;
                     jogador.moving = true;
                 }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador.jumping) {
+                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador.jumping) {  // Pulo
                     jogador.jumping = true;
                 }
             }
         }
+
+        // Tratamento de soltura de teclas
         else if (event.type == ALLEGRO_EVENT_KEY_UP) {
             if (event.keyboard.keycode == ALLEGRO_KEY_D) {
                 jogador.move_right = false;
@@ -201,21 +78,24 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
+        // Atualiza o movimento do jogador
         if (!jogador.knocked_back) {
             if (jogador.move_right) jogador.pos_x += jogador.movement_speed;
             if (jogador.move_left) jogador.pos_x -= jogador.movement_speed;
         }
 
+        // Atualiza o pulo do jogador
         if (jogador.jumping) {
             jogador.pos_y += jogador.jump_velocity;
             jogador.jump_velocity += jogador.gravity;
             if (jogador.pos_y >= jogador.initial_pos_y) {
-                jogador.pos_y = jogador.initial_pos_y;
+                jogador.pos_y = jogador.initial_pos_y;  // Se o jogador atingir o solo
                 jogador.jumping = false;
-                jogador.jump_velocity = -10.0f;
+                jogador.jump_velocity = -12.0f;  // Reinicia o pulo
             }
         }
 
+        // Atualiza a animação do jogador
         if (jogador.moving) {
             jogador.frame_timer += 1.0 / 30.0;
             if (jogador.frame_timer >= jogador.frame_time) {
@@ -227,6 +107,7 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             jogador.current_frame = 0;
         }
 
+        // Atualiza o movimento do guarda
         if (guarda.move_right) {
             guarda.pos_x += guarda.movement_speed;
             if (guarda.pos_x >= guarda.max_x) {
@@ -240,21 +121,33 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
+        // Verifica a colisão entre o jogador e o guarda
         if (detectar_colisao(&jogador, &guarda)) {
             printf("Colisão detectada!\n");
-            jogador.knocked_back = true;
-            jogador.knockback_velocity = 6.0f;
-            jogador.jump_velocity = -6.0f;
 
-            jogador.vidas--;
-            printf("Vidas restantes: %d\n", jogador.vidas);
+            // Se a colisão for com a parte superior do guarda, destrói o guarda
+            if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda.pos_y + 50) {
+                printf("O guarda foi derrotado!\n");
+                guarda.morto = true;  // Marca o guarda como morto
+                guarda.pos_x = -guarda.frame_width * guarda.scale_factor;  // Reposiciona o guarda fora da tela
+            }
+            else {
+                // Caso contrário, o jogador é empurrado
+                jogador.knocked_back = true;
+                jogador.knockback_velocity = 5.0f;  // Empurra o jogador
+                jogador.jump_velocity = -5.5f;     // Impede o jogador de pular após ser empurrado
 
-            if (jogador.vidas <= 0) {
-                printf("Game Over!\n");
-                running = false;
+                jogador.vidas--;  // Perde uma vida
+                printf("Vidas restantes: %d\n", jogador.vidas);
+
+                if (jogador.vidas <= 0) {  // Game Over
+                    printf("Game Over!\n");
+                    running = false;
+                }
             }
         }
 
+        // Lógica de empurrão do jogador
         if (jogador.knocked_back) {
             if (jogador.facing_right) {
                 jogador.pos_x -= jogador.knockback_velocity;
@@ -263,36 +156,126 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
                 jogador.pos_x += jogador.knockback_velocity;
             }
             jogador.pos_y += jogador.jump_velocity;
-            jogador.knockback_velocity -= 0.2f;
+            jogador.knockback_velocity -= 0.2f;  // Diminui a velocidade do empurrão
             jogador.jump_velocity += jogador.gravity;
 
             if (jogador.pos_y >= jogador.initial_pos_y) {
-                jogador.pos_y = jogador.initial_pos_y;
+                jogador.pos_y = jogador.initial_pos_y;  // O jogador volta ao chão
                 jogador.knocked_back = false;
-                jogador.jump_velocity = -10.0f;
+                jogador.jump_velocity = -12.0f;  // Reinicia o pulo
             }
         }
 
+        // Atualiza a animação do guarda
         guarda.frame_timer += 1.0 / 30.0;
         if (guarda.frame_timer >= guarda.frame_time) {
             guarda.current_frame = (guarda.current_frame + 1) % guarda.total_frames;
             guarda.frame_timer = 0;
         }
 
+        // Se o jogo estiver pausado, ignore o restante da lógica
+        if (*game_state == PAUSE_MENU) {
+            continue;  // Ignora atualizações enquanto o jogo estiver em pausa
+        }
+
+        // Detecção de pressionamento da tecla 'P' para pausar
+        if (event.keyboard.keycode == ALLEGRO_KEY_P) {
+            printf("Botão de pausa clicado. Voltando ao mapa.\n");
+            running = false;
+            *game_state = PAUSE_MENU; // Corrigido para atualizar o estado corretamente
+        }
+
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            running = false;
+        }
+
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            switch (event.keyboard.keycode) {
+            case ALLEGRO_KEY_A:
+            case ALLEGRO_KEY_D:
+            case ALLEGRO_KEY_SPACE:
+                mostrar_caixa_mensagem = false;  // Não mostrar a caixa ao pressionar essas teclas
+                break;
+
+
+        
+
+            case ALLEGRO_KEY_P:
+                printf("Pausando o jogo.\n");
+                *game_state = PAUSE_MENU;  // Altera o estado para PAUSE_MENU
+                running = false;  // Finaliza a fase 1
+                break;
+            }
+        }
+
+        // Verifica se o jogador chegou à posição desejada para transitar para a próxima fase
+        if (jogador.pos_x >= 1000) {
+            *game_state = FASE1_2;  // Altera o estado do jogo para a próxima fase
+            running = false;  // Encerra o loop da fase 1
+        }
+
+        // Limpa a tela e desenha o fundo
         al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_scaled_bitmap(jogo.background, 0, 0, al_get_bitmap_width(jogo.background),
             al_get_bitmap_height(jogo.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
 
+        // Desenha a imagem da tecla de pausa no centro da tela (ajustada)
+        // Fator de escala para diminuir a imagem
+        float escala = 0.15f;  // Reduz a imagem para 50% do tamanho original
+        int offset_x = 25; // Move para a direita
+        int offset_y = 25; // Move para cima
+
+        int largura_imagem = al_get_bitmap_width(tecla_pause);
+        int altura_imagem = al_get_bitmap_height(tecla_pause);
+
+        al_draw_scaled_bitmap(tecla_pause,
+            0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
+            (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
+            (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
+            largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
+            0);  // Nenhuma rotação
+
+        // Fator de escala aumentado para tamanho maior
+        float escala_mensagem = 0.85f;
+
+        // Obtendo as dimensões da imagem
+        int largura_mensagem = al_get_bitmap_width(caixa_mensagem);
+        int altura_mensagem = al_get_bitmap_height(caixa_mensagem);
+
+        // Posições fixas no início do mapa para colocar a caixa na parte superior da tela
+        int posicao_x_mensagem = 10;  // Posição X fixa no mapa, um pouco à direita para não ficar exatamente na borda
+        int posicao_y_mensagem = -200;  // Posição Y fixa, suficientemente alta para estar na parte superior da tela
+
+        // Desenhando a caixa de mensagem
+        al_draw_scaled_bitmap(caixa_mensagem,
+            0, 0, largura_mensagem, altura_mensagem,  // Coordenadas de origem e dimensões originais da imagem
+            posicao_x_mensagem, posicao_y_mensagem,   // Coordenadas onde a imagem será desenhada na tela
+            largura_mensagem* escala_mensagem, altura_mensagem* escala_mensagem,  // Dimensões escaladas da imagem
+            0);  // Sem rotação
+
+        if (mostrar_caixa_mensagem) {
+            al_draw_scaled_bitmap(caixa_mensagem,
+                0, 0, largura_mensagem, altura_mensagem,  // Coordenadas de origem e dimensões originais da imagem
+                posicao_x_mensagem, posicao_y_mensagem,   // Coordenadas onde a imagem será desenhada na tela
+                largura_mensagem * escala_mensagem, altura_mensagem * escala_mensagem,  // Dimensões escaladas da imagem
+                0);  // Sem rotação
+        }
+
+        // Desenha o jogador e o guarda (se não estiver morto)
         desenha_jogador(&jogador);
         desenha_guarda(&guarda);
 
+        // Atualiza a tela
         al_flip_display();
     }
 
+    // Libera recursos
+    al_destroy_bitmap(tecla_pause);  // Libera a imagem da tecla de pausa
     al_destroy_bitmap(jogo.background);
     al_destroy_bitmap(jogador.sprite_sheet);
     al_destroy_bitmap(guarda.sprite_sheet);
     al_destroy_timer(jogo.timer);
     al_destroy_event_queue(jogo.event_queue);
+    al_destroy_bitmap(caixa_mensagem);
 }

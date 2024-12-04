@@ -3,8 +3,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "pause_menu.h"
-#include "game.h"
+#include "headers/pause_menu.h"
+#include "headers/game.h"
 
 // Função para exibir o menu de pausa
 void exibir_menu_pausa(ALLEGRO_DISPLAY* display, GameState* game_state) {
