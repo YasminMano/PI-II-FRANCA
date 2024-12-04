@@ -4,6 +4,8 @@
 #include <allegro5/keyboard.h>
 #include <allegro5/keycodes.h>
 #include "headers/game.h"
+#include "headers/pause_menu.h"
+#include "headers/mapa.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -169,24 +171,31 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
             if (!jogador2.knocked_back) {
-                if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
-                    jogador2.move_right = true;
-                    jogador2.facing_right = true;
-                    jogador2.moving = true;
-                }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_A) {// Move para a esquerda
-                    jogador2.move_left = true;
-                    jogador2.facing_right = false;
-                    jogador2.moving = true;
-                }
-                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && !jogador2.jumping) {// Pulo
-                    jogador2.jumping = true;
+                switch (event.keyboard.keycode) {
+                    case ALLEGRO_KEY_D:
+                        jogador2.move_right = true;
+                        jogador2.facing_right = true;
+                        jogador2.moving = true;
+                        break;
+                    case ALLEGRO_KEY_A:
+                        jogador2.move_left = true;
+                        jogador2.facing_right = false;
+                        jogador2.moving = true;
+                        break;
+                    case ALLEGRO_KEY_SPACE:
+                        if (!jogador2.jumping) {
+                            jogador2.jumping = true;
+                        }
+                        break;
+                    case ALLEGRO_KEY_P:
+                        *game_state = PAUSE_MENU;
+                        running = false;
+                        break;
                 }
             }
-        }
-        else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla é solta
+        }else if (event.type == ALLEGRO_EVENT_KEY_UP) {// Detecta quando uma tecla é solta
             if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Para de se mover para a direita
                 jogador2.move_right = false;
                 if (!jogador2.move_left) jogador2.moving = false;
@@ -246,28 +255,12 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         // Transição para o corredor
         if (jogador2.pos_x > 1180) {
-            x = 1;
-            iniciar_fase_2_3(display, &game_state);
+            *game_state = FASE_2_3; 
             running = false;
         }
 
         if (jogador2.pos_x < 0) {
             jogador2.move_left = false;
-        }
-
-        // Se o jogo estiver pausado, ignore o restante da lógica
-        if (*game_state == "PAUSE_MENU") {
-            continue;
-        }
-
-        // Detecção de pressionamento da tecla 'P' para pausar
-        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-            if (event.keyboard.keycode == ALLEGRO_KEY_P) {
-                x = 2;
-                printf("Pausando o jogo.\n");
-                exibir_menu_pausa(display, &game_state);
-                running = false;
-            }
         }
 
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
