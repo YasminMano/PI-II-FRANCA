@@ -166,15 +166,15 @@ void init_resumo_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         // Texto do resumo
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Resumo da Fase 2:");
         y += 40;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Na Fase 2, voce ira para o palacio de Versalhes");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Na Fase 2, você irá para o Palácio de Versalhes");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao palacio de Versalhes e encontre as chaves para ir a sala do rei!");
-        y += 40; // Espa�o maior entre as se��es
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao Palácio de Versalhes e encontre as chaves para ir à sala do rei!");
+        y += 40; // Espaço maior entre as seções
 
         // Texto sobre a Marcha das mulheres
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A Marcha das Mulheres a Versalhes foi um protesto em outubro de 1789");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "durante a Revolucao, liderado principalmente por mulheres de Paris.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "durante a Revolução, liderado principalmente por mulheres de Paris.");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Insatisfeitas com a escassez de pão e os altos preços,");
         y += 20;
@@ -187,7 +187,7 @@ void init_resumo_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Objetivos:");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao palacio de Versalhes e encontre a chave escondida");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao Palácio de Versalhes e encontre a chave escondida");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "para acessar a sala do Rei Luis XVI!");
         y += 40;
@@ -201,7 +201,7 @@ void init_resumo_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione F para interagir");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione E para abrir");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione E para abrir os baús");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Pressione ESPACO para pular");
         y += 20;

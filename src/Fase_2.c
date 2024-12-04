@@ -4,6 +4,8 @@
 #include <allegro5/keyboard.h>
 #include <allegro5/keycodes.h>
 #include "headers/game.h"
+#include <time.h>
+#include <stdlib.h>
 
 // Estrutura para o jogador
 typedef struct {
@@ -50,7 +52,7 @@ void init_jogador2(Jogador2* jogador2, int display_height) {
     jogador2->moving = false;// Indica se o personagem está se movendo
     jogador2->knocked_back = false;
     jogador2->knockback_velocity = 0;
-    jogador2->vidas = 3;
+    jogador2->vidas = 2;
 }
 
 // Estrutura para o contexto do jogo
@@ -91,6 +93,7 @@ void desenha_jogador2(Jogador2* jogador2) {
     );
 }
 int x = 0;
+
 void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo2 jogo2;
     jogo2.display = display;
@@ -99,21 +102,74 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogador2 jogador2;
     init_jogador2(&jogador2, al_get_display_height(display));
 
+    // Carregar a imagem da tecla de pausa
+    ALLEGRO_BITMAP* tecla_pause = al_load_bitmap("assets/images/botao_pause.png");
+    if (!tecla_pause) {
+        printf("Falha ao carregar a imagem tecla_pause.png!\n");
+        return;
+    }
+
+    // Carregar a imagem do card 1
+    ALLEGRO_BITMAP* card = al_load_bitmap("assets/images/fase_2_1.png");
+    if (!card) {
+        printf("Falha ao carregar a imagem card1.png!\n");
+        return;
+    }
+
+    // Carregar a imagem do card 2
+    ALLEGRO_BITMAP* card2 = al_load_bitmap("assets/images/fase_2_2.png");
+    if (!card) {
+        printf("Falha ao carregar a imagem card1.png!\n");
+        return;
+    }
+
+    // Desenha a imagem da tecla de pausa no centro da tela (ajustada)
+    float escala = 0.15f;  // Reduz a imagem para 50% do tamanho original
+    int offset_x = 25; // Move para a direita
+    int offset_y = 25; // Move para cima
+
+    int largura_imagem = al_get_bitmap_width(tecla_pause);
+    int altura_imagem = al_get_bitmap_height(tecla_pause);
+
+    // Desenha a imagem do card 1
+    float escala2 = 0.6f;  // Reduz a imagem para 50% do tamanho original
+    int offset_x2 = -550; // Move para a esquerda
+    int offset_y2 = 50; // Move para baixo
+
+    int largura_imagem2 = al_get_bitmap_width(card);
+    int altura_imagem2 = al_get_bitmap_height(card);
+
+    // Desenha a imagem do card 2
+    float escala2_2 = 0.6f;  // Reduz a imagem para 50% do tamanho original
+    int offset_x2_2 = -150; // Move para a esquerda
+    int offset_y2_2 = 50; // Move para baixo
+
+    int largura_imagem2_2 = al_get_bitmap_width(card2);
+    int altura_imagem2_2 = al_get_bitmap_height(card2);
+
     bool running = true;
 
-    if (x > 0) {
+    if (x == 1) {
         jogador2.pos_x = 1150;
+        x = 0;
     }
+    else if (x == 2) {
+        jogador2.pos_x = 50;
+        x = 0;
+    }
+    else {
+        jogador2.pos_x = 50;
+    }
+
     // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
         al_wait_for_event(jogo2.event_queue, &event);
-        x++;
 
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
         }
-       
+
         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {// Detecta quando uma tecla é pressionada
             if (!jogador2.knocked_back) {
                 if (event.keyboard.keycode == ALLEGRO_KEY_D) {// Move para a direita
@@ -191,6 +247,7 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         // Transição para o corredor
         if (jogador2.pos_x > 1180) {
+            x = 1;
             iniciar_fase_2_3(display, &game_state);
             running = false;
         }
@@ -199,19 +256,61 @@ void iniciar_fase_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
             jogador2.move_left = false;
         }
 
+        // Se o jogo estiver pausado, ignore o restante da lógica
+        if (*game_state == "PAUSE_MENU") {
+            continue;
+        }
+
+        // Detecção de pressionamento da tecla 'P' para pausar
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            if (event.keyboard.keycode == ALLEGRO_KEY_P) {
+                x = 2;
+                printf("Pausando o jogo.\n");
+                exibir_menu_pausa(display, &game_state);
+                running = false;
+            }
+        }
+
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            running = false;
+        }
+
         // Limpa a tela e desenha o cenário e o personagem
         al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
             al_get_bitmap_height(jogo2.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
-
         // Desenha o personagem na direção correta com ajuste de escala
         desenha_jogador2(&jogador2);
+        //desenha o pause
+        al_draw_scaled_bitmap(tecla_pause,
+            0, 0, largura_imagem, altura_imagem,// Fonte da imagem
+            (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,// Nova posição X
+            (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,// Nova posição Y
+            largura_imagem * escala, altura_imagem * escala,// Novo tamanho
+            0);// Nenhuma rotação
+        //desenha o card 1
+        al_draw_scaled_bitmap(card,
+            0, 0, largura_imagem2, altura_imagem2,// Fonte da imagem
+            (al_get_display_width(display) - largura_imagem2 * escala2) / 1.05 + offset_x2,// Nova posição X
+            (al_get_display_height(display) - altura_imagem2 * escala2) / offset_y2,// Nova posição Y
+            largura_imagem2* escala2, altura_imagem2* escala2,// Novo tamanho
+            0);
+        //desenha o card 2
+        al_draw_scaled_bitmap(card2,
+            0, 0, largura_imagem2_2, altura_imagem2_2,// Fonte da imagem
+            (al_get_display_width(display) - largura_imagem2_2 * escala2_2) / 1.05 + offset_x2_2,// Nova posição X
+            (al_get_display_height(display) - altura_imagem2_2 * escala2_2) / offset_y2_2,// Nova posição Y
+            largura_imagem2_2* escala2_2, altura_imagem2_2* escala2_2,// Novo tamanho
+            0);
         al_flip_display();// Atualiza a tela
     }
     // Destrói os recursos após o fim do jogo
     al_destroy_bitmap(jogo2.background);
     al_destroy_bitmap(jogador2.sprite_sheet);
+    al_destroy_bitmap(card);
+    al_destroy_bitmap(card2);
+    al_destroy_bitmap(tecla_pause);
     al_destroy_timer(jogo2.timer);
     al_destroy_event_queue(jogo2.event_queue);
 }

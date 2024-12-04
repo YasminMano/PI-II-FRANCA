@@ -65,7 +65,7 @@ void init_jogo_banheiro(Jogo_banheiro* jogo2) {
     al_init();
     al_install_keyboard();
     jogo2->timer = al_create_timer(1.0 / 30.0);// Cria um timer para controlar a taxa de atualização do jogo
-    jogo2->background = al_load_bitmap("assets/images/caminho.png");
+    jogo2->background = al_load_bitmap("assets/images/banheiro.png");
     jogo2->event_queue = al_create_event_queue();
     al_register_event_source(jogo2->event_queue, al_get_display_event_source(jogo2->display));
     al_register_event_source(jogo2->event_queue, al_get_timer_event_source(jogo2->timer));
@@ -95,12 +95,26 @@ int p = 0;
 void banheiro(ALLEGRO_DISPLAY* display, GameState* game_state, int k) {
     Jogo_banheiro jogo2;
     jogo2.display = display;
-    init_jogo2(&jogo2);
+    init_jogo_banheiro(&jogo2);
 
     Jogador_banheiro jogador2;
     init_jogador_banheiro(&jogador2, al_get_display_height(display));
-    // Carregar as imagens do personagem e do cenário
-    jogo2.background = al_load_bitmap("assets/images/banheiro.png");
+
+    // Carregar a imagem da tecla de pausa
+    ALLEGRO_BITMAP* tecla_pause = al_load_bitmap("assets/images/botao_pause.png");
+    if (!tecla_pause) {
+        printf("Falha ao carregar a imagem tecla_pause.png!\n");
+        return;
+    }
+
+    // Desenha a imagem da tecla de pausa no centro da tela (ajustada)
+                 // Fator de escala para diminuir a imagem
+    float escala = 0.15f;  // Reduz a imagem para 50% do tamanho original
+    int offset_x = 25; // Move para a direita
+    int offset_y = 25; // Move para cima
+
+    int largura_imagem = al_get_bitmap_width(tecla_pause);
+    int altura_imagem = al_get_bitmap_height(tecla_pause);
 
     bool running = true;  // Indica se o loop do jogo está rodando
     if (p == 1) {
@@ -218,14 +232,38 @@ void banheiro(ALLEGRO_DISPLAY* display, GameState* game_state, int k) {
             jogador2.move_left = false;
         }
 
+        // Se o jogo estiver pausado, ignore o restante da lógica
+        if (*game_state == "PAUSE_MENU") {
+            continue;
+        }
+
+        // Detecção de pressionamento da tecla 'P' para pausar
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            if (event.keyboard.keycode == ALLEGRO_KEY_P) {
+                printf("Pausando o jogo.\n");
+                exibir_menu_pausa(display, &game_state);
+                running = false;
+            }
+        }
+
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            running = false;
+        }
+
         // Limpa a tela e desenha o cenário e o personagem
         al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_scaled_bitmap(jogo2.background, 0, 0, al_get_bitmap_width(jogo2.background),
             al_get_bitmap_height(jogo2.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
-
         // Desenha o personagem na direção correta com ajuste de escala
         desenha_jogador_banheiro(&jogador2);
+        //desenha o pause
+        al_draw_scaled_bitmap(tecla_pause,
+            0, 0, largura_imagem, altura_imagem,// Fonte da imagem
+            (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,// Nova posição X
+            (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,// Nova posição Y
+            largura_imagem* escala, altura_imagem* escala,// Novo tamanho
+            0);// Nenhuma rotação
         al_flip_display();// Atualiza a tela
     }
     // Destrói os recursos após o fim do jogo
