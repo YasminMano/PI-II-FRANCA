@@ -53,7 +53,7 @@ void bau(ALLEGRO_DISPLAY* display, GameState* game_state, int quartos, int numer
 
         if (event.type == ALLEGRO_EVENT_KEY_DOWN) {  // Detecta quando uma tecla é pressionada
             if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && numero_aleatorio % 2 == 0) {
-                iniciar_fase_2(display, &game_state);
+                *game_state = MAPA;
                 running = false;
             }
             if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && quartos==1) {
@@ -75,7 +75,6 @@ void bau(ALLEGRO_DISPLAY* display, GameState* game_state, int quartos, int numer
             al_get_bitmap_height(jogo2.background), 0, 0,
             al_get_display_width(display), al_get_display_height(display), 0);
         al_flip_display();// Atualiza a tela
-        printf("%d\n", numero_aleatorio);
     }
 
     // Destrói os recursos após o fim do jogo

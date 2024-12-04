@@ -256,12 +256,12 @@ void init_resumo_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         al_draw_filled_rectangle(550, 600, 730, 650, al_map_rgb(100, 100, 100)); // Fundo cinza
         al_draw_text(font, white, 640, 615, ALLEGRO_ALIGN_CENTER, "Voltar");
         // Texto do resumo
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Resumo da Fase 2:");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Resumo da Fase 3:");
         y += 40;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Na Fase 3, voce enfrentara o causador da revolucao, Luis XVI");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao palacio de Versalhes e encontre as chaves para ir a sala do rei!");
-        y += 40; // Espa�o maior entre as se��es
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao Palácio de Versalhes e encontre as chaves para ir à sala do rei!");
+        y += 40; // Espaço maior entre as seções
 
         // Texto sobre a Marcha das mulheres
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A Marcha das Mulheres a Versalhes foi um protesto em outubro de 1789");
@@ -279,7 +279,7 @@ void init_resumo_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Objetivos:");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao palacio de Versalhes e encontre a chave escondida");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Chegue ao Palácio de Versalhes e encontre a chave escondida");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "para acessar a sala do Rei Luis XVI!");
         y += 40;

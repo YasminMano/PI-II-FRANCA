@@ -18,7 +18,6 @@ int main() {
         printf("Erro ao inicializar Allegro!\n");
         return -1;
     }
-
     // Inicializa os addons necessários
     al_init_image_addon();
     al_install_mouse();
