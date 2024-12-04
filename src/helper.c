@@ -1,4 +1,4 @@
-#include "helper.h"
+#include "headers/helper.h"
 #include <allegro5/allegro.h>
 
 // Função auxiliar que verifica o clique do mouse

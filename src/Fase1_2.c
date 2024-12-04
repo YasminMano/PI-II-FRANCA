@@ -4,11 +4,11 @@
 #include <allegro5/keyboard.h>
 #include <allegro5/keycodes.h>
 #include <stdio.h>
-#include "fases.h"
-#include "game.h"
-#include "jogador.h"
-#include "guarda.h"
-#include "jogo.h"
+#include "headers/fases.h"
+#include "headers/game.h"
+#include "headers/jogador.h"
+#include "headers/guarda.h"
+#include "headers/jogo.h"
 
 void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo jogo;
@@ -20,11 +20,11 @@ void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
     // Criando o primeiro guarda (ajustado para ficar mais à esquerda)
     Guarda guarda1;
-    init_guarda(&guarda1, al_get_display_width(display) - 400, al_get_display_height(display));  // Ajuste a posição conforme necessário
+    init_guarda(&guarda1, al_get_display_width(display) - 100, al_get_display_height(display));  // Ajuste a posição conforme necessário
 
     // Criando o segundo guarda (ajustado para ficar mais à esquerda)
     Guarda guarda2;
-    init_guarda(&guarda2, al_get_display_width(display) - 600, al_get_display_height(display));  // Ajuste a posição conforme necessário
+    init_guarda(&guarda2, al_get_display_width(display) - 500, al_get_display_height(display));  // Ajuste a posição conforme necessário
 
      // Carregar a imagem da tecla de pausa
     ALLEGRO_BITMAP* tecla_pause = al_load_bitmap("assets/images/tecle_pause.png");
@@ -133,51 +133,52 @@ void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
-        // // Verifica a colisão entre o jogador e o primeiro guarda
-        // if (detectar_colisao(&jogador, &guarda1)) {
-        //     printf("Colisão com o primeiro guarda detectada!\n");
 
-        //     if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda1.pos_y + 50) {
-        //         printf("O primeiro guarda foi derrotado!\n");
-        //         guarda1.morto = true;
-        //         guarda1.pos_x = -guarda1.frame_width * guarda1.scale_factor;
-        //     }
-        //     else {
-        //         jogador.knocked_back = true;
-        //         jogador.knockback_velocity = 5.0f;
-        //         jogador.jump_velocity = -5.5f;
-        //         jogador.vidas--;
-        //         printf("Vidas restantes: %d\n", jogador.vidas);
+         // Verifica a colisão entre o jogador e o primeiro guarda
+         if (detectar_colisao(&jogador, &guarda1)) {
+             printf("Colisão com o primeiro guarda detectada!\n");
 
-        //         if (jogador.vidas <= 0) {
-        //             printf("Game Over!\n");
-        //             running = false;
-        //         }
-        //     }
-        // }
+             if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda1.pos_y + 50) {
+                 printf("O primeiro guarda foi derrotado!\n");
+                 guarda1.morto = true;
+                 guarda1.pos_x = -guarda1.frame_width * guarda1.scale_factor;
+             }
+             else {
+                 jogador.knocked_back = true;
+                 jogador.knockback_velocity = 5.0f;
+                 jogador.jump_velocity = -5.5f;
+                 jogador.vidas--;
+                 printf("Vidas restantes: %d\n", jogador.vidas);
 
-        // // Verifica a colisão entre o jogador e o segundo guarda
-        // if (detectar_colisao(&jogador, &guarda2)) {
-        //     printf("Colisão com o segundo guarda detectada!\n");
+                 if (jogador.vidas <= 0) {
+                     printf("Game Over!\n");
+                     running = false;
+                 }
+             }
+         }
 
-        //     if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda2.pos_y + 50) {
-        //         printf("O segundo guarda foi derrotado!\n");
-        //         guarda2.morto = true;
-        //         guarda2.pos_x = -guarda2.frame_width * guarda2.scale_factor;
-        //     }
-        //     else {
-        //         jogador.knocked_back = true;
-        //         jogador.knockback_velocity = 5.0f;
-        //         jogador.jump_velocity = -5.5f;
-        //         jogador.vidas--;
-        //         printf("Vidas restantes: %d\n", jogador.vidas);
+         // Verifica a colisão entre o jogador e o segundo guarda
+         if (detectar_colisao(&jogador, &guarda2)) {
+             printf("Colisão com o segundo guarda detectada!\n");
 
-        //         if (jogador.vidas <= 0) {
-        //             printf("Game Over!\n");
-        //             running = false;
-        //         }
-        //     }
-        // }
+             if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda2.pos_y + 50) {
+                 printf("O segundo guarda foi derrotado!\n");
+                 guarda2.morto = true;
+                 guarda2.pos_x = -guarda2.frame_width * guarda2.scale_factor;
+             }
+             else {
+                 jogador.knocked_back = true;
+                 jogador.knockback_velocity = 5.0f;
+                 jogador.jump_velocity = -5.5f;
+                 jogador.vidas--;
+                 printf("Vidas restantes: %d\n", jogador.vidas);
+
+                 if (jogador.vidas <= 0) {
+                     printf("Game Over!\n");
+                     running = false;
+                }
+             }
+         }
 
         // Lógica de empurrão do jogador
         if (jogador.knocked_back) {

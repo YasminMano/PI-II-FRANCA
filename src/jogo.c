@@ -7,7 +7,15 @@ void init_jogo(Jogo* jogo) {
     al_init(); // Inicializa a biblioteca Allegro
     al_install_keyboard(); // Instala o sistema de teclado
     jogo->timer = al_create_timer(1.0 / 30.0); // Cria o timer com 30 quadros por segundo
-    jogo->background = al_load_bitmap("assets/images/cenario1.png"); // Carrega a imagem de fundo
+    if (game_state == FASE_1) {
+        jogo->background = al_load_bitmap("assets/images/cenario1.png"); // Carrega a imagem de fundo
+    }
+    else if (game_state == FASE1_2) {
+        jogo->background = al_load_bitmap("assets/images/cenario1.png"); // Carrega a imagem de fundo
+    }
+    else if (game_state == FASE1_3) {
+        jogo->background = al_load_bitmap("assets/images/prisao.png"); // Carrega a imagem de fundo
+    }
     jogo->event_queue = al_create_event_queue(); // Cria a fila de eventos
     al_register_event_source(jogo->event_queue, al_get_display_event_source(jogo->display)); // Registra a fonte de eventos da janela
     al_register_event_source(jogo->event_queue, al_get_timer_event_source(jogo->timer)); // Registra a fonte de eventos do timer

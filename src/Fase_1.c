@@ -27,8 +27,15 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
         printf("Falha ao carregar a imagem tecla_pause.png!\n");
         return;  // Se falhar em carregar a imagem, sair da função
     }
+    ALLEGRO_BITMAP* caixa_mensagem = al_load_bitmap("assets/images/caixa_mensagem_fase1.png");
+    if (!caixa_mensagem) {
+        printf("Falha ao carregar a imagem caixa_mensagem_fase1.png!\n");
+        return;  // Se falhar em carregar a imagem, sair da função
+    }
+
 
     bool running = true;
+    bool mostrar_caixa_mensagem = true;
 
     // Loop principal do jogo
     while (running) {
@@ -180,6 +187,29 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            running = false;
+        }
+
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            switch (event.keyboard.keycode) {
+            case ALLEGRO_KEY_A:
+            case ALLEGRO_KEY_D:
+            case ALLEGRO_KEY_SPACE:
+                mostrar_caixa_mensagem = false;  // Não mostrar a caixa ao pressionar essas teclas
+                break;
+
+
+        
+
+            case ALLEGRO_KEY_P:
+                printf("Pausando o jogo.\n");
+                *game_state = PAUSE_MENU;  // Altera o estado para PAUSE_MENU
+                running = false;  // Finaliza a fase 1
+                break;
+            }
+        }
+
         // Verifica se o jogador chegou à posição desejada para transitar para a próxima fase
         if (jogador.pos_x >= 1000) {
             *game_state = FASE1_2;  // Altera o estado do jogo para a próxima fase
@@ -202,11 +232,38 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
         int altura_imagem = al_get_bitmap_height(tecla_pause);
 
         al_draw_scaled_bitmap(tecla_pause,
-                       0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
-                       (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
-                       (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
-                       largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
-                       0);  // Nenhuma rotação
+            0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
+            (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
+            (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
+            largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
+            0);  // Nenhuma rotação
+
+        // Fator de escala aumentado para tamanho maior
+        float escala_mensagem = 0.85f;
+
+        // Obtendo as dimensões da imagem
+        int largura_mensagem = al_get_bitmap_width(caixa_mensagem);
+        int altura_mensagem = al_get_bitmap_height(caixa_mensagem);
+
+        // Posições fixas no início do mapa para colocar a caixa na parte superior da tela
+        int posicao_x_mensagem = 10;  // Posição X fixa no mapa, um pouco à direita para não ficar exatamente na borda
+        int posicao_y_mensagem = -200;  // Posição Y fixa, suficientemente alta para estar na parte superior da tela
+
+        // Desenhando a caixa de mensagem
+        al_draw_scaled_bitmap(caixa_mensagem,
+            0, 0, largura_mensagem, altura_mensagem,  // Coordenadas de origem e dimensões originais da imagem
+            posicao_x_mensagem, posicao_y_mensagem,   // Coordenadas onde a imagem será desenhada na tela
+            largura_mensagem* escala_mensagem, altura_mensagem* escala_mensagem,  // Dimensões escaladas da imagem
+            0);  // Sem rotação
+
+        if (mostrar_caixa_mensagem) {
+            al_draw_scaled_bitmap(caixa_mensagem,
+                0, 0, largura_mensagem, altura_mensagem,  // Coordenadas de origem e dimensões originais da imagem
+                posicao_x_mensagem, posicao_y_mensagem,   // Coordenadas onde a imagem será desenhada na tela
+                largura_mensagem * escala_mensagem, altura_mensagem * escala_mensagem,  // Dimensões escaladas da imagem
+                0);  // Sem rotação
+        }
+
         // Desenha o jogador e o guarda (se não estiver morto)
         desenha_jogador(&jogador);
         desenha_guarda(&guarda);
@@ -222,4 +279,5 @@ void iniciar_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     al_destroy_bitmap(guarda.sprite_sheet);
     al_destroy_timer(jogo.timer);
     al_destroy_event_queue(jogo.event_queue);
+    al_destroy_bitmap(caixa_mensagem);
 }

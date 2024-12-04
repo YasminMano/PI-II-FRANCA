@@ -2,8 +2,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "resumo_inicio.h"
-#include "game.h"
+#include "headers/resumo_inicio.h"
+#include "headers/game.h"
 
 void iniciar_resumo(ALLEGRO_DISPLAY* display, GameState* game_state) {
     // Verifique se os ponteiros são nulos antes de usar
@@ -59,9 +59,12 @@ void iniciar_resumo(ALLEGRO_DISPLAY* display, GameState* game_state) {
         int y = al_get_display_height(display) / 4;
 
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "Resumo Geral:");
-        al_draw_text(font, white, x, y + 40, ALLEGRO_ALIGN_CENTER, "A Revolução Francesa foi um movimento político e social.");
-        al_draw_text(font, white, x, y + 80, ALLEGRO_ALIGN_CENTER, "Ela ocorreu entre 1789 e 1799, marcando o início da democracia.");
-        al_draw_text(font, white, x, y + 120, ALLEGRO_ALIGN_CENTER, "Inspirou mudanças ao redor do mundo.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A Revolução Francesa foi um movimento social");
+        al_draw_text(font, white, x, y + 20, ALLEGRO_ALIGN_CENTER, "e político que ocorreu na França entre 1789 e 1799.");
+        al_draw_text(font, white, x, y + 40, ALLEGRO_ALIGN_CENTER, "Ela foi marcada pela derrubada da monarquia");
+        al_draw_text(font, white, x, y + 60, ALLEGRO_ALIGN_CENTER, "e a instauração de uma república.");
+        al_draw_text(font, white, x, y + 80, ALLEGRO_ALIGN_CENTER, "Foi um evento de grande impacto histórico,");
+        al_draw_text(font, white, x, y + 100, ALLEGRO_ALIGN_CENTER, "inspirando mudanças em todo o mundo.");
 
         // Botão "Voltar"
         al_draw_filled_rectangle(300, 400, 500, 450, al_map_rgb(100, 100, 100));

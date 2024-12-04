@@ -2,8 +2,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
-#include "resumo_fase.h"
-#include "game.h"
+#include "headers/resumo_fase.h"
+#include "headers/game.h"
 
 void init_resumo_fase_1(ALLEGRO_DISPLAY* display, GameState* game_state) {
     ALLEGRO_FONT* font = al_create_builtin_font();

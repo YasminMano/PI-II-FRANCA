@@ -22,6 +22,6 @@ typedef struct {
 } Guarda;
 
 void init_guarda(Guarda* guarda, int display_width, int display_height);
-void desenha_guarda(Guarda* guarda) ;
+void desenha_guarda(Guarda* guarda);
 
 #endif

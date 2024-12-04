@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "screens.h"  // Inclui as definições de funções e estruturas relacionadas às telas
+#include "headers/screens.h"  // Inclui as definições de funções e estruturas relacionadas às telas
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include "handle.h"  // Para o controle de eventos e transição de telas
+#include "headers/handle.h"  // Para o controle de eventos e transição de telas
 
 // Função para desenhar a tela inicial do menu
 bool drawTelaInicio(struct AllegroGame* game) {

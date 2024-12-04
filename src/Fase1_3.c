@@ -4,11 +4,11 @@
 #include <allegro5/keyboard.h>
 #include <allegro5/keycodes.h>
 #include <stdio.h>
-#include "fases.h"
-#include "game.h"
-#include "jogador.h"
-#include "guarda.h"
-#include "jogo.h"
+#include "headers/fases.h"
+#include "headers/game.h"
+#include "headers/jogador.h"
+#include "headers/guarda.h"
+#include "headers/jogo.h"
 
 void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Jogo jogo;
@@ -17,8 +17,12 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
     Jogador jogador;
     init_jogador(&jogador, al_get_display_height(display));
+    
+    Guarda guarda3;
+    init_guarda(&guarda3, al_get_display_width(display) - 400, al_get_display_height(display));
 
-     // Carregar a imagem da tecla de pausa
+
+    // Carregar a imagem da tecla de pausa
     ALLEGRO_BITMAP* tecla_pause = al_load_bitmap("assets/images/tecle_pause.png");
     if (!tecla_pause) {
         printf("Falha ao carregar a imagem tecla_pause.png!\n");
@@ -98,6 +102,44 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
             jogador.current_frame = 0;
         }
 
+        // Atualiza o movimento do segundo guarda
+        if (guarda3.move_right) {
+            guarda3.pos_x += guarda3.movement_speed;
+            if (guarda3.pos_x >= guarda3.max_x) {
+                guarda3.move_right = false;
+            }
+        }
+        else {
+            guarda3.pos_x -= guarda3.movement_speed;
+            if (guarda3.pos_x <= guarda3.min_x) {
+                guarda3.move_right = true;
+            }
+        }
+
+
+        // Verifica a colisão entre o jogador e o primeiro guarda
+        if (detectar_colisao(&jogador, &guarda3)) {
+            printf("Colisão com o primeiro guarda detectada!\n");
+
+            if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda3.pos_y + 50) {
+                printf("O primeiro guarda foi derrotado!\n");
+                guarda3.morto = true;
+                guarda3.pos_x = -guarda3.frame_width * guarda3.scale_factor;
+            }
+            else {
+                jogador.knocked_back = true;
+                jogador.knockback_velocity = 5.0f;
+                jogador.jump_velocity = -5.5f;
+                jogador.vidas--;
+                printf("Vidas restantes: %d\n", jogador.vidas);
+
+                if (jogador.vidas <= 0) {
+                    printf("Game Over!\n");
+                    running = false;
+                }
+            }
+        }
+
         // Lógica de empurrão do jogador
         if (jogador.knocked_back) {
             if (jogador.facing_right) {
@@ -116,6 +158,14 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
                 jogador.jump_velocity = -12.0f;
             }
         }
+
+        // Atualiza a animação do primeiro guarda
+        guarda3.frame_timer += 1.0 / 30.0;
+        if (guarda3.frame_timer >= guarda3.frame_time) {
+            guarda3.current_frame = (guarda3.current_frame + 1) % guarda3.total_frames;
+            guarda3.frame_timer = 0;
+        }
+
 
         // Se o jogo estiver pausado, ignore o restante da lógica
         if (*game_state == PAUSE_MENU) {
@@ -161,15 +211,15 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         int altura_imagem = al_get_bitmap_height(tecla_pause);
 
         al_draw_scaled_bitmap(tecla_pause,
-                       0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
-                       (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
-                       (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
-                       largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
-                       0);  // Nenhuma rotação
+            0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
+            (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
+            (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
+            largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
+            0);  // Nenhuma rotação
 
         // Desenha o jogador
         desenha_jogador(&jogador);
-
+        desenha_guarda(&guarda3);
         // Atualiza a tela
         al_flip_display();
     }
