@@ -256,7 +256,7 @@ void init_resumo_fase_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "pos a descoberta de documentos que comprovaram sua conspiracao contra a Revolucao,");
         y += 20;
-        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "ele foi julgado pela Conven��o Nacional e condenado por traicao.");
+        al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "ele foi julgado pela Convencao Nacional e condenado por traicao.");
         y += 20;
         al_draw_text(font, white, x, y, ALLEGRO_ALIGN_CENTER, "A execucao por guilhotina na Praca da Revolucao simbolizou o fim definitivo da monarquia absolutista na Franca");
         y += 20;
