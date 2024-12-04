@@ -17,7 +17,7 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
     Jogador jogador;
     init_jogador(&jogador, al_get_display_height(display));
-    
+
     Guarda guarda3;
     init_guarda(&guarda3, al_get_display_width(display) - 400, al_get_display_height(display));
 
@@ -29,9 +29,38 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
         return;  // Se falhar em carregar a imagem, sair da função
     }
 
+    ALLEGRO_BITMAP* chave = al_load_bitmap("assets/images/chave.png");
+    if (!chave) {
+        printf("Falha ao carregar a imagem chave.png!\n");
+        return -1;  // Se falhar em carregar a imagem, sair da função
+    }
+
+
+    ALLEGRO_BITMAP* gaiola = al_load_bitmap("assets/images/gaiola.png");
+    if (!gaiola) {
+        printf("Falha ao carregar a imagem gaiola.png!\n");
+        return -1;  // Se falhar em carregar a imagem, sair da função
+    }
+
+    ALLEGRO_BITMAP* sprite_sheet = al_load_bitmap("assets/images/mulher_fase1.png");
+    if (!sprite_sheet) {
+        fprintf(stderr, "Falha ao carregar a imagem do sprite 'mulher.png'\n");
+        return -1; // Tratamento de erro adequado
+    }
+
+    ALLEGRO_BITMAP* caixa_mensagem3 = al_load_bitmap("assets/images/caixa_mensagem_fase1_3.png");
+    if (!caixa_mensagem3) {
+        fprintf(stderr, "Falha ao carregar a imagem do sprite 'mulher.png'\n");
+        return -1; // Tratamento de erro adequado
+    }
+
+
+    ALLEGRO_BITMAP* sprite_atual = gaiola;  // Começa com a gaiola visível
+
 
     bool running = true;
-
+    bool chave_coletada = false;
+    bool mostrar_caixa_mensagem3 = true;
     // Loop principal do jogo
     while (running) {
         ALLEGRO_EVENT event;
@@ -119,10 +148,10 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
 
         // Verifica a colisão entre o jogador e o primeiro guarda
         if (detectar_colisao(&jogador, &guarda3)) {
-            printf("Colisão com o primeiro guarda detectada!\n");
+            printf("Colisao com o guarda detectada!\n");
 
             if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda3.pos_y + 50) {
-                printf("O primeiro guarda foi derrotado!\n");
+                printf("O ultimo guarda foi derrotado!\n");
                 guarda3.morto = true;
                 guarda3.pos_x = -guarda3.frame_width * guarda3.scale_factor;
             }
@@ -181,6 +210,22 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
             }
         }
 
+        // No tratamento de eventos do teclado
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            switch (event.keyboard.keycode) {
+            case ALLEGRO_KEY_F:
+                if (sprite_atual == gaiola) {
+                    sprite_atual = sprite_sheet;  // Troca para a imagem da mulher
+                }
+                else {
+                    sprite_atual = gaiola;  // Troca de volta para a gaiola
+                }
+                break;
+                // Outras teclas podem ser tratadas aqui
+            }
+        }
+
+
 
         // Verifica se o jogador chegou à posição desejada para transitar para a próxima fase
         if (jogador.pos_x >= 1000) {
@@ -217,6 +262,130 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
             largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
             0);  // Nenhuma rotação
 
+
+        // GAIOLA
+        float escala_gaiola = 0.95f;  // Ajustar escala conforme necessário
+        int offset_x_gaiola = -10;     // Positivo para mover mais para a direita
+        int offset_y_gaiola = 70;     // Positivo para mover mais para baixo
+
+        int largura_gaiola = al_get_bitmap_width(gaiola);
+        int altura_gaiola = al_get_bitmap_height(gaiola);
+
+        // Calcular as posições X e Y com base no tamanho da tela e nas dimensões da imagem ajustadas pela escala
+        int posicao_x_gaiola = al_get_display_width(display) - largura_gaiola * escala_gaiola - offset_x_gaiola;
+        int posicao_y_gaiola = al_get_display_height(display) - altura_gaiola * escala_gaiola + offset_y_gaiola;  // Adicionando o offset para mover para baixo
+
+        float escala_mulher = 0.6; // Ajuste conforme necessário para o tamanho desejado
+
+        // Calculando a altura ajustada da mulher
+        int altura_mulher_ajustada = al_get_bitmap_height(sprite_sheet) * escala_mulher;
+
+        // Calculando a posição Y para que a mulher toque o chão
+        int offsetY = 200;  // Altere este valor para mover a mulher para cima (-) ou para baixo (+)
+        int pos_y_mulher = posicao_y_gaiola + offsetY;
+        // Ajuste fino da posição x, se necessário (ajustar o valor de offsetX se necessário)
+        int offsetX = 300;  // Altere este valor para mover a mulher para esquerda (-) ou direita (+)
+        int pos_x_mulher = posicao_x_gaiola + offsetX;
+
+        // Desenhando a mulher na tela na posição x ajustada e y ajustada
+        if (sprite_atual == sprite_sheet) {
+            al_draw_scaled_bitmap(sprite_sheet,
+                0, 0,  // Coordenadas do canto superior esquerdo para começar a cortar a imagem
+                al_get_bitmap_width(sprite_sheet), al_get_bitmap_height(sprite_sheet),  // Usar a largura e altura completas do bitmap da mulher
+                pos_x_mulher, pos_y_mulher,  // Posições x e y ajustadas
+                al_get_bitmap_width(sprite_sheet) * escala_mulher, al_get_bitmap_height(sprite_sheet) * escala_mulher,  // Largura e altura escaladas
+                0);  // Sem rotação
+        }
+        else {
+            // Se o sprite atual for a gaiola ou qualquer outro sprite, desenhá-lo normalmente
+            al_draw_scaled_bitmap(sprite_atual,
+                0, 0,
+                al_get_bitmap_width(sprite_atual), al_get_bitmap_height(sprite_atual),
+                posicao_x_gaiola, posicao_y_gaiola,
+                al_get_bitmap_width(sprite_atual) * escala_gaiola, al_get_bitmap_height(sprite_atual) * escala_gaiola,
+                0);
+        }
+
+
+        //CHAVE
+        float escala_chave = 0.08f;  // Ajuste de escala para a chave
+        int offset_x_chave = 100;    // Offset para a chave aparecer antes da gaiola
+        int offset_y_chave = 70;     // Mantém o mesmo offset vertical da gaiola para alinhamento
+
+        int largura_chave = al_get_bitmap_width(chave);
+        int altura_chave = al_get_bitmap_height(chave);
+
+        // Posição X da chave: Alinhar para que a chave apareça antes da gaiola
+        int posicao_x_chave = posicao_x_gaiola - largura_chave * escala_chave - offset_x_chave;
+        int posicao_y_chave = posicao_y_gaiola;  // Mesma altura da gaiola para simplicidade
+
+        // Desenhar a chave
+        al_draw_scaled_bitmap(chave,
+            0, 0, largura_chave, altura_chave,
+            posicao_x_chave, posicao_y_chave,
+            largura_chave * escala_chave, altura_chave * escala_chave,
+            0);
+
+
+        // Supondo que estas são as coordenadas e tamanhos usados para detecção de colisão
+        float jogador_left = jogador.pos_x;
+        float jogador_right = jogador.pos_x + jogador.frame_width * jogador.scale_factor;
+        float jogador_top = jogador.pos_y;
+        float jogador_bottom = jogador.pos_y + jogador.frame_height * jogador.scale_factor;
+
+        float chave_left = posicao_x_chave;
+        float chave_right = posicao_x_chave + largura_chave * escala_chave;
+        float chave_top = posicao_y_chave;
+        float chave_bottom = posicao_y_chave + altura_chave * escala_chave;
+
+        if (!chave_coletada &&
+            jogador_right > chave_left &&
+            jogador_left < chave_right &&
+            jogador_bottom > chave_top &&
+            jogador_top < chave_bottom) {
+            chave_coletada = true;
+            printf("Chave coletada!\n");
+            // Não destrua a chave aqui
+
+
+        }
+
+        // Desenha a chave se não foi coletada
+        if (!chave_coletada) {
+            al_draw_scaled_bitmap(chave,
+                0, 0, largura_chave, altura_chave,
+                posicao_x_chave, posicao_y_chave,
+                largura_chave * escala_chave, altura_chave * escala_chave,
+                0);
+
+        }
+
+        // Fator de escala aumentado para tamanho maior
+        float escala_mensagem3 = 0.85f;
+
+        // Obtendo as dimensões da imagem
+        int largura_mensagem3 = al_get_bitmap_width(caixa_mensagem3);
+        int altura_mensagem3 = al_get_bitmap_height(caixa_mensagem3);
+
+        // Posições fixas no início do mapa para colocar a caixa na parte superior da tela
+        int posicao_x_mensagem3 = 10;  // Posição X fixa no mapa, um pouco à direita para não ficar exatamente na borda
+        int posicao_y_mensagem3 = -200;  // Posição Y fixa, suficientemente alta para estar na parte superior da tela
+
+        // Desenhando a caixa de mensagem
+        al_draw_scaled_bitmap(caixa_mensagem3,
+            0, 0, largura_mensagem3, altura_mensagem3,  // Coordenadas de origem e dimensões originais da imagem
+            posicao_x_mensagem3, posicao_y_mensagem3,   // Coordenadas onde a imagem será desenhada na tela
+            largura_mensagem3 * escala_mensagem3, altura_mensagem3 * escala_mensagem3,  // Dimensões escaladas da imagem
+            0);  // Sem rotação
+
+        if (mostrar_caixa_mensagem3) {
+            al_draw_scaled_bitmap(caixa_mensagem3,
+                0, 0, largura_mensagem3, altura_mensagem3,  // Coordenadas de origem e dimensões originais da imagem
+                posicao_x_mensagem3, posicao_y_mensagem3,   // Coordenadas onde a imagem será desenhada na tela
+                largura_mensagem3 * escala_mensagem3, altura_mensagem3 * escala_mensagem3,  // Dimensões escaladas da imagem
+                0);  // Sem rotação
+        }
+
         // Desenha o jogador
         desenha_jogador(&jogador);
         desenha_guarda(&guarda3);
@@ -229,4 +398,6 @@ void iniciar_fase1_3(ALLEGRO_DISPLAY* display, GameState* game_state) {
     al_destroy_bitmap(jogador.sprite_sheet);
     al_destroy_timer(jogo.timer);
     al_destroy_event_queue(jogo.event_queue);
+    al_destroy_bitmap(chave);
+    al_destroy_bitmap(caixa_mensagem3);
 }

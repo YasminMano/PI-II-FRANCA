@@ -26,14 +26,21 @@ void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
     Guarda guarda2;
     init_guarda(&guarda2, al_get_display_width(display) - 500, al_get_display_height(display));  // Ajuste a posição conforme necessário
 
-     // Carregar a imagem da tecla de pausa
+    // Carregar a imagem da tecla de pausa
     ALLEGRO_BITMAP* tecla_pause = al_load_bitmap("assets/images/tecle_pause.png");
     if (!tecla_pause) {
         printf("Falha ao carregar a imagem tecla_pause.png!\n");
         return;  // Se falhar em carregar a imagem, sair da função
     }
 
+    ALLEGRO_BITMAP* caixa_mensagem2 = al_load_bitmap("assets/images/caixa_mensagem_fase1_2.png");
+    if (!caixa_mensagem2) {
+        fprintf(stderr, "Falha ao carregar a imagem do sprite 'mulher.png'\n");
+        return -1; // Tratamento de erro adequado
+    }
+
     bool running = true;
+    bool mostrar_caixa_mensagem2 = true;
 
     // Loop principal do jogo
     while (running) {
@@ -134,51 +141,51 @@ void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         }
 
 
-         // Verifica a colisão entre o jogador e o primeiro guarda
-         if (detectar_colisao(&jogador, &guarda1)) {
-             printf("Colisão com o primeiro guarda detectada!\n");
+        // Verifica a colisão entre o jogador e o primeiro guarda
+        if (detectar_colisao(&jogador, &guarda1)) {
+            printf("Colisão com o primeiro guarda detectada!\n");
 
-             if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda1.pos_y + 50) {
-                 printf("O primeiro guarda foi derrotado!\n");
-                 guarda1.morto = true;
-                 guarda1.pos_x = -guarda1.frame_width * guarda1.scale_factor;
-             }
-             else {
-                 jogador.knocked_back = true;
-                 jogador.knockback_velocity = 5.0f;
-                 jogador.jump_velocity = -5.5f;
-                 jogador.vidas--;
-                 printf("Vidas restantes: %d\n", jogador.vidas);
+            if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda1.pos_y + 50) {
+                printf("O primeiro guarda foi derrotado!\n");
+                guarda1.morto = true;
+                guarda1.pos_x = -guarda1.frame_width * guarda1.scale_factor;
+            }
+            else {
+                jogador.knocked_back = true;
+                jogador.knockback_velocity = 5.0f;
+                jogador.jump_velocity = -5.5f;
+                jogador.vidas--;
+                printf("Vidas restantes: %d\n", jogador.vidas);
 
-                 if (jogador.vidas <= 0) {
-                     printf("Game Over!\n");
-                     running = false;
-                 }
-             }
-         }
-
-         // Verifica a colisão entre o jogador e o segundo guarda
-         if (detectar_colisao(&jogador, &guarda2)) {
-             printf("Colisão com o segundo guarda detectada!\n");
-
-             if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda2.pos_y + 50) {
-                 printf("O segundo guarda foi derrotado!\n");
-                 guarda2.morto = true;
-                 guarda2.pos_x = -guarda2.frame_width * guarda2.scale_factor;
-             }
-             else {
-                 jogador.knocked_back = true;
-                 jogador.knockback_velocity = 5.0f;
-                 jogador.jump_velocity = -5.5f;
-                 jogador.vidas--;
-                 printf("Vidas restantes: %d\n", jogador.vidas);
-
-                 if (jogador.vidas <= 0) {
-                     printf("Game Over!\n");
-                     running = false;
+                if (jogador.vidas <= 0) {
+                    printf("Game Over!\n");
+                    running = false;
                 }
-             }
-         }
+            }
+        }
+
+        // Verifica a colisão entre o jogador e o segundo guarda
+        if (detectar_colisao(&jogador, &guarda2)) {
+            printf("Colisão com o segundo guarda detectada!\n");
+
+            if (jogador.pos_y + jogador.frame_height * jogador.scale_factor <= guarda2.pos_y + 50) {
+                printf("O segundo guarda foi derrotado!\n");
+                guarda2.morto = true;
+                guarda2.pos_x = -guarda2.frame_width * guarda2.scale_factor;
+            }
+            else {
+                jogador.knocked_back = true;
+                jogador.knockback_velocity = 5.0f;
+                jogador.jump_velocity = -5.5f;
+                jogador.vidas--;
+                printf("Vidas restantes: %d\n", jogador.vidas);
+
+                if (jogador.vidas <= 0) {
+                    printf("Game Over!\n");
+                    running = false;
+                }
+            }
+        }
 
         // Lógica de empurrão do jogador
         if (jogador.knocked_back) {
@@ -257,11 +264,39 @@ void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
         int altura_imagem = al_get_bitmap_height(tecla_pause);
 
         al_draw_scaled_bitmap(tecla_pause,
-                       0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
-                       (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
-                       (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
-                       largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
-                       0);  // Nenhuma rotação
+            0, 0, largura_imagem, altura_imagem,  // Fonte da imagem
+            (al_get_display_width(display) - largura_imagem * escala) / 1.05 + offset_x,  // Nova posição X
+            (al_get_display_height(display) - altura_imagem * escala) / 8.5 - offset_y,  // Nova posição Y
+            largura_imagem * escala, altura_imagem * escala,  // Novo tamanho
+            0);  // Nenhuma rotação
+
+
+
+        // Fator de escala aumentado para tamanho maior
+        float escala_mensagem2 = 0.85f;
+
+        // Obtendo as dimensões da imagem
+        int largura_mensagem2 = al_get_bitmap_width(caixa_mensagem2);
+        int altura_mensagem2 = al_get_bitmap_height(caixa_mensagem2);
+
+        // Posições fixas no início do mapa para colocar a caixa na parte superior da tela
+        int posicao_x_mensagem2 = 10;  // Posição X fixa no mapa, um pouco à direita para não ficar exatamente na borda
+        int posicao_y_mensagem2 = -200;  // Posição Y fixa, suficientemente alta para estar na parte superior da tela
+
+        // Desenhando a caixa de mensagem
+        al_draw_scaled_bitmap(caixa_mensagem2,
+            0, 0, largura_mensagem2, altura_mensagem2,  // Coordenadas de origem e dimensões originais da imagem
+            posicao_x_mensagem2, posicao_y_mensagem2,   // Coordenadas onde a imagem será desenhada na tela
+            largura_mensagem2 * escala_mensagem2, altura_mensagem2 * escala_mensagem2,  // Dimensões escaladas da imagem
+            0);  // Sem rotação
+
+        if (mostrar_caixa_mensagem2) {
+            al_draw_scaled_bitmap(caixa_mensagem2,
+                0, 0, largura_mensagem2, altura_mensagem2,  // Coordenadas de origem e dimensões originais da imagem
+                posicao_x_mensagem2, posicao_y_mensagem2,   // Coordenadas onde a imagem será desenhada na tela
+                largura_mensagem2 * escala_mensagem2, altura_mensagem2 * escala_mensagem2,  // Dimensões escaladas da imagem
+                0);  // Sem rotação
+        }
 
         // Desenha o jogador e os dois guardas
         desenha_jogador(&jogador);
@@ -279,4 +314,5 @@ void iniciar_fase1_2(ALLEGRO_DISPLAY* display, GameState* game_state) {
     al_destroy_bitmap(guarda2.sprite_sheet);
     al_destroy_timer(jogo.timer);
     al_destroy_event_queue(jogo.event_queue);
+    al_destroy_bitmap(caixa_mensagem2);
 }
