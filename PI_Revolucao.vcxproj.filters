@@ -2,6 +2,33 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Fase_1.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fase_2.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fase_2_3.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fase_3.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\handle.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helper.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mapa.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pause_menu.c">
+      <Filter>Arquivos de origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resumo_fase.c">
       <Filter>Arquivos_de_Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Fase_2.c">
@@ -110,6 +137,37 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\fases.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\game.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\handle.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\helper.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\mapa.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\pause_menu.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\resumo_fase.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\resumo_inicio.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\screens.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\Tela_inicio.h">
+      <Filter>Arquivos de origem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
       <Filter>Arquivos_de_Origem</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\game.h">

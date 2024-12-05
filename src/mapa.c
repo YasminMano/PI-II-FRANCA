@@ -6,6 +6,8 @@
 #include "headers/mapa.h"
 #include "headers/resumo_fase.h"
 #include "game.h"
+#include "headers/game.h"
+#include "headers/resumo_fase.h"
 
 ALLEGRO_BITMAP* background_mapa = NULL;
 ALLEGRO_BITMAP* red_circle = NULL;
@@ -21,7 +23,6 @@ int caixa2_x = 500, caixa2_y = 450;
 int caixa3_x = 740, caixa3_y = 570;
 
 void init_mapa(event_queue) {
-    // Carregar a imagem do mapa, bolinha vermelha e caixa de mensagem
     background_mapa = al_load_bitmap("assets/images/mapa_2.png");
     red_circle = al_load_bitmap("assets/images/vermelho.png");
     message_box = al_load_bitmap("assets/images/caixa_mensagem.png");
